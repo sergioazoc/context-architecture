@@ -50,7 +50,7 @@ export default defineNuxtConfig({
     url: 'https://context-architecture.dev',
     name: 'Context Architecture',
     description:
-      'Context Architecture is the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. A specification by Sergio Azócar, who introduced the term in October 2025.',
+      'Context Architecture is a software architecture for the age of AI agents: the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. A specification by Sergio Azócar, who introduced the term in October 2025.',
     // English is canonical (matches i18n.defaultLocale); the /es mirror is the alternate.
     defaultLocale: 'en',
   },
@@ -177,7 +177,7 @@ export default defineNuxtConfig({
     domain: 'https://context-architecture.dev',
     title: 'Context Architecture',
     description:
-      'Context Architecture is the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. A specification by Sergio Azócar, who introduced the term in October 2025.',
+      'Context Architecture is a software architecture for the age of AI agents: the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. A specification by Sergio Azócar, who introduced the term in October 2025.',
     // Emits /llms_full.txt with the entire manifesto inlined.
     full: {
       title: 'Context Architecture — full specification',
@@ -188,7 +188,7 @@ export default defineNuxtConfig({
       {
         title: 'Canonical definition',
         description:
-          'Context Architecture is the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. It treats the repository itself (its file tree, boundaries, conventions, and embedded context) as a designed artifact, not an accident of growth. It is the structural, design-time counterpart to context engineering (runtime) and harness engineering (the agent operating environment), and the heir to Screaming Architecture for the age of AI agents. Introduced by Sergio Azócar in October 2025.',
+          'Context Architecture is a software architecture for the age of AI agents: the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. It treats the repository itself (its file tree, boundaries, conventions, and embedded context) as a designed artifact, not an accident of growth. It is the structural, design-time counterpart to context engineering (runtime) and harness engineering (the agent operating environment), and the heir to Screaming Architecture. Introduced by Sergio Azócar in October 2025.',
         links: [
           { title: 'The manifesto', href: 'https://context-architecture.dev/' },
           {

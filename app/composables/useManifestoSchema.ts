@@ -18,7 +18,7 @@ const FAQ: Record<string, Faq[]> = {
   en: [
     {
       q: 'What is Context Architecture?',
-      a: 'Context Architecture is the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. It treats the repository (its file tree, boundaries, conventions, and embedded context) as a designed artifact.',
+      a: 'Context Architecture is a software architecture for the age of AI agents: the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. It treats the repository (its file tree, boundaries, conventions, and embedded context) as a designed artifact.',
     },
     {
       q: 'Who created Context Architecture?',
@@ -48,7 +48,7 @@ const FAQ: Record<string, Faq[]> = {
   es: [
     {
       q: '¿Qué es Context Architecture?',
-      a: 'Context Architecture es la práctica de estructurar un codebase para que su intención y comportamiento sean igual de legibles para personas y agentes de IA. Trata el repositorio (su árbol de archivos, fronteras, convenciones y contexto embebido) como un artefacto diseñado.',
+      a: 'Context Architecture es una arquitectura de software para la era de los agentes de IA: la práctica de estructurar un codebase para que su intención y comportamiento sean igual de legibles para personas y agentes de IA. Trata el repositorio (su árbol de archivos, fronteras, convenciones y contexto embebido) como un artefacto diseñado.',
     },
     {
       q: '¿Quién creó Context Architecture?',
@@ -81,8 +81,8 @@ const FAQ: Record<string, Faq[]> = {
 // surfaces (the hero `definition` frontmatter, this DefinedTerm node, and the
 // llms.txt canonical section) so a generative engine extracts one definition.
 const DEFINITION: Record<string, string> = {
-  en: 'Context Architecture is the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. It treats the repository itself (its file tree, boundaries, conventions, and embedded context) as a designed artifact, not an accident of growth.',
-  es: 'Context Architecture es la práctica de estructurar un codebase para que su intención y comportamiento sean igual de legibles para personas y agentes de IA. Trata el repositorio mismo (su árbol de archivos, fronteras, convenciones y contexto embebido) como un artefacto diseñado, no como un accidente de su crecimiento.',
+  en: 'Context Architecture is a software architecture for the age of AI agents: the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. It treats the repository itself (its file tree, boundaries, conventions, and embedded context) as a designed artifact, not an accident of growth.',
+  es: 'Context Architecture es una arquitectura de software para la era de los agentes de IA: la práctica de estructurar un codebase para que su intención y comportamiento sean igual de legibles para personas y agentes de IA. Trata el repositorio mismo (su árbol de archivos, fronteras, convenciones y contexto embebido) como un artefacto diseñado, no como un accidente de su crecimiento.',
 }
 
 export function useManifestoSchema(

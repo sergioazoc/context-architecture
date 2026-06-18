@@ -1,8 +1,8 @@
 ---
 title: Context Architecture
-description: Context Architecture is the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. A specification by Sergio Azócar.
+description: "Context Architecture is a software architecture for the age of AI agents: the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. A specification by Sergio Azócar."
 eyebrow: A specification
-definition: Context Architecture is the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. It treats the repository itself (its file tree, boundaries, conventions, and embedded context) as a designed artifact, not an accident of growth.
+definition: "Context Architecture is a software architecture for the age of AI agents: the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. It treats the repository itself (its file tree, boundaries, conventions, and embedded context) as a designed artifact, not an accident of growth."
 attribution: I introduced the term Context Architecture in October 2025, while restructuring Skyward's monorepo for people and AI-agent legibility. First published June 2026.
 ---
 
@@ -433,9 +433,9 @@ of leaving it implicit, is the whole reason a plugin like this can exist.
 
 ### What is Context Architecture?
 
-Context Architecture is the practice of structuring a codebase so that its intent and behavior are
-equally legible to people and AI agents. It treats the repository (its file tree, boundaries,
-conventions, and embedded context) as a designed artifact.
+Context Architecture is a software architecture for the age of AI agents: the practice of structuring
+a codebase so that its intent and behavior are equally legible to people and AI agents. It treats the
+repository (its file tree, boundaries, conventions, and embedded context) as a designed artifact.
 
 ### Who created Context Architecture?
 

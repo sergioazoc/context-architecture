@@ -1,8 +1,8 @@
 ---
 title: Context Architecture
-description: Context Architecture es la práctica de estructurar un codebase para que su intención y comportamiento sean igual de legibles para personas y agentes de IA. Una especificación de Sergio Azócar.
+description: "Context Architecture es una arquitectura de software para la era de los agentes de IA: la práctica de estructurar un codebase para que su intención y comportamiento sean igual de legibles para personas y agentes de IA. Una especificación de Sergio Azócar."
 eyebrow: Una especificación
-definition: Context Architecture es la práctica de estructurar un codebase para que su intención y comportamiento sean igual de legibles para personas y agentes de IA. Trata el repositorio mismo (su árbol de archivos, fronteras, convenciones y contexto embebido) como un artefacto diseñado, no como un accidente de su crecimiento.
+definition: "Context Architecture es una arquitectura de software para la era de los agentes de IA: la práctica de estructurar un codebase para que su intención y comportamiento sean igual de legibles para personas y agentes de IA. Trata el repositorio mismo (su árbol de archivos, fronteras, convenciones y contexto embebido) como un artefacto diseñado, no como un accidente de su crecimiento."
 attribution: Introduje el término Context Architecture en octubre de 2025, mientras reestructuraba el monorepo de Skyward para la legibilidad de personas y agentes de IA. Publicado por primera vez en junio de 2026.
 ---
 
@@ -441,9 +441,10 @@ implícita, es la razón de que un plugin así pueda existir.
 
 ### ¿Qué es Context Architecture?
 
-Context Architecture es la práctica de estructurar un codebase para que su intención y
-comportamiento sean igual de legibles para personas y agentes de IA. Trata el repositorio (su árbol
-de archivos, fronteras, convenciones y contexto embebido) como un artefacto diseñado.
+Context Architecture es una arquitectura de software para la era de los agentes de IA: la práctica de
+estructurar un codebase para que su intención y comportamiento sean igual de legibles para personas y
+agentes de IA. Trata el repositorio (su árbol de archivos, fronteras, convenciones y contexto
+embebido) como un artefacto diseñado.
 
 ### ¿Quién creó Context Architecture?
 

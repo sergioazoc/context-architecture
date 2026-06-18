@@ -21,8 +21,8 @@ const meta = useSiteMeta()
 // Descriptive, keyword-rich <title> for the home page (the h1 stays the term).
 const seoTitle = computed(() =>
   locale.value === 'es'
-    ? 'Context Architecture — estructurar codebases para personas y agentes de IA'
-    : 'Context Architecture — structuring codebases for people and AI agents',
+    ? 'Context Architecture — arquitectura de software para personas y agentes de IA'
+    : 'Context Architecture — software architecture for people and AI agents',
 )
 
 useSeoMeta({
