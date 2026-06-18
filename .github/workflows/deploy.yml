@@ -64,3 +64,24 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      # Tell IndexNow (Bing, Yandex, Naver, Seznam, Yep — and Bing feeds AI search)
+      # that the published URLs changed, so they re-crawl promptly. Google does not
+      # participate. The key is the public file public/<key>.txt; the URL list comes
+      # from the generated sitemap. Best-effort: a failed ping never fails the deploy.
+      - name: Ping IndexNow
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        run: |
+          key="$(basename "$(ls public/*.txt | head -1)" .txt)"
+          urls="$(grep -ohE '<loc>[^<]+</loc>' .output/public/__sitemap__/*.xml | sed -E 's:</?loc>::g' | sort -u)"
+          body="$(jq -n \
+            --arg host 'context-architecture.dev' \
+            --arg key "$key" \
+            --arg keyLocation "https://context-architecture.dev/$key.txt" \
+            --argjson urlList "$(printf '%s\n' "$urls" | jq -R . | jq -s 'map(select(length > 0))')" \
+            '{host: $host, key: $key, keyLocation: $keyLocation, urlList: $urlList}')"
+          echo "Submitting to IndexNow:"; echo "$urls"
+          curl -sS -X POST 'https://api.indexnow.org/indexnow' \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data "$body" -w '\nIndexNow HTTP %{http_code}\n'
