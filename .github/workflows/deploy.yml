@@ -49,9 +49,13 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      # Prerender the static site to .output/public (SSG).
+      # Prerender the static site to .output/public (SSG). The GA4 Measurement ID
+      # (repo variable NUXT_PUBLIC_GA_ID, optional) is baked into the static build
+      # here; empty means analytics stays off.
       - name: Build
         run: pnpm generate
+        env:
+          NUXT_PUBLIC_GA_ID: ${{ vars.NUXT_PUBLIC_GA_ID }}
 
       # Deploy only on push to main; PRs run the checks above but never deploy.
       - name: Deploy to Cloudflare
