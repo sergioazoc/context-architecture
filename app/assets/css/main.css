@@ -1,0 +1,145 @@
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+/* Let Tailwind discover any utility classes used inside Markdown (MDC inline
+   class spans), since content files are not scanned by default. */
+@source '../../../content/**/*';
+
+/* ===========================================================================
+   Context Architecture — design system
+   "Ink on paper." Tokens are defined once (brief §4) and everything else
+   derives from them. Dark mode is an inversion, not a separate theme.
+
+   Only tokens and global base styles live here. Everything that can be a
+   Tailwind utility is one — component look comes from utilities (in markup or
+   in ui.prose / ui.* config), never from hand-written component classes.
+   =========================================================================== */
+
+@theme {
+  /* Typography carries the personality (§5). Serif for reading, mono for
+     structure. Both families are downloaded & self-hosted by @nuxt/fonts. */
+  --font-sans: 'IBM Plex Serif', ui-serif, Georgia, serif;
+  --font-serif: 'IBM Plex Serif', ui-serif, Georgia, serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Modular type scale (~1.25). */
+  --text-xs: 0.79rem;
+  --text-sm: 0.889rem;
+  --text-base: 1rem;
+  --text-lg: 1.266rem;
+  --text-xl: 1.602rem;
+  --text-2xl: 2.027rem;
+  --text-3xl: 2.566rem;
+  --text-4xl: 3.247rem;
+}
+
+/* --- Tokens: light ("paper") ------------------------------------------- */
+:root {
+  --ca-paper: #f8f8f6; /* off-white, cold — never cream */
+  --ca-ink: #1a1c1e;
+  --ca-ink-soft: #4a4f54;
+  --ca-rule: #e2e4e3;
+  --ca-accent: #355e52; /* desaturated forest green — links + signature only */
+  --ca-accent-ink: #224138;
+
+  --ca-radius: 2px;
+  --ca-measure: 70ch; /* reading column width */
+  --ca-leading: 1.65; /* reading body */
+  --ca-code-bg: #f1f2f0; /* code blocks & inline code (§2) */
+
+  /* Map Nuxt UI semantic tokens onto ours. */
+  --ui-radius: var(--ca-radius);
+  --ui-container: 72rem; /* align UHeader/UFooter/UPage with max-w-6xl content */
+  --ui-bg: var(--ca-paper);
+  --ui-bg-muted: var(--ca-paper);
+  --ui-bg-elevated: color-mix(in srgb, var(--ca-ink) 4%, var(--ca-paper));
+  --ui-bg-accented: color-mix(in srgb, var(--ca-ink) 8%, var(--ca-paper));
+  --ui-bg-inverted: var(--ca-ink);
+
+  --ui-text-dimmed: color-mix(in srgb, var(--ca-ink-soft) 70%, var(--ca-paper));
+  --ui-text-muted: var(--ca-ink-soft);
+  --ui-text-toned: color-mix(in srgb, var(--ca-ink) 80%, transparent);
+  --ui-text: var(--ca-ink);
+  --ui-text-highlighted: var(--ca-ink);
+  --ui-text-inverted: var(--ca-paper);
+
+  --ui-border: var(--ca-rule);
+  --ui-border-muted: var(--ca-rule);
+  --ui-border-accented: color-mix(in srgb, var(--ca-ink) 16%, var(--ca-paper));
+  --ui-border-inverted: var(--ca-ink);
+
+  --ui-primary: var(--ca-accent);
+}
+
+/* --- Tokens: dark ("ink") — inversion ---------------------------------- */
+.dark {
+  --ca-paper: #16181a;
+  --ca-ink: #eceeed;
+  --ca-ink-soft: #9aa0a0;
+  --ca-rule: #2a2e30;
+  --ca-accent: #6fa292; /* lighter for AA contrast on dark */
+  --ca-accent-ink: #8fbcad;
+  --ca-code-bg: #1e2123;
+
+  --ui-bg: var(--ca-paper);
+  --ui-bg-muted: var(--ca-paper);
+  --ui-bg-elevated: color-mix(in srgb, var(--ca-ink) 6%, var(--ca-paper));
+  --ui-bg-accented: color-mix(in srgb, var(--ca-ink) 10%, var(--ca-paper));
+  --ui-bg-inverted: var(--ca-ink);
+
+  --ui-text-dimmed: color-mix(in srgb, var(--ca-ink-soft) 70%, var(--ca-paper));
+  --ui-text-muted: var(--ca-ink-soft);
+  --ui-text-toned: color-mix(in srgb, var(--ca-ink) 80%, transparent);
+  --ui-text: var(--ca-ink);
+  --ui-text-highlighted: #ffffff;
+  --ui-text-inverted: var(--ca-paper);
+
+  --ui-border: var(--ca-rule);
+  --ui-border-muted: var(--ca-rule);
+  --ui-border-accented: color-mix(in srgb, var(--ca-ink) 20%, var(--ca-paper));
+  --ui-border-inverted: var(--ca-ink);
+
+  --ui-primary: var(--ca-accent);
+}
+
+/* --- Base ---------------------------------------------------------------- */
+html {
+  font-family: var(--font-serif);
+  scroll-behavior: smooth;
+  /* Anchored sections clear the sticky header. */
+  scroll-padding-top: calc(var(--ui-header-height, 4rem) + 1.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Honor reduced-motion globally, not just for scroll: neutralize transitions
+     and animations everywhere (hover color fades, etc.). */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background-color: var(--ca-paper);
+  color: var(--ca-ink);
+  line-height: var(--ca-leading);
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern', 'liga';
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--ca-accent) 22%, transparent);
+}
+
+/* Accessible, visible keyboard focus across the document. */
+:where(a, button, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--ca-accent);
+  outline-offset: 2px;
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "context-architecture",
+  "compatibility_date": "2025-06-12",
+  // Dominio oficial. Requiere que context-architecture.dev esté añadido como
+  // zona en tu cuenta de Cloudflare. Quita este bloque para usar solo el
+  // subdominio *.workers.dev.
+  "routes": [{ "pattern": "context-architecture.dev", "custom_domain": true }],
+  // Sitio 100% estático (SSG): no hay Worker script (`main`), Cloudflare
+  // sirve directamente los archivos prerenderizados por `nuxt generate`.
+  "assets": {
+    "directory": "./.output/public",
+    // Sirve el 404.html que genera Nuxt para rutas no encontradas.
+    "not_found_handling": "404-page",
+  },
+}
