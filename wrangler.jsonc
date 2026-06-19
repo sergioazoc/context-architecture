@@ -10,6 +10,13 @@
   // sirve directamente los archivos prerenderizados por `nuxt generate`.
   "assets": {
     "directory": "./.output/public",
+    // Sin barra final, para alinear con las URLs canónicas: el canonical y el
+    // sitemap de @nuxtjs/seo declaran las rutas sin trailing slash (p.ej.
+    // /comparison), así que Cloudflare debe servir esa misma forma con 200 (y
+    // redirigir /comparison/ → /comparison con 307). Con el default
+    // `auto-trailing-slash` ocurría lo contrario y el sitemap/canonical
+    // apuntaban a URLs que redirigían.
+    "html_handling": "drop-trailing-slash",
     // Sirve el 404.html que genera Nuxt para rutas no encontradas.
     "not_found_handling": "404-page",
   },
