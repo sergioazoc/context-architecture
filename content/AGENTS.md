@@ -41,3 +41,7 @@ the collection by the active locale.
   belong to the tooling, not to Context Architecture. External corroboration is the linked tweet from
   Skyward's CTO. If you ever add a figure, attribute it to what produced it and confirm it with the
   author.
+- **Voice and wording.** Follow the repository voice rules in the root `AGENTS.md`: plain,
+  unambiguous wording (never "discharge"/"descargar" for removing a spec; say it is removed), no em
+  dashes, no filler, tech terms in English. Public pages read in the author's voice within the
+  specification register.

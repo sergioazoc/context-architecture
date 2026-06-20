@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import enRaw from '~~/content/en/index.md?raw'
-import esRaw from '~~/content/es/index.md?raw'
+import enRaw from '~~/content/en/glossary.md?raw'
+import esRaw from '~~/content/es/glossary.md?raw'
 
 const { locale } = useI18n()
 
 const rawByLocale: Record<string, string> = { en: enRaw, es: esRaw }
 
 const { data: page } = await useAsyncData(
-  () => `manifesto-${locale.value}`,
-  () => queryCollection('docs').path(`/${locale.value}`).first(),
+  () => `glossary-${locale.value}`,
+  () => queryCollection('docs').path(`/${locale.value}/glossary`).first(),
   { watch: [locale] },
 )
 
@@ -18,15 +18,8 @@ const toc = computed(() => page.value?.body?.toc?.links ?? [])
 
 const meta = useSiteMeta()
 
-// Descriptive, keyword-rich <title> for the home page (the h1 stays the term).
-const seoTitle = computed(() =>
-  locale.value === 'es'
-    ? 'Context Architecture: arquitectura de software para personas y agentes de IA'
-    : 'Context Architecture: software architecture for people and AI agents',
-)
-
 useSeoMeta({
-  title: () => seoTitle.value,
+  title: () => page.value?.title,
   description: () => page.value?.description,
   ogType: 'article',
   articleAuthor: ['Sergio Azócar'],
@@ -35,14 +28,12 @@ useSeoMeta({
 })
 
 defineOgImageComponent('NuxtSeoTakumi', {
-  title: 'Context Architecture',
-  description:
-    locale.value === 'es'
-      ? 'Estructurar codebases para personas y agentes de IA'
-      : 'Structuring codebases for people and AI agents',
+  title: locale.value === 'es' ? 'Glosario' : 'Glossary',
+  description: 'Context Architecture, context engineering, harness engineering',
 })
 
-useManifestoSchema(page)
+// The glossary's structured data is a DefinedTermSet of all the terms it defines.
+useGlossarySchema(page)
 </script>
 
 <template>
@@ -50,9 +41,8 @@ useManifestoSchema(page)
     <DocHero
       v-model:view="view"
       :eyebrow="page?.eyebrow"
-      :title="page?.title ?? 'Context Architecture'"
+      :title="page?.title ?? 'Glossary'"
       :definition="page?.definition"
-      :attribution="page?.attribution"
     />
 
     <DocShell :toc="toc" :show-toc="view === 'human'">

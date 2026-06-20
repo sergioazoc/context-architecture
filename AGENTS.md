@@ -30,13 +30,37 @@ Register reference points: c4model.com, micro-frontends.org.
   graph (`DefinedTerm`, `Person` with `sameAs`, `TechArticle`, `FAQPage`) and Lighthouse 100 across
   the board are the floor.
 
+## Voice and wording
+
+- **Public copy follows the author's voice**, adapted to this register. The reference is the
+  `sergio-voice` skill (in the author's personal repo): write as a builder, problem first, precise
+  with concrete examples, honest about tradeoffs, no filler. Adapt it to the specification register:
+  this is an RFC, not a blog, so no personal anecdotes, slang, or calls to action.
+- **Say things plainly; avoid ambiguous or uncommon words.** Prefer the phrasing a reader cannot
+  misread over the clever one. Concretely: never write that a spec is "discharged" or "descargado"
+  when it is deleted. Say it plainly: the spec is removed once its content lives in tests, types,
+  lint, and the nearest `AGENTS.md`.
+- **No em dashes (—).** Use commas, periods, or parentheses. The author does not use them; a stray
+  em dash usually means an AI wrote the line. The manifesto predates this rule and will be aligned
+  when its wording is finalized; do not add new em dashes anywhere.
+- **No filler and no AI tells.** Delete any sentence that adds no information. Drop "dive in", "in
+  conclusion", "it's worth noting", "game-changer", and the like.
+- **Tech terms stay in English** in both languages (`AGENTS.md`, lint, types, context engineering,
+  harness engineering, retrofit, spec).
+
 ## Where things live
 
 - `content/` — manifesto Markdown (see `content/AGENTS.md`).
 - `app/` — the Nuxt app: pages, components, composables, design system (see `app/AGENTS.md`).
-- `specs/` — design-time only, and absent by design. Per principle 03 a spec is discharged into
-  code, tests, and the relevant `AGENTS.md` once written, then removed. The site's own spec has
-  already been discharged into this file, so there is no `specs/` directory in the tree.
+- `skills/` holds the distributable skill (`skills/context-architecture/SKILL.md`) that users install
+  into their own tool; see `skills/AGENTS.md`.
+- `server/` has the one prerendered Nitro route that serves the raw skill at `/skill.md`; see
+  `server/AGENTS.md`.
+- `.claude-plugin/marketplace.json` wraps that skill as a Claude Code plugin, so the repo doubles as a
+  single-plugin marketplace (`/plugin marketplace add sergioazoc/context-architecture`).
+- `specs/` — design-time only, and absent by design. Per principle 03 a spec is turned into code,
+  tests, and the relevant `AGENTS.md` once written, then removed. The site's own spec was already
+  written into this file and the code, so there is no `specs/` directory in the tree.
 - UI strings live in each component's own `<i18n>` block, colocated with the component (principle
   02, Context Lives With Code). There is no central locale file. English is canonical; Spanish
   mirrors it.

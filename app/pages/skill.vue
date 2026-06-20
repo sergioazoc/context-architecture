@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import enRaw from '~~/content/en/index.md?raw'
-import esRaw from '~~/content/es/index.md?raw'
+import enRaw from '~~/content/en/skill.md?raw'
+import esRaw from '~~/content/es/skill.md?raw'
 
 const { locale } = useI18n()
 
 const rawByLocale: Record<string, string> = { en: enRaw, es: esRaw }
 
 const { data: page } = await useAsyncData(
-  () => `manifesto-${locale.value}`,
-  () => queryCollection('docs').path(`/${locale.value}`).first(),
+  () => `skill-${locale.value}`,
+  () => queryCollection('docs').path(`/${locale.value}/skill`).first(),
   { watch: [locale] },
 )
 
@@ -18,15 +18,8 @@ const toc = computed(() => page.value?.body?.toc?.links ?? [])
 
 const meta = useSiteMeta()
 
-// Descriptive, keyword-rich <title> for the home page (the h1 stays the term).
-const seoTitle = computed(() =>
-  locale.value === 'es'
-    ? 'Context Architecture: arquitectura de software para personas y agentes de IA'
-    : 'Context Architecture: software architecture for people and AI agents',
-)
-
 useSeoMeta({
-  title: () => seoTitle.value,
+  title: () => page.value?.title,
   description: () => page.value?.description,
   ogType: 'article',
   articleAuthor: ['Sergio Azócar'],
@@ -35,14 +28,14 @@ useSeoMeta({
 })
 
 defineOgImageComponent('NuxtSeoTakumi', {
-  title: 'Context Architecture',
+  title: 'The Context Architecture skill',
   description:
     locale.value === 'es'
-      ? 'Estructurar codebases para personas y agentes de IA'
-      : 'Structuring codebases for people and AI agents',
+      ? 'Audita y retrofitea un codebase con tu agente'
+      : 'Audit and retrofit a codebase with your agent',
 })
 
-useManifestoSchema(page)
+useManifestoSchema(page, { faq: false })
 </script>
 
 <template>
@@ -50,9 +43,8 @@ useManifestoSchema(page)
     <DocHero
       v-model:view="view"
       :eyebrow="page?.eyebrow"
-      :title="page?.title ?? 'Context Architecture'"
+      :title="page?.title ?? 'The Context Architecture skill'"
       :definition="page?.definition"
-      :attribution="page?.attribution"
     />
 
     <DocShell :toc="toc" :show-toc="view === 'human'">

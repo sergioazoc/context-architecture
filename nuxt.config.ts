@@ -139,6 +139,12 @@ export default defineNuxtConfig({
       comparison: {
         es: '/comparacion',
       },
+      guide: {
+        es: '/guia',
+      },
+      glossary: {
+        es: '/glosario',
+      },
     },
     // No global message files: every UI string lives in its component's
     // <i18n> block (Context Lives With Code, §02).
@@ -224,6 +230,26 @@ export default defineNuxtConfig({
           '07 The Repo Is Legible at Every Zoom Level: from the file tree to the function body, each level of zoom communicates purpose; legibility is fractal. ' +
           '08 Optimize for the Newcomer, and the Newcomer Is Now an Agent: the clearest test of architecture is how fast a stranger becomes productive, and that stranger is increasingly a machine.',
       },
+      {
+        title: 'Applying it',
+        description:
+          'Context Architecture is a retrofit discipline for codebases that already exist, not a scaffold for new projects. The guide walks the incremental retrofit step by step. The skill is an agent-agnostic procedure (a single Markdown file, no server) that audits a repository against the eight principles, finds context-rot, and proposes a prioritized backlog; it is served raw at /skill.md so an agent can fetch it in one request. The glossary defines the term alongside context engineering, harness engineering, AGENTS.md, spec-driven development, and Screaming Architecture.',
+        links: [
+          {
+            title: 'How to apply Context Architecture to an existing codebase',
+            href: 'https://context-architecture.dev/guide',
+          },
+          {
+            title: 'The Context Architecture skill (agent-agnostic)',
+            href: 'https://context-architecture.dev/skill',
+          },
+          { title: 'The skill, raw markdown', href: 'https://context-architecture.dev/skill.md' },
+          {
+            title: 'Glossary: Context Architecture and adjacent terms',
+            href: 'https://context-architecture.dev/glossary',
+          },
+        ],
+      },
     ],
   },
 
@@ -252,9 +278,23 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
-      // Prerender the /404 page so its content (not the blank SPA-fallback shell)
-      // is what Cloudflare serves for unknown routes — readable with no JS.
-      routes: ['/', '/404'],
+      // Crawling from the footer nav reaches every page, but list them (both
+      // locales) explicitly so a prerender never silently drops one. `/skill.md`
+      // is the raw skill artifact served by server/routes/skill.md.ts.
+      routes: [
+        '/',
+        '/404',
+        '/skill.md',
+        '/comparison',
+        '/guide',
+        '/glossary',
+        '/skill',
+        '/es',
+        '/es/comparacion',
+        '/es/guia',
+        '/es/glosario',
+        '/es/skill',
+      ],
     },
     hooks: {
       // Emit the prerendered /404 page as 404.html (the document Cloudflare's

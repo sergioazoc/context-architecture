@@ -77,10 +77,11 @@ const FAQ: Record<string, Faq[]> = {
   ],
 }
 
-// The canonical definition: kept verbatim and identical across the three citable
-// surfaces (the hero `definition` frontmatter, this DefinedTerm node, and the
-// llms.txt canonical section) so a generative engine extracts one definition.
-const DEFINITION: Record<string, string> = {
+// The canonical definition: kept verbatim and identical across the citable
+// surfaces (the hero `definition` frontmatter, this DefinedTerm node, the glossary
+// term, and the llms.txt canonical section) so a generative engine extracts one
+// definition. Exported so useGlossarySchema reuses the same string (single source).
+export const CANONICAL_DEFINITION: Record<string, string> = {
   en: 'Context Architecture is a software architecture for the age of AI agents: the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. It treats the repository itself (its file tree, boundaries, conventions, and embedded context) as a designed artifact, not an accident of growth.',
   es: 'Context Architecture es una arquitectura de software para la era de los agentes de IA: la práctica de estructurar un codebase para que su intención y comportamiento sean igual de legibles para personas y agentes de IA. Trata el repositorio mismo (su árbol de archivos, fronteras, convenciones y contexto embebido) como un artefacto diseñado, no como un accidente de su crecimiento.',
 }
@@ -127,7 +128,7 @@ export function useManifestoSchema(
         '@type': 'DefinedTerm',
         '@id': `${base}/#context-architecture`,
         name: 'Context Architecture',
-        description: DEFINITION[lang] ?? DEFINITION.en,
+        description: CANONICAL_DEFINITION[lang] ?? CANONICAL_DEFINITION.en,
         inDefinedTermSet: { '@id': `${base}/#termset` },
       },
       {

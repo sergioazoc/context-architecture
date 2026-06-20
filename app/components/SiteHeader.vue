@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui'
+
 // Nuxt UI's UHeader owns the sticky shell, the container width, and
-// --ui-header-height. We only fill the wordmark (left) and the controls
-// (right): locale switch + color mode. No nav links, so no mobile menu.
+// --ui-header-height. We fill the wordmark (left), the page nav (center), and
+// the controls (right): locale switch + color mode. The toggle opens the same
+// nav as a vertical menu on mobile (the `#body` slot).
+const { t } = useI18n({ useScope: 'local' })
 const { locale, locales } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 const localePath = useLocalePath()
@@ -9,10 +13,18 @@ const localePath = useLocalePath()
 const availableLocales = computed(() =>
   locales.value.map(l => (typeof l === 'string' ? { code: l } : l)),
 )
+
+// The internal pages, surfaced in the navbar so a reader knows they exist.
+const links = computed<NavigationMenuItem[]>(() => [
+  { label: t('nav.guide'), to: localePath('/guide') },
+  { label: t('nav.comparison'), to: localePath('/comparison') },
+  { label: t('nav.glossary'), to: localePath('/glossary') },
+  { label: t('nav.skill'), to: localePath('/skill') },
+])
 </script>
 
 <template>
-  <UHeader :toggle="false" :ui="{ root: 'bg-default/85 backdrop-blur-sm' }">
+  <UHeader :ui="{ root: 'bg-default/85 backdrop-blur-sm' }">
     <template #left>
       <NuxtLink
         :to="localePath('/')"
@@ -21,6 +33,13 @@ const availableLocales = computed(() =>
         context-architecture<span class="text-muted">.dev</span>
       </NuxtLink>
     </template>
+
+    <UNavigationMenu
+      :items="links"
+      variant="link"
+      color="neutral"
+      :ui="{ link: 'font-mono text-xs' }"
+    />
 
     <template #right>
       <ul class="flex items-center gap-2 font-mono text-xs">
@@ -38,5 +57,36 @@ const availableLocales = computed(() =>
 
       <UColorModeButton :ui="{ base: 'text-muted hover:text-default' }" />
     </template>
+
+    <template #body>
+      <UNavigationMenu
+        :items="links"
+        orientation="vertical"
+        variant="link"
+        color="neutral"
+        :ui="{ link: 'font-mono text-sm' }"
+      />
+    </template>
   </UHeader>
 </template>
+
+<i18n lang="json">
+{
+  "en": {
+    "nav": {
+      "guide": "Guide",
+      "comparison": "Comparison",
+      "glossary": "Glossary",
+      "skill": "Skill"
+    }
+  },
+  "es": {
+    "nav": {
+      "guide": "Guía",
+      "comparison": "Comparación",
+      "glossary": "Glosario",
+      "skill": "Skill"
+    }
+  }
+}
+</i18n>

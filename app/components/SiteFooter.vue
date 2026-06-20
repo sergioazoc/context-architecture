@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const { t } = useI18n({ useScope: 'local' })
-const localePath = useLocalePath()
 
-// Site-wide metadata. Single source for footer + schema/SEO.
+// Site-wide metadata. Single source for footer + schema/SEO. Page navigation
+// lives in the header (SiteHeader); the footer carries provenance only.
 const meta = useSiteMeta()
 </script>
 
@@ -58,9 +58,9 @@ const meta = useSiteMeta()
                 >GitHub</a
               >
               <span class="mx-1 text-muted">·</span>
-              <NuxtLink :to="localePath('/comparison')" class="text-default underline underline-offset-2">
-                {{ t('comparison') }}
-              </NuxtLink>
+              <a href="/llms.txt" rel="noopener" class="text-default underline underline-offset-2"
+                >llms.txt</a
+              >
             </dd>
           </div>
           <div>
@@ -89,8 +89,7 @@ const meta = useSiteMeta()
     "code": "Code",
     "published": "First published",
     "source": "Source",
-    "author": "Written by",
-    "comparison": "Comparison"
+    "author": "Written by"
   },
   "es": {
     "license": "Licencia",
@@ -98,8 +97,7 @@ const meta = useSiteMeta()
     "code": "Código",
     "published": "Publicado por primera vez",
     "source": "Código",
-    "author": "Escrito por",
-    "comparison": "Comparación"
+    "author": "Escrito por"
   }
 }
 </i18n>
