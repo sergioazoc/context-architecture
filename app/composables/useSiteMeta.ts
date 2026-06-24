@@ -5,8 +5,6 @@
 export interface SiteMeta {
   /** ISO date the manifesto was first published. */
   publishedISO: string
-  /** Human-readable publication date. */
-  published: string
   /** ISO timestamp of the last build (stamped via runtimeConfig.public.buildDate). */
   modifiedISO: string
   /**
@@ -25,7 +23,6 @@ export function useSiteMeta(): SiteMeta {
   const { buildDate } = useRuntimeConfig().public
   return {
     publishedISO: '2026-06-17',
-    published: 'June 2026',
     modifiedISO: buildDate,
     introducedISO: '2025-10-28',
     introduced: 'October 2025',

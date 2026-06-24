@@ -55,6 +55,18 @@ const links = computed<NavigationMenuItem[]>(() => [
         </li>
       </ul>
 
+      <UButton
+        to="https://github.com/sergioazoc/context-architecture"
+        target="_blank"
+        rel="noopener"
+        icon="i-lucide-star"
+        :label="t('nav.star')"
+        color="neutral"
+        variant="outline"
+        size="xs"
+        :ui="{ base: 'font-mono text-xs text-muted hover:text-default' }"
+      />
+
       <UColorModeButton :ui="{ base: 'text-muted hover:text-default' }" />
     </template>
 
@@ -77,7 +89,8 @@ const links = computed<NavigationMenuItem[]>(() => [
       "guide": "Guide",
       "comparison": "Comparison",
       "glossary": "Glossary",
-      "skill": "Skill"
+      "skill": "Skill",
+      "star": "Star"
     }
   },
   "es": {
@@ -85,7 +98,8 @@ const links = computed<NavigationMenuItem[]>(() => [
       "guide": "Guía",
       "comparison": "Comparación",
       "glossary": "Glosario",
-      "skill": "Skill"
+      "skill": "Skill",
+      "star": "Star"
     }
   }
 }

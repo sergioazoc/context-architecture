@@ -1,9 +1,20 @@
 <script setup lang="ts">
-const { t } = useI18n({ useScope: 'local' })
+const { t, locale } = useI18n({ useScope: 'local' })
 
 // Site-wide metadata. Single source for footer + schema/SEO. Page navigation
 // lives in the header (SiteHeader); the footer carries provenance only.
 const meta = useSiteMeta()
+
+// The publication date is presentation, so localize it here from the ISO source
+// rather than hard-coding a language. UTC avoids a timezone month shift.
+const publishedLabel = computed(() => {
+  const formatted = new Intl.DateTimeFormat(locale.value, {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(meta.publishedISO))
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1)
+})
 </script>
 
 <template>
@@ -23,29 +34,32 @@ const meta = useSiteMeta()
         >
           <div>
             <dt class="uppercase tracking-[0.08em]">{{ t('license') }}</dt>
-            <dd class="mt-1">
-              <span class="text-muted">{{ t('manifesto') }}</span>
-              <a
-                href="https://creativecommons.org/licenses/by/4.0/"
-                rel="license noopener nofollow"
-                target="_blank"
-                class="text-default underline underline-offset-2"
-                >CC BY 4.0</a
-              >
-              <span class="mx-1 text-muted">·</span>
-              <span class="text-muted">{{ t('code') }}</span>
-              <a
-                :href="`${meta.repo}/blob/main/LICENSE`"
-                rel="license noopener nofollow"
-                target="_blank"
-                class="text-default underline underline-offset-2"
-                >MIT</a
-              >
+            <dd class="mt-1 space-y-1">
+              <div>
+                <span class="me-1 text-muted">{{ t('manifesto') }}</span>
+                <a
+                  href="https://creativecommons.org/licenses/by/4.0/"
+                  rel="license noopener nofollow"
+                  target="_blank"
+                  class="text-default underline underline-offset-2"
+                  >CC BY 4.0</a
+                >
+              </div>
+              <div>
+                <span class="me-1 text-muted">{{ t('code') }}</span>
+                <a
+                  :href="`${meta.repo}/blob/main/LICENSE`"
+                  rel="license noopener nofollow"
+                  target="_blank"
+                  class="text-default underline underline-offset-2"
+                  >MIT</a
+                >
+              </div>
             </dd>
           </div>
           <div>
             <dt class="uppercase tracking-[0.08em]">{{ t('published') }}</dt>
-            <dd class="mt-1 text-default">{{ meta.published }}</dd>
+            <dd class="mt-1 text-default">{{ publishedLabel }}</dd>
           </div>
           <div>
             <dt class="uppercase tracking-[0.08em]">{{ t('source') }}</dt>
