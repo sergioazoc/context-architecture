@@ -32,7 +32,7 @@ already grew without design. To apply it:
   (Claude Code, Cursor, Codex, Copilot, and more), or copy
   [`skills/context-architecture/SKILL.md`](./skills/context-architecture/SKILL.md) / fetch the raw file at
   [`context-architecture.dev/skill.md`](https://context-architecture.dev/skill.md). The
-  [skill page](https://context-architecture.dev/skill) has per-tool steps.
+  [skill page](https://context-architecture.dev/skill) has per-tool install and update steps.
 
 ## Structure
 
@@ -71,7 +71,8 @@ Conventions are codified, not tribal (principle 07). The CSS conventions are mac
 pnpm lint         # oxlint + oxlint-tailwindcss
 pnpm typecheck    # vue-tsc
 pnpm test         # vitest: the repo's claims about itself, bound
-pnpm format       # oxfmt
+pnpm format       # oxfmt (formats code; Markdown is excluded, it reflows MDC blocks)
+pnpm format:check # oxfmt --check (the CI gate that fails on unformatted code)
 ```
 
 ## Build & deploy

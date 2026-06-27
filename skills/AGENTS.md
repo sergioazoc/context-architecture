@@ -44,3 +44,11 @@ and the served `/skill.md` route all depend on this exact path.
   installs never see the new content. `tests/skill-version.test.ts` binds this, the published
   version is pinned to a hash of `SKILL.md`, so changing the skill without bumping the version fails
   the test. This is the rule applied to the skill itself.
+- **Re-sync the external mirror on a version bump.** The skill is also vendored as a copy in the
+  `davila7/claude-code-templates` aggregator, at
+  `cli-tool/components/skills/development/context-architecture/SKILL.md`. That copy names this site as
+  its source but is not bound to it: nothing here fails when it drifts, because it lives in a repo this
+  one does not control. Treat it as a manual sync. On a meaningful version bump, open a PR there with
+  the current `SKILL.md` (a faithful copy, attribution and the CC BY 4.0 license intact). If the
+  aggregator's copy is older than `marketplace.json`'s version, a re-sync is pending. Last synced:
+  v0.2.0.
