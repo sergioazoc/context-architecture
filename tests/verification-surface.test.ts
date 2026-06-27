@@ -24,9 +24,15 @@ describe('the verification surface is itself bound (principle 09)', () => {
     expect(cfg.jsPlugins ?? []).toContain('oxlint-tailwindcss')
   })
 
-  it('CI runs lint, typecheck, test, and the build', () => {
+  it('CI runs lint, format:check, typecheck, test, and the build', () => {
     const ci = read('.github/workflows/deploy.yml')
-    for (const cmd of ['pnpm lint', 'pnpm typecheck', 'pnpm test', 'pnpm generate']) {
+    for (const cmd of [
+      'pnpm lint',
+      'pnpm format:check',
+      'pnpm typecheck',
+      'pnpm test',
+      'pnpm generate',
+    ]) {
       expect(ci, `CI must run ${cmd}`).toContain(cmd)
     }
   })

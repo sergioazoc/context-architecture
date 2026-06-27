@@ -7,11 +7,7 @@ const label = computed(() => (locale.value === 'es' ? 'La regla' : 'The rule'))
 </script>
 
 <template>
-  <aside
-    class="my-10 border-l-2 border-(--ca-accent) pl-5 sm:pl-6"
-    role="note"
-    :aria-label="label"
-  >
+  <aside class="my-10 border-l-2 border-(--ca-accent) pl-5 sm:pl-6" role="note" :aria-label="label">
     <p class="mb-3 font-mono text-xs uppercase tracking-[0.08em] text-muted">{{ label }}</p>
     <div class="font-serif text-xl leading-[1.3] text-highlighted sm:text-2xl">
       <slot />

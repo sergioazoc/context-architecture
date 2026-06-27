@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "The Context Architecture skill: audit and structure a codebase (greenfield or brownfield) so it is legible to people and AI agents.",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "plugins": [
     {
@@ -13,7 +13,7 @@
       "displayName": "Context Architecture",
       "description": "Audit and structure a codebase so it is legible to people and AI agents. Applies the nine principles of Context Architecture: make structure say what the system does, place AGENTS.md at boundaries, codify conventions in lint and types, find unbound claims, and back every claim the repo makes about itself with a check that fails when it stops being true. Works greenfield (a repo born legible) and brownfield (a repo restructured in steps).",
       "source": "./",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "Sergio Azócar"
       },
@@ -32,9 +32,7 @@
         "ai-legible"
       ],
       "strict": false,
-      "skills": [
-        "./skills/context-architecture"
-      ]
+      "skills": ["./skills/context-architecture"]
     }
   ]
 }

@@ -8,7 +8,10 @@ import { resolve } from 'node:path'
 // directly. That file is the single source; there is no committed copy to drift, which
 // is the rule this site argues for.
 export default defineEventHandler(async (event) => {
-  const body = await readFile(resolve(process.cwd(), 'skills/context-architecture/SKILL.md'), 'utf8')
+  const body = await readFile(
+    resolve(process.cwd(), 'skills/context-architecture/SKILL.md'),
+    'utf8',
+  )
   setHeader(event, 'content-type', 'text/markdown; charset=utf-8')
   return body
 })

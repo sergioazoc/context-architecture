@@ -46,6 +46,11 @@ jobs:
       - name: Lint (oxlint + oxlint-tailwindcss)
         run: pnpm lint
 
+      # Formatting is a convention too (principle 07). oxfmt formats the code; Markdown
+      # is excluded in .oxfmtrc.json because oxfmt reflows MDC blocks like ::rule.
+      - name: Format check (oxfmt)
+        run: pnpm format:check
+
       - name: Typecheck
         run: pnpm typecheck
 

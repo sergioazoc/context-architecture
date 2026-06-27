@@ -20,10 +20,7 @@ const view = defineModel<'human' | 'agent'>('view', { default: 'human' })
       >
         {{ title }}
       </h1>
-      <p
-        v-if="definition"
-        class="mt-6 font-serif text-lg leading-[1.5] text-toned sm:text-xl"
-      >
+      <p v-if="definition" class="mt-6 font-serif text-lg leading-[1.5] text-toned sm:text-xl">
         {{ definition }}
       </p>
       <p v-if="attribution" class="mt-6 max-w-[58ch] font-mono text-xs leading-relaxed text-muted">

@@ -125,6 +125,20 @@ landing with the mechanism that fails when its claim stops being true. Start whe
 the claims that are only prose, and the `AGENTS.md` files at the top boundaries. That is where you get
 the most back per edit.
 
+## Keep it updated
+
+Updates travel through the default branch: a change reaches anyone only once it is merged to `main`
+and the site is redeployed. After that, how you pull it in depends on how you installed it.
+
+- **Claude Code plugin** (`/plugin marketplace add`): run
+  `/plugin marketplace update context-architecture`. Each release bumps the plugin version, so Claude
+  Code sees a new version and fetches it. An unchanged version is treated as cached and skipped, which
+  is why every change to the skill ships with a version bump.
+- **`skills` CLI**: re-run `npx skills add sergioazoc/context-architecture`. It overwrites the
+  installed copy from the repo.
+- **Manual install (`curl`)**: re-run the same `curl ... -o <path>` you installed with; it overwrites
+  the file. Claude Code picks up an edited `~/.claude/skills/...` file within the session, no restart.
+
 ## Where to go next
 
 - The [specification](/): the rule, the loop, the kinds of mechanism, and the nine principles.

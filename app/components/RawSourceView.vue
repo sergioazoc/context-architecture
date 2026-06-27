@@ -12,7 +12,8 @@ const { t } = useI18n({ useScope: 'local' })
     </p>
     <pre
       class="font-mono text-sm leading-[1.7] whitespace-pre-wrap break-words [tab-size:2] text-muted"
-    >{{ source }}</pre>
+      >{{ source }}</pre
+    >
   </div>
 </template>
 

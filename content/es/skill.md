@@ -127,6 +127,21 @@ cada uno aterrizando con el mecanismo que falla cuando su afirmación deja de se
 te diga: las afirmaciones que son solo prosa, y los `AGENTS.md` de las fronteras de arriba. Ahí es
 donde más recuperas por edición.
 
+## Mantenerlo al día
+
+Las actualizaciones viajan por la rama por defecto: un cambio le llega a alguien solo cuando se
+mergea a `main` y se vuelve a deployar el sitio. Después, cómo lo bajas depende de cómo lo instalaste.
+
+- **Plugin de Claude Code** (`/plugin marketplace add`): corre
+  `/plugin marketplace update context-architecture`. Cada release sube la versión del plugin, así
+  Claude Code ve una versión nueva y la baja. Una versión sin cambios la trata como cacheada y la
+  salta, por eso cada cambio en el skill viaja con un bump de versión.
+- **CLI `skills`**: vuelve a correr `npx skills add sergioazoc/context-architecture`. Sobreescribe la
+  copia instalada desde el repo.
+- **Instalación manual (`curl`)**: vuelve a correr el mismo `curl ... -o <ruta>` con el que
+  instalaste; sobreescribe el archivo. Claude Code toma un archivo `~/.claude/skills/...` editado
+  dentro de la sesión, sin reiniciar.
+
 ## Hacia dónde seguir
 
 - La [especificación](/es): la regla, el loop, los tipos de mecanismo y los nueve principios.

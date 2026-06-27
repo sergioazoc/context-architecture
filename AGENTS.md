@@ -90,10 +90,14 @@ fails when it stops being true:
 - `tests/capabilities.test.ts`: the core commands exist and are documented, and no doc cites an
   undefined script (principle 05). The command list is hand-kept; the test enforces its consistency.
 - `tests/verification-surface.test.ts`: the lint rules stay at `error` and CI keeps running
-  lint/typecheck/test/build, so the surface cannot be quietly weakened (principle 09).
+  lint/format:check/typecheck/test/build, so the surface cannot be quietly weakened (principle 09).
 - `tests/structured-data.test.ts` and `tests/prerendered-no-js.test.ts`: the prerendered HTML carries
   the rule, the principle bodies, and the schema.org graph with no JavaScript (principle 08, the GEO
   floor). They read `.output/public`, so CI runs `pnpm generate` before `pnpm test`.
+- `tests/skill-version.test.ts`: the distributable skill's published version (in
+  `.claude-plugin/marketplace.json`) is pinned to a hash of `SKILL.md`, so changing the skill without
+  bumping the version fails the test. Existing plugin installs detect an update by version, so this is
+  the rule applied to the skill's own release.
 
 Principles 01, 03, and 04 (domain-first structure, named boundaries, fractal legibility) hold here by
 discipline plus the parity and doc tests, not by a dedicated structure/import/naming lint rule: a
@@ -108,7 +112,8 @@ pnpm dev          # develop
 pnpm lint         # oxlint + oxlint-tailwindcss
 pnpm typecheck    # vue-tsc
 pnpm test         # vitest: the repo's claims about itself, bound
-pnpm format       # oxfmt
+pnpm format       # oxfmt (formats code; Markdown is excluded, it reflows MDC blocks)
+pnpm format:check # oxfmt --check: the CI gate that fails on unformatted code
 pnpm generate     # prerender (SSG) to .output/public
 pnpm deploy       # generate && deploy to Cloudflare Workers
 ```

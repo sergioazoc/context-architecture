@@ -38,3 +38,9 @@ and the served `/skill.md` route all depend on this exact path.
   reads it and serves it raw at `/skill.md`; the `/skill` page documents per-tool install; and
   `.claude-plugin/marketplace.json` at the repo root references `./skills/context-architecture` to
   publish it as a Claude Code plugin. Keep all four in sync, and do not rename the folder.
+- **Bump the version on every change.** A change to `SKILL.md` ships with a version bump in
+  `.claude-plugin/marketplace.json` (both `metadata.version` and the plugin entry, kept equal).
+  Claude Code dedupes a plugin by version: an unchanged version is served from cache, so existing
+  installs never see the new content. `tests/skill-version.test.ts` binds this, the published
+  version is pinned to a hash of `SKILL.md`, so changing the skill without bumping the version fails
+  the test. This is the rule applied to the skill itself.

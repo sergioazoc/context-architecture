@@ -40,7 +40,8 @@ const framework = `src/
         </p>
         <pre
           class="overflow-x-auto rounded-[2px] border border-default bg-(--ca-code-bg) px-5 py-4 font-mono text-sm"
-        >{{ screams }}</pre>
+          >{{ screams }}</pre
+        >
       </div>
       <div>
         <p class="mb-2 font-mono text-xs uppercase tracking-[0.08em] text-muted">
@@ -48,7 +49,8 @@ const framework = `src/
         </p>
         <pre
           class="overflow-x-auto rounded-[2px] border border-default bg-(--ca-code-bg) px-5 py-4 font-mono text-sm"
-        >{{ framework }}</pre>
+          >{{ framework }}</pre
+        >
       </div>
     </div>
     <figcaption class="mt-3 font-mono text-xs text-muted">{{ t.caption }}</figcaption>
