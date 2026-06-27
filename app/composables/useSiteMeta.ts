@@ -1,6 +1,6 @@
 /**
  * Single source of truth for site-wide metadata (footer, schema.org, SEO).
- * Colocated, explicit, machine-readable — the architecture this site argues for.
+ * Colocated, explicit, machine-readable: the architecture this site argues for.
  */
 export interface SiteMeta {
   /** ISO date the manifesto was first published. */

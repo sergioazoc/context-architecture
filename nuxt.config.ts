@@ -50,7 +50,7 @@ export default defineNuxtConfig({
     url: 'https://context-architecture.dev',
     name: 'Context Architecture',
     description:
-      'Context Architecture is a software architecture for the age of AI agents: the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. A specification by Sergio Azócar, who introduced the term in October 2025.',
+      'Context Architecture is a software architecture for the age of AI agents: it structures a repository so every claim it makes about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when the claim stops being true. A specification by Sergio Azócar, who introduced the term in October 2025.',
     // English is canonical (matches i18n.defaultLocale); the /es mirror is the alternate.
     defaultLocale: 'en',
   },
@@ -122,7 +122,7 @@ export default defineNuxtConfig({
   },
 
   // --- @nuxtjs/i18n v10 ---------------------------------------------------
-  // Inglés canónico sin prefijo; español espejo bajo /es/ (brief §9).
+  // Inglés canónico sin prefijo; español espejo bajo /es/.
   i18n: {
     defaultLocale: 'en',
     // Required for @nuxtjs/i18n to emit absolute hreflang alternate links.
@@ -147,7 +147,7 @@ export default defineNuxtConfig({
       },
     },
     // No global message files: every UI string lives in its component's
-    // <i18n> block (Context Lives With Code, §02).
+    // <i18n> block (principle 02, Context Lives With Code).
     locales: [
       { code: 'en', language: 'en', name: 'English' },
       { code: 'es', language: 'es', name: 'Español' },
@@ -183,18 +183,18 @@ export default defineNuxtConfig({
     domain: 'https://context-architecture.dev',
     title: 'Context Architecture',
     description:
-      'Context Architecture is a software architecture for the age of AI agents: the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. A specification by Sergio Azócar, who introduced the term in October 2025.',
+      'Context Architecture is a software architecture for the age of AI agents: it structures a repository so every claim it makes about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when the claim stops being true. A specification by Sergio Azócar, who introduced the term in October 2025.',
     // Emits /llms_full.txt with the entire manifesto inlined.
     full: {
-      title: 'Context Architecture — full specification',
+      title: 'Context Architecture: full specification',
       description:
-        'The complete Context Architecture specification: canonical definition, the eight principles, the practices, the case studies, and the comparison with adjacent disciplines.',
+        'The complete Context Architecture specification: the rule, the problem, the autonomy spectrum, the write-and-verify loop, the nine principles, what it does not do, and its limits.',
     },
     sections: [
       {
         title: 'Canonical definition',
         description:
-          'Context Architecture is a software architecture for the age of AI agents: the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents. It treats the repository itself (its file tree, boundaries, conventions, and embedded context) as a designed artifact, not an accident of growth. It is the structural, design-time counterpart to context engineering (runtime) and harness engineering (the agent operating environment), and the heir to Screaming Architecture. Introduced by Sergio Azócar in October 2025.',
+          'Context Architecture is a software architecture for the age of AI agents: it structures a repository so that everything it claims about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when that claim stops being true. It is the design-time counterpart to context engineering (runtime) and harness engineering (the agent operating environment). Introduced by Sergio Azócar in October 2025.',
         links: [
           { title: 'The manifesto', href: 'https://context-architecture.dev/' },
           {
@@ -206,37 +206,37 @@ export default defineNuxtConfig({
       {
         title: 'The rule',
         description:
-          'The whole architecture reduces to one invariant: every claim a repository makes about itself must be bound to a mechanism that fails when that claim stops being true. The slogan: if a piece of context can rot silently, it is not architecture, it is documentation. The rule assumes a reader who retains nothing between sessions and knows only what the repository makes explicit (AI agents satisfy this exactly), and it exists to remove five failure modes: reimplementation, invented structure, obedience to false documentation, deprecated-pattern propagation, and random ambiguity resolution.',
+          'The whole architecture reduces to one rule: every claim a repository makes about itself must be bound to a mechanism that fails when that claim stops being true. A claim is anything the repository holds about itself, not just the shape of its folders: where the source of truth lives, what pattern is correct, how long an operation may take, what data must not cross a boundary. The mechanism must actually fail, not just exist; a check that cannot fail violates the rule. The rule applies to itself: the set of tests and rules that verify the repository is also bound, so it cannot be weakened to get a change through. Design for a reader who retains nothing between sessions and knows only what the repository says out loud (an agent meets this exactly). When no person reviews the code, the mechanisms are the reviewer.',
       },
       {
-        title: 'How it works',
+        title: 'The problem',
         description:
-          'Context is written (the four pillars), verified (the mechanism), and, in its mature form, fed (the metabolism). ' +
-          'The four pillars: 1 Structure Screams Intent, 2 Embedded Context at every boundary, 3 Intent Becomes Mechanism (a spec written before code, then turned into tests, types, and lint, and removed), 4 Capabilities Are Discoverable (at predictable paths, bound to a generated, drift-checked index). Context lives with the code (where it is written) and conventions are codified (the mechanism\'s first instance) run across all four. ' +
-          'The mechanism is four layers that make a claim fail when it stops being true: the compiler, the linter, the tests, and review (human or AI); together they leave the five failure modes nowhere to happen. ' +
-          'The metabolism: when a PR introduces a source of truth, the review loop asks to document it in the same PR, so context grows with the system. ' +
-          'It all serves one quality attribute: the time to the first correct change by a reader with no prior context.',
+          'Writing code stopped being the bottleneck; verifying that a growing volume of changes does not break anything, at the speed an agent produces them, is. A small error rate times that volume and speed, with no mechanism that fails when a claim is violated, is silent breakage at scale. With a person reviewing, verification does not scale. Without a person, a change that looks correct gets integrated because nothing failed. The job of the architecture is not to make the agent wrong less often (the model handles that), but to make every violated claim fail at once, where it broke. The problem grows with better models, it does not go away.',
+      },
+      {
+        title: 'The autonomy spectrum',
+        description:
+          'Context Architecture works with or without a person in the loop, across the whole range: inline (a person approves each edit), async (a person reviews the change before integrating), autonomous (a person sets the rules and does not look at each change), and orchestrated (nobody in the middle). What changes across the spectrum is who consumes the verification, not the verification: the same AGENTS.md and the same mechanisms serve all of them. With a person, the mechanisms absorb the routine review; without a person, they are the reviewer.',
+      },
+      {
+        title: 'How it applies',
+        description:
+          'Working with an agent is a continuous flow of code changes, and the rule lives inside that flow. When a change introduces a claim (a source of truth, an invariant, a convention), it is bound to a mechanism in the same change; when a change touches existing code, it meets the mechanisms already there. Binding means connecting a claim to something that fails when it stops being true. Context Architecture names the kinds of mechanism, not the tool: the compiler (a forbidden import breaks the build), the linter (a misplaced file fails the lint), automated tests (an AGENTS.md citing a deleted file turns the tests red), and review by a person or an agent (catches the meaning). Context Architecture decides what gets verified and guarantees the mechanism exists and fails; the infrastructure runs it.',
       },
       {
         title: 'The principles',
         description:
-          'The methodology is eight principles. ' +
-          '01 Structure Screams Intent: a reader, person or agent, must infer what the system does from the file tree alone, never from the framework it happens to use. ' +
-          '02 Context Lives With Code: embedded context belongs at every meaningful boundary, colocated with what it describes, not exiled to a wiki that drifts. ' +
-          '03 Intent Becomes Mechanism: intent is written as a spec before code exists, then becomes the code and the checks that enforce it (acceptance criteria become tests, contracts become types, conventions become lint); the spec is scaffolding, removed once that is done, kept only when it is generative. ' +
-          '04 Boundaries Are Explicit and Named: every module, package, and ownership line is named so its responsibility is inferable; ambiguous names are architectural debt. ' +
-          '05 Conventions Are Codified, Not Implicit: encode conventions in linting and types so the toolchain can check them. ' +
-          '06 Capabilities Are Discoverable: tools, skills, and commands live at predictable paths, bound to a generated, drift-checked index, so an agent finds them instead of re-implementing them; choosing which to load at runtime is context engineering\'s job. ' +
-          '07 The Repo Is Legible at Every Zoom Level: from the file tree to the function body, each level of zoom communicates purpose; legibility is fractal. ' +
-          '08 Optimize for the Newcomer, and the Newcomer Is Now an Agent: the clearest test of architecture is how fast a stranger becomes productive, and that stranger is increasingly a machine.',
+          'Each principle is a property you can check, bound to a mechanism, not an aspiration. ' +
+          'Let the repository say what it is: 01 Structure Screams Intent (the file tree says what the system does, not what framework built it); 02 Context Lives With Code (context at every boundary, next to the code, not in a wiki that goes stale); 03 Boundaries Are Explicit and Named (named for the responsibility they own; genuinely shared code goes in a small shared/, the debt is using a generic name to avoid deciding); 04 The Repo Is Legible at Every Zoom Level (from the tree to the function body); 05 Capabilities Are Discoverable (tools and commands at predictable paths, listed by a generated index that cannot leave one out). ' +
+          'Bind every claim to a mechanism: 06 Intent Becomes Mechanism (the spec is written before the code, becomes the code and the checks that enforce it, then is removed; the durable artifact is the intent and its verification); 07 Conventions Are Codified, Not Implicit (lint rules and type constraints); 08 Behavior Is Verifiable, Not Asserted (latency, security, and data contracts bound to an automated test in the repository that goes red when behavior deviates); 09 The Verification Surface Is Itself Bound (an agent cannot weaken or delete a check to get a change through).',
       },
       {
-        title: 'Applying it',
+        title: 'What it does not do, and how to apply it',
         description:
-          'Context Architecture is a retrofit discipline for codebases that already exist, not a scaffold for new projects. The guide walks the incremental retrofit step by step. The skill is an agent-agnostic procedure (a single Markdown file, no server) that audits a repository against the eight principles, finds context-rot, and proposes a prioritized backlog; it is served raw at /skill.md so an agent can fetch it in one request. The glossary defines the term alongside context engineering, harness engineering, AGENTS.md, spec-driven development, and Screaming Architecture.',
+          'Context Architecture is not an isolation or permissions system, not the machinery that runs the controls, not regulatory compliance, and it does not impose tools (it names the kinds of mechanism, the repository picks the product). It does not make the agent smarter; it makes the truth of the repository checkable so the agent error fails at once instead of integrating silently. It applies from the first commit (a repository can be born legible) and to one that grew without design, restructured in steps. The skill is an agent-agnostic procedure (a single Markdown file, served raw at /skill.md) that audits a repository against the principles and proposes a prioritized backlog.',
         links: [
           {
-            title: 'How to apply Context Architecture to an existing codebase',
+            title: 'How to apply Context Architecture',
             href: 'https://context-architecture.dev/guide',
           },
           {
@@ -254,14 +254,14 @@ export default defineNuxtConfig({
   },
 
   // --- nuxt-schema-org (vía @nuxtjs/seo) ----------------------------------
-  // Identidad del autor para atribución verificable (brief §10).
+  // Identidad del autor para atribución verificable.
   schemaOrg: {
     identity: {
       type: 'Person',
       name: 'Sergio Azócar',
       url: 'https://sergioazocar.com',
       // Cross-profile links disambiguate the author entity for generative
-      // engines and knowledge graphs (§11). Verified from sergioazocar.com.
+      // engines and knowledge graphs. Verified from sergioazocar.com.
       sameAs: [
         'https://sergioazocar.com',
         'https://github.com/sergioazoc',

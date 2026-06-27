@@ -15,6 +15,6 @@ useHead({
   <ErrorView
     code="404"
     title="Page not found"
-    message="That page does not exist. Context Architecture is the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents."
+    message="That page does not exist. Context Architecture is a software architecture for the age of AI agents: every claim a repository makes about itself is bound to a mechanism that fails when that claim stops being true."
   />
 </template>

@@ -31,8 +31,8 @@ estructurarse el repo en primer lugar, antes de que algún agente lo lea.
 
 Y hay una relación causal entre los dos. Un codebase con buena Context Architecture le baja el
 trabajo a toda otra capa: menos que comprimir en runtime, menos guardrails correctivos en el
-harness, menos errores que parchar entre sesiones. La estructura bien hecha en tiempo de diseño es
-apalancamiento en todo lo que viene aguas abajo.
+harness, menos errores que parchar entre sesiones. La estructura bien hecha en tiempo de diseño
+rinde en todo lo que viene aguas abajo.
 
 ## Una analogía
 

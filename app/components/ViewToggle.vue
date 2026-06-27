@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// The signature element (§7): the same document, read by two kinds of reader.
+// The signature element: the same document, read by two kinds of reader.
 // Built on Nuxt UI primitives (UFieldGroup connects the borders); the active
 // segment is the one filled (neutral solid = inverted), the other outlined.
 const model = defineModel<'human' | 'agent'>({ default: 'human' })

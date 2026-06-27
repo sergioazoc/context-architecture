@@ -1,30 +1,63 @@
 ---
-title: Cómo aplicar Context Architecture a un codebase existente
-description: "Una guía práctica para reordenar un repositorio y dejarlo legible para personas y agentes de IA: léelo como alguien sin contexto, arregla los docs que mienten, pon AGENTS.md en las fronteras y respalda cada afirmación con un check. Una especificación de Sergio Azócar."
+title: Cómo aplicar Context Architecture
+description: "Una guía práctica para dejar un repositorio legible para personas y agentes de IA: estructúralo para que diga lo que es, y luego ata cada afirmación que hace sobre sí mismo a un mecanismo que falla cuando esa afirmación deja de ser verdad. Sirve desde el primer commit y en un repo que ya creció. Una especificación de Sergio Azócar."
 eyebrow: Guía
-definition: Context Architecture se aplica a un codebase que ya existe, reordenándolo de a poco, nunca armando uno nuevo desde cero. Lees el repo como alguien sin contexto, arreglas la documentación que miente y respaldas cada afirmación que el repo hace sobre sí mismo con un check que falla cuando esa afirmación deja de ser verdad.
+definition: Context Architecture se aplica de dos formas. En un repositorio nuevo, lo arrancas legible: la estructura dice qué hace el sistema y cada afirmación queda atada a un mecanismo desde el primer commit. En un repositorio que ya creció, lo reordenas de a poco, nunca con una reescritura de golpe. En ambos casos, atas cada afirmación que el repo hace sobre sí mismo a un check que falla cuando esa afirmación deja de ser verdad.
 ---
 
-Un repo parte limpio y crece tres años. Las convenciones se separan. Los docs dejan de calzar con el
-código. Los nombres de las carpetas te dicen qué framework armó la cosa, no qué hace la cosa.
+La [especificación](/es) dice qué es Context Architecture y por qué. Esta página es la parte que
+haces con las manos.
 
-Ahora pásaselo a un lector sin memoria: alguien en su primer día, o un agente de IA arrancado en frío.
-Pídele un cambio. No puede saber qué significa nada, dónde va el cambio, ni cuál de dos patrones que
-conviven es el actual. El repo creció. Nadie lo diseñó para que se pudiera leer.
+Aplica en dos situaciones, y eliges tu camino según en cuál estás.
 
-Ese es el problema que esto arregla. La [especificación](/es) dice qué es Context Architecture y por
-qué. Esta página es la parte que haces con las manos: cómo aplicarla a un repo que ya tienes.
+Estás arrancando un repositorio nuevo. Lo quieres legible de nacimiento: la estructura dice qué hace
+el sistema, y cada afirmación que hace sobre sí mismo queda atada a un mecanismo desde el primer
+commit. Nada se ha desviado todavía, así que el trabajo es evitar que la deriva empiece. Salta a
+[arrancar un repo legible](#path-a-arrancar-un-repo-legible).
 
-El "ya tienes" importa. Un proyecto nuevo parte con la estructura que le da su framework, y este
-problema todavía no existe. Aparece después, cuando el código crece más allá de lo que una persona
-mantiene en la cabeza. Así que esto no es una forma de empezar un proyecto. Es una forma de arreglar
-uno. No estás construyendo una ciudad nueva, le estás poniendo nombres a las calles de una que ya se
-desparramó.
+Tienes un repositorio que ya creció. Partió limpio y creció tres años. Las convenciones se separaron.
+Los docs dejaron de calzar con el código. Los nombres de las carpetas te dicen qué framework armó la
+cosa, no qué hace la cosa. Pásaselo a un lector sin memoria, alguien en su primer día o un agente
+arrancado en frío, y pídele un cambio: no puede saber qué significa nada, dónde va el cambio, ni cuál
+de dos patrones que conviven es el actual. Nadie lo diseñó para que se pudiera leer. Salta a
+[reordenar un repo que creció](#path-b-reordenar-un-repo-que-crecio).
+
+Ambos caminos convergen en el mismo estado final y el mismo loop. La diferencia es solo el punto de
+partida y el costo. Nacer legible es más barato, pagas a medida que avanzas. Reordenar es más caro,
+pagas lo que ya se acumuló, en pasos.
+
+## El loop, en cualquiera de los dos casos
+
+Trabajar con un agente es un flujo continuo de cambios de código. Context Architecture vive dentro de
+ese flujo, no aparte. Cada cambio hace dos cosas:
+
+1. **Escribir la afirmación.** Cuando un cambio introduce o modifica algo que el repo sostiene sobre
+   sí mismo, una fuente de verdad, una invariante, una convención, escribes esa afirmación donde
+   corresponde.
+2. **Verificarla.** Atas esa afirmación a un mecanismo que falla cuando deja de ser cierta, en el
+   mismo cambio.
+
+Repite en cada cambio. Un repo nuevo corre este loop desde el primer commit. Un repo existente también
+lo corre, más un backlog de afirmaciones que nunca se ataron, que vas resolviendo en pasos. Esa es
+toda la diferencia entre los dos caminos.
+
+Por eso el contexto crece con el sistema en lugar de quedarse atrás. No es un montaje que haces una
+vez, es una propiedad que se mantiene cambio a cambio. Cuando un cambio agrega una afirmación y la deja
+suelta, la revisión, de una persona o de un agente, lo detecta y exige atarla antes de aceptar el
+cambio.
+
+## El único lector para el que diseñar
+
+::callout{color="neutral"}
+Asume un lector que no guarda nada entre sesiones y solo sabe lo que el repo dice en voz alta. Un
+agente de IA es exactamente ese lector. Alguien recién llegado se le acerca. La pregunta debajo de
+todo es una sola: cuánto demora ese lector en hacer un cambio correcto.
+::
 
 ## Antes de empezar: ¿vale la pena?
 
-Tiene un costo real. La reorganización inicial, los checks que son código que tienes que mantener en
-verde, y un pequeño impuesto en cada pull request para que cada afirmación quede atada a un check.
+Tiene un costo real. La estructura inicial, los checks que son código que tienes que mantener en
+verde, y un pequeño impuesto en cada cambio para que cada afirmación quede atada a un mecanismo.
 
 Se paga en proporción a cuánto trabajo de agentes o de varias personas absorbe el repo. Vale la pena
 en un codebase que aguanta refactors, migraciones, features con spec, contribuciones de agentes. No
@@ -32,17 +65,59 @@ vale la pena en un prototipo desechable ni en un problema que todavía no entien
 cuesta más de lo que devuelve, y saltártelo es lo correcto. Decirlo en voz alta es parte de la
 disciplina.
 
-::callout{color="neutral"}
-**El único lector para el que diseñar.** Asume un lector que no guarda nada entre sesiones y solo sabe
-lo que el repo dice en voz alta. Un agente de IA es exactamente ese lector. Alguien recién llegado se
-le acerca. Debajo de todo hay un solo número: cuánto demora ese lector en hacer un cambio correcto.
-::
+Esto vale para los dos caminos. Un repo nuevo que sabes que es desechable tampoco necesita la
+disciplina.
 
-## El orden de operaciones
+## Path A: arrancar un repo legible
 
-Hazlo de a poco. No detienes todo para reorganizar de una. Aterrizas un cambio acotado y reversible a
-la vez, y cada uno llega con el check que mantiene honesta su afirmación. Nada de reescribir todo de
-golpe.
+Un proyecto nuevo parte con la estructura que le da su framework. Esa estructura nombra el framework,
+no el producto, y la deriva empieza el día en que la segunda persona hace commit. Arrancar legible
+significa que no heredas ese default para después pelearte con él.
+
+Construyes en el orden en que caen los principios, y cada pieza llega con su mecanismo:
+
+1. **Distribuye el primer nivel por dominio, no por capa de framework.** `billing/`, `onboarding/`,
+   `payments/`, no `controllers/`, `services/`, `utils/`. El framework vive un nivel más abajo, dentro
+   del dominio al que sirve. Hacerlo el día uno no cuesta nada; hacerlo después de tres años es el
+   movimiento más caro que hay.
+
+2. **Nombra cada frontera por lo que posee.** Nada de `utils/`, `common/`, `helpers/` como cajón de
+   sastre por defecto. Un `shared/` chico para código genuinamente genérico y sin dependencias está
+   bien, y se mantiene chico. El mecanismo: una regla de lint que da error cuando un archivo queda en
+   una carpeta que no corresponde a su dominio, y una regla de imports que rompe la compilación cuando
+   un módulo cruza una frontera que no debería.
+
+3. **Pon un `AGENTS.md` raíz desde el primer commit**, y uno en cada frontera a medida que la creas.
+   Contiene solo lo que el código no puede decir por sí mismo: la fuente de verdad, los invariantes, la
+   deuda técnica que tomaste a propósito. El mecanismo: una prueba que falla si un `AGENTS.md` cita una
+   ruta que ya no existe.
+
+4. **Codifica cada convención en el momento en que la decides**, en vez de escribirla en un doc y
+   confiar. La primera vez que dejarías un comentario de review, hazlo una regla de lint o un tipo en
+   su lugar. Una convención que un agente no puede leer es una convención que va a romper.
+
+5. **Ata el comportamiento a una prueba, no a una frase.** La primera vez que escribes "esta operación
+   responde dentro de cierto tiempo" o "este formato no se puede romper para quienes ya lo usan", esa
+   línea llega con la prueba automatizada que se pone en rojo cuando deja de sostenerse.
+
+6. **Genera la lista de capacidades, no la mantengas a mano.** Desde el primer script, mantén scripts
+   y comandos en lugares predecibles y nombrados y genera la lista a partir de esas rutas, con una
+   prueba que falla si una capacidad real no aparece en ella.
+
+7. **Ata la propia superficie de verificación.** El conjunto de pruebas y reglas es también una
+   afirmación. Protégelo para que un cambio no pueda debilitar ni borrar un check para colarse.
+
+Hecho así, los cinco modos de falla de abajo nunca alcanzan a acumularse. No estás deshaciendo la
+deriva, te estás negando a empezarla. Cuando terminas el montaje, ya estás corriendo
+[el loop](#el-loop-en-cualquiera-de-los-dos-casos): cada cambio nuevo escribe sus afirmaciones y las
+ata en el mismo cambio.
+
+## Path B: reordenar un repo que creció
+
+No estás construyendo una ciudad nueva, le estás poniendo nombres a las calles de una que ya se
+desparramó. Hazlo de a poco. No detienes todo para reorganizar de una. Aterrizas un cambio acotado y
+reversible a la vez, y cada uno llega con el mecanismo que mantiene honesta su afirmación. Nada de
+reescribir todo de golpe.
 
 El orden va de lo más barato y seguro a lo más caro:
 
@@ -53,18 +128,25 @@ El orden va de lo más barato y seguro a lo más caro:
 5. Desarma una carpeta cajón de sastre.
 6. Haz que las capacidades se encuentren.
 7. Avanza hacia una estructura por dominio, al final, y solo si se gana el costo de mover todo.
-8. Conecta el bucle que evita que se vuelva a pudrir.
 
-El resto de la guía es un paso por sección, y después un ejemplo completo.
+No hay un paso final aparte para "encender" el loop. Una vez que un cambio escribe sus afirmaciones y
+las ata, ya estás corriendo [el loop](#el-loop-en-cualquiera-de-los-dos-casos). Los pasos de abajo son
+el backlog de afirmaciones que el repo nunca ató; el loop es lo que evita que una nueva quede suelta de
+nuevo.
 
-## Paso 1: auditar el repo como un lector en frío
+El resto de este camino es un paso por sección, y después un ejemplo completo.
+
+### Paso 1: auditar el repo como un lector en frío
 
 Abre el repo como si nunca lo hubieras visto y no recordaras nada. Lee el árbol de primer nivel, luego
 las fronteras, luego un puñado de archivos hoja. En cada nivel, una pregunta: ¿podría hacer un cambio
 correcto acá sin preguntarle a nadie? Cada "no" es un defecto que acabas de encontrar.
 
-Los defectos vienen en cinco formas. Ninguno es culpa del modelo, y por eso un modelo mejor o un
-prompt más astuto no arregla ninguno:
+Los defectos vienen en cinco formas. Son señales de diagnóstico, los síntomas que buscas cuando un
+repo calla sobre sí mismo, no una ley fija. Un modelo mejor baja la frecuencia de cada uno, pero no los
+elimina donde el repo no dice nada en voz alta: sin una fuente de verdad que encontrar, hasta un modelo
+fuerte reimplementa; con dos convenciones vivas y nada que diga cuál es la actual, igual tiene que
+adivinar.
 
 1. **Reimplementación.** La fuente de verdad no se podía encontrar, así que el lector reconstruye lo que ya existe.
 2. **Estructura inventada.** No se impuso ninguna, así que el lector impone la suya.
@@ -80,7 +162,7 @@ repartida en tres carpetas (una reimplementación esperando para ocurrir), un `R
 script de deploy borrado hace meses (docs falsos) y dos helpers de fecha con firmas distintas (un cara
 o sello). Tres modos de falla nombrados antes de tocar una línea.
 
-## Paso 2: arreglar el context-rot primero
+### Paso 2: arreglar el context-rot primero
 
 Parte por hacer que los docs dejen de mentir. Un doc que cita un archivo borrado o contradice el código
 es peor que no tener doc, porque un lector con confianza hace lo que dice.
@@ -90,15 +172,15 @@ Encuéntralo a mano o con un script: saca cada ruta de archivo, comando, símbol
 siga existiendo o siga corriendo. Arregla cada mentira contra lo que el código realmente hace hoy.
 
 Después haz que el rot sea imposible de traer de vuelta. Agrega un test que afirme que cada ruta que
-los docs citan sigue existiendo en disco. Ahora "este doc es preciso" es una afirmación con un check
+los docs citan sigue existiendo en disco. Ahora "este doc es preciso" es una afirmación con un mecanismo
 detrás, en vez de un deseo.
 
 **Cómo se ve esto.** El `README` documenta un `deploy.sh` que se borró hace un año. Sacas la referencia
 muerta, escribes el comando real y agregas ese test de rutas. La próxima vez que alguien mueva un
-archivo por debajo de un doc, la suite se pone roja en el mismo pull request, no en producción seis
-semanas después.
+archivo por debajo de un doc, la suite se pone roja en el mismo cambio, no en producción seis semanas
+después.
 
-## Paso 3: poner AGENTS.md en las fronteras de arriba
+### Paso 3: poner AGENTS.md en las fronteras de arriba
 
 El contexto va junto al código que describe, en cada frontera que es dueña de algo. Puesto ahí,
 envejece al mismo ritmo que el código y lo lee el mismo agente que está por editarlo. Empieza por la
@@ -123,11 +205,11 @@ Los precios vienen del paquete `pricing-engine`, nunca hardcodeados acá.
 La ruta legacy `chargeV1` se queda hasta la migración 2026-Q3. No la extiendas.
 ```
 
-Mira los invariantes: cada uno nombra el check que lo hace cumplir. Ese es todo el punto. Un invariante
-sin nada detrás es solo una línea nueva que se puede pudrir. Si el check todavía no existe, escríbelo en
-el mismo cambio, o redacta la línea como un hueco conocido, no como una garantía.
+Mira los invariantes: cada uno nombra el mecanismo que lo hace cumplir. Ese es todo el punto. Un
+invariante sin nada detrás es solo una línea nueva que se puede pudrir. Si el mecanismo todavía no
+existe, escríbelo en el mismo cambio, o redacta la línea como un hueco conocido, no como una garantía.
 
-## Paso 4: codificar la convención más repetida
+### Paso 4: codificar la convención más repetida
 
 Toma el comentario que más dejas en review, el que vive solo en la cabeza de tu equipo, y ponlo en la
 cadena de herramientas. Una convención que un agente no puede leer es una convención que va a romper,
@@ -151,7 +233,7 @@ profundas". Hoy vive en la cabeza de quienes revisan, así que un agente lo romp
 Una vez que la regla está en el linter, la ruta profunda falla al toque, con un mensaje que cita la
 regla, no a quien revisó y justo estaba prestando atención ese día.
 
-## Paso 5: nombrar una frontera de cajón de sastre
+### Paso 5: nombrar una frontera de cajón de sastre
 
 `utils/`, `common/`, `helpers/`, `core/`, `lib/`. Acá es donde la responsabilidad va a morir. Nada en el
 nombre frena al código no relacionado, así que la carpeta crece para siempre. Elige la peor y divídela
@@ -172,7 +254,7 @@ pricing, porque deja de calzar. Si no puedes nombrar una frontera con precisión
 `shared` no es la respuesta. Un `shared/` chiquito para un formateador de fechas o un tipo result está
 bien. La deuda es echar mano del nombre genérico para esquivar la pregunta de dónde va algo.
 
-## Paso 6: hacer las capacidades descubribles
+### Paso 6: hacer las capacidades descubribles
 
 Una capacidad que un agente no puede encontrar es, para ese agente, una capacidad que no existe.
 Simplemente la rehace, o la salta. Mueve tus scripts, generadores y comandos a lugares predecibles y
@@ -188,7 +270,7 @@ un hilo de Slack que nadie encuentra. Los mueves a `scripts/` con nombres que di
 listas en `package.json`. El siguiente agente los encuentra donde mira primero, en vez de escribir un
 cuarto.
 
-## Paso 7: avanzar hacia una estructura por dominio (al final)
+### Paso 7: avanzar hacia una estructura por dominio (al final)
 
 El primer nivel debería decir qué hace el sistema, no qué framework lo armó: `billing/`, `onboarding/`,
 `payments/`, no `controllers/`, `services/`, `utils/`. El framework vive un nivel más abajo, dentro del
@@ -201,12 +283,17 @@ compra más legibilidad, por archivo movido, que reorganizar todo de una.
 ```text
 # antes: organizado por capa técnica
 src/
-  controllers/   services/   models/   utils/
+  controllers/
+  services/
+  models/
+  utils/
 
 # después: organizado por dominio, el framework un nivel más abajo
 src/
   billing/
-    controllers/   services/   models/   # el framework, dentro del dominio al que sirve
+    controllers/   # el framework, dentro del dominio al que sirve
+    services/
+    models/
   onboarding/
   payments/
 ```
@@ -215,20 +302,11 @@ Evita que se devuelva con una regla de lint que impide que el código de dominio
 de capa, y mantén la estructura objetivo en el `AGENTS.md` raíz para que un lector que cae a mitad de la
 migración sepa hacia dónde es adelante.
 
-## Paso 8: instalar el metabolismo
-
-La versión madura no solo revisa el contexto, lo alimenta. Un repo que se revisa a sí mismo no puede
-pudrirse en silencio. Un repo que se alimenta a sí mismo absorbe conocimiento nuevo en el momento en que
-se crea.
-
-Una línea en el `AGENTS.md` raíz y en la checklist de review lo logra: cuando un pull request agrega una
-fuente de verdad o un invariante, lo documenta en ese mismo pull request, con un check detrás. Ahora el
-contexto crece con el sistema en vez de ir seis meses atrás.
-
 ## Un ejemplo completo, de principio a fin
 
-Un servicio que empezó como una app de un framework y creció tres años. El árbol grita el framework, no
-el producto, y el único doc es un `README` que está medio equivocado.
+Esto recorre el Path B, el más difícil. Un servicio que empezó como una app de un framework y creció
+tres años. El árbol grita el framework, no el producto, y el único doc es un `README` que está medio
+equivocado.
 
 ```text
 # antes
@@ -278,8 +356,9 @@ README.md           # preciso, y un test lo mantiene así
 ```
 
 Ahora la misma tarea aterriza en `billing/refunds/`, contra un `AGENTS.md` que enuncia el invariante del
-reembolso, reutilizando el paquete `money/` al que la regla lint ya apunta. Los modos de falla no tienen
-dónde ocurrir.
+reembolso, reutilizando el paquete `money/` al que la regla lint ya apunta. Cada afirmación que el repo
+hace está atada a un mecanismo, y de aquí en adelante el loop la mantiene así: el siguiente cambio que
+agrega una afirmación la ata en el mismo cambio. Los modos de falla no tienen dónde ocurrir.
 
 ## Correrlo con el skill
 
@@ -290,7 +369,8 @@ Apúntalo a tu repositorio y empieza por lo que marca primero.
 
 ## Hacia dónde seguir
 
-- La [especificación](/es): la regla, los cuatro pilares, el mecanismo y los ocho principios completos.
+- La [especificación](/es): la regla, el espectro de autonomía, los tipos de mecanismo y los nueve
+  principios completos.
 - La [comparación](/es/comparacion) con context engineering y harness engineering: qué capa diseña cada
   una, y por qué esta se sitúa debajo de ellas en tiempo de diseño.
 - El [skill](/es/skill): para correr el trabajo con tu propio agente.

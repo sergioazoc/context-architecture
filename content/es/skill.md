@@ -1,29 +1,33 @@
 ---
 title: El skill de Context Architecture, aplícalo con tu agente
-description: "Un skill agnóstico de agente que audita un codebase existente contra los ocho principios de Context Architecture, encuentra los docs que mienten y te devuelve un backlog de arreglos. Un comando lo instala en Claude Code, Cursor, Codex, Copilot y más. Por Sergio Azócar."
+description: "Un skill agnóstico de agente que audita un codebase contra los nueve principios de Context Architecture, encuentra las afirmaciones que no están atadas a un mecanismo y te devuelve un backlog de arreglos. Un comando lo instala en Claude Code, Cursor, Codex, Copilot y más. Por Sergio Azócar."
 eyebrow: Skill
-definition: "El skill de Context Architecture es un procedimiento agnóstico de agente que lee un repositorio existente como un lector en frío, lo audita contra los ocho principios, encuentra la documentación que miente y te devuelve un backlog ordenado de arreglos. No necesita servidor. La instalación es un archivo que tu agente lee."
+definition: "El skill de Context Architecture es un procedimiento agnóstico de agente que lee un repositorio como un lector en frío, lo audita contra los nueve principios, encuentra las afirmaciones que el repositorio hace sobre sí mismo que no están atadas a un mecanismo y te devuelve un backlog ordenado de arreglos. No necesita servidor. La instalación es un archivo que tu agente lee."
 ---
 
 El skill es la especificación, convertida en algo que tu agente corre. Un archivo Markdown. Lo cargas,
 lo apuntas a un repo, y lee el código como un lector sin memoria, lo audita contra los
-[ocho principios](/es) y te dice dónde ese lector tendría que adivinar. Después te devuelve el backlog
-en el orden que arma la [guía](/es/guia).
+[nueve principios](/es) y encuentra las afirmaciones que el repositorio hace sobre sí mismo que no
+están atadas a un mecanismo que falla cuando dejan de ser ciertas. Después te devuelve el backlog en el
+orden que arma la [guía](/es/guia).
 
 Sin servidor, sin dependencia, sin herramientas especiales. Es un archivo que tu agente lee, que es el
-principio 06 (Las capacidades son descubribles) aplicado al skill mismo.
+principio 05 (Las capacidades son descubribles) aplicado al skill mismo.
 
 ## Qué hace
 
-- **Audita** el repo contra los ocho principios y los cinco modos de falla, y escribe un informe con un
-  veredicto y la evidencia que lo respalda, uno por principio.
-- **Encuentra context-rot**: docs que citan archivos borrados, nombran módulos renombrados o
-  contradicen el código.
-- **Propone un backlog**: cambios del tamaño de un PR ordenados por palanca, cada uno emparejado con el
-  check (lint, tipos, test, revisión) que mantiene honesta su afirmación.
+- **Audita** el repo contra los nueve principios y escribe un informe con un veredicto y la evidencia
+  que lo respalda, uno por principio: qué afirmaciones están atadas a un mecanismo y cuáles son solo
+  prosa.
+- **Encuentra afirmaciones sueltas**: docs que citan archivos borrados, nombran módulos renombrados o
+  contradicen el código, y convenciones que viven solo en prosa sin nada que falle cuando se rompen.
+- **Propone un backlog**: cambios del tamaño de un PR ordenados por impacto, cada uno emparejado con el
+  mecanismo (compilador, linter, prueba automatizada, revisión) que falla cuando su afirmación deja de
+  ser cierta.
 - **Redacta archivos `AGENTS.md`** en las fronteras, con solo lo que no puedes sacar del código.
 
-Funciona sobre código que ya existe y creció desordenado. No arma proyectos nuevos desde cero.
+Aplica desde el primer commit, así un repo puede nacer legible, y también sobre un repo que creció sin
+diseño, reestructurado en pasos. Hace la misma auditoría en ambos casos.
 
 ## Instalarlo
 
@@ -110,8 +114,7 @@ Toma el archivo en crudo y pégalo en las instrucciones de tu herramienta, o ap�
 curl -fsSL https://context-architecture.dev/skill.md
 ```
 
-Es autocontenido. Reenuncia la regla, los ocho principios y los cinco modos de falla, así que funciona
-sin vuelta a este sitio.
+Es autocontenido. Reenuncia la regla y los nueve principios, así que funciona sin vuelta a este sitio.
 
 ## Usarlo
 
@@ -120,11 +123,12 @@ Carga el skill y apunta tu agente a un repo:
 > Aplica el skill de Context Architecture a este repositorio.
 
 Escribe primero la auditoría, solo lectura, después el backlog ordenado. Trabájalo un cambio a la vez,
-cada uno aterrizando con el check que evita que su afirmación se pudra. Empieza donde te diga: los docs
-que mienten, y los `AGENTS.md` de las fronteras de arriba. Ahí es donde más recuperas por edición.
+cada uno aterrizando con el mecanismo que falla cuando su afirmación deja de ser cierta. Empieza donde
+te diga: las afirmaciones que son solo prosa, y los `AGENTS.md` de las fronteras de arriba. Ahí es
+donde más recuperas por edición.
 
 ## Hacia dónde seguir
 
-- La [especificación](/es): la regla, los cuatro pilares, el mecanismo y los ocho principios.
+- La [especificación](/es): la regla, el loop, los tipos de mecanismo y los nueve principios.
 - La [guía](/es/guia): el mismo trabajo, hecho a mano, paso a paso.
 - El [glosario](/es/glosario): los términos que usa el skill, definidos.

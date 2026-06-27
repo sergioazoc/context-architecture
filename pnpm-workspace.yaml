@@ -12,3 +12,18 @@ allowBuilds:
 minimumReleaseAgeExclude:
   # Self-authored package, trusted immediately (the maintainer is the site author).
   - oxlint-tailwindcss@1.3.3
+  - '@nuxt/icon@2.2.4'
+  - '@nuxtjs/seo@5.3.1'
+  - '@vue/compiler-core@3.5.39'
+  - '@vue/compiler-dom@3.5.39'
+  - '@vue/compiler-sfc@3.5.39'
+  - '@vue/compiler-ssr@3.5.39'
+  - '@vue/reactivity@3.5.39'
+  - '@vue/runtime-core@3.5.39'
+  - '@vue/runtime-dom@3.5.39'
+  - '@vue/server-renderer@3.5.39'
+  - '@vue/shared@3.5.39'
+  - miniflare@4.20260625.0
+  - nuxtseo-shared@5.3.1
+  - vue@3.5.39
+  - wrangler@4.105.0

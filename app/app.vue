@@ -10,7 +10,7 @@ const current = computed(() =>
   i18nLocales.value.find(l => (typeof l === 'string' ? l : l.code) === locale.value),
 )
 
-// hreflang alternate links in the <head> — the strongest bilingual SEO signal.
+// hreflang alternate links in the <head>, the strongest bilingual SEO signal.
 // Built explicitly so they don't depend on module head-integration quirks.
 const alternateLinks = computed(() => {
   const links = i18nLocales.value.map(l => ({

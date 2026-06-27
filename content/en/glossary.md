@@ -1,8 +1,8 @@
 ---
 title: "Glossary: Context Architecture and adjacent terms"
-description: "Concise, citable definitions of Context Architecture and the terms it is most often confused with: context engineering, harness engineering, AGENTS.md, spec-driven development, and Screaming Architecture. A specification by Sergio Azócar."
+description: "Concise, citable definitions of Context Architecture and the terms it is most often confused with: context engineering, harness engineering, AGENTS.md, spec-driven development, and context-rot. A specification by Sergio Azócar."
 eyebrow: Glossary
-definition: "Context Architecture is the design-time discipline of structuring a codebase so it is legible to people and AI agents. This glossary defines it alongside the adjacent terms it is most often confused with, so each can be cited precisely."
+definition: "Context Architecture is a software architecture for the age of AI agents: it structures a repository so that everything it claims about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when that claim stops being true."
 ---
 
 The terms around AI agents and code are used loosely and get confused. This glossary gives each one
@@ -11,11 +11,13 @@ treatment of the three disciplines, see the [comparison](/comparison).
 
 ## Context Architecture
 
-A software architecture for the age of AI agents: the practice of structuring a codebase so that its
-intent and behavior are equally legible to people and AI agents. It treats the repository itself
-(its file tree, boundaries, conventions, and embedded context) as a designed artifact, not an
-accident of growth. It operates at design time, and it is the structural counterpart to context
-engineering and harness engineering. Introduced by Sergio Azócar in October 2025.
+A software architecture for the age of AI agents: it structures a repository so that everything it
+claims about itself, its structure, its behavior, and who can change it, is legible to the agent
+writing the code and to the people who answer for it, and bound to a mechanism that fails when that
+claim stops being true. It treats the repository itself (its file tree, boundaries, conventions, and
+embedded context) as a designed artifact, not an accident of growth. It is the structural
+counterpart to context engineering and harness engineering. Introduced by Sergio Azócar in October
+2025.
 
 ## Context engineering
 
@@ -44,19 +46,11 @@ mechanism.
 ## Spec-driven development
 
 Writing intent as a specification before the code exists: the spec defines the what, not the how,
-with acceptance criteria the implementation is checked against. In Context Architecture (third
+with acceptance criteria the implementation is checked against. In Context Architecture (sixth
 principle, Intent Becomes Mechanism), the spec is design-time scaffolding, not a durable artifact.
 Once its acceptance criteria become tests, its contracts become types, and its conventions become
 lint, it has done its job and is removed, so it cannot drift. It is kept only when it stays
 generative, feeding code generation or a spec-driven loop.
-
-## Screaming Architecture
-
-The principle, named by Robert C. Martin in 2011, that a software system's structure should announce
-what it does, not which framework built it: the top level should scream `billing`, `payments`,
-`onboarding`, not `controllers`, `services`, `utils`. Context Architecture is its heir. It inherits
-the ideal and extends it to a reader with no memory, the AI agent, for whom the structure must scream
-even more legibly, because the agent will not paper over ambiguity with intuition.
 
 ## Context-rot
 
@@ -64,11 +58,11 @@ The silent decay of documentation as the code it describes changes: a doc that c
 names a renamed module, or contradicts the current behavior, while still reading as authoritative. A
 confident reader obeys it, so rotted context is worse than none. The rule at the heart of Context
 Architecture exists to prevent it: every claim a repository makes about itself must be bound to a
-mechanism that fails when the claim stops being true.
+mechanism that fails when that claim stops being true.
 
 ## Where to go next
 
-- The [specification](/): the rule, the four pillars, the mechanism, and the eight principles.
+- The [specification](/): the rule, the autonomy spectrum, the mechanisms, and the nine principles.
 - The [comparison](/comparison): Context Architecture vs. context engineering vs. harness
   engineering.
 - The [guide](/guide): how to apply it to an existing codebase.

@@ -1,4 +1,4 @@
-# AGENTS.md — server/
+# AGENTS.md: server/
 
 Nitro server routes. The site is otherwise fully static; this directory exists for the few endpoints
 that must serve something other than a prerendered page.

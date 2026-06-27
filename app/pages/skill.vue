@@ -31,11 +31,11 @@ defineOgImageComponent('NuxtSeoTakumi', {
   title: 'The Context Architecture skill',
   description:
     locale.value === 'es'
-      ? 'Audita y retrofitea un codebase con tu agente'
-      : 'Audit and retrofit a codebase with your agent',
+      ? 'Audita y estructura un codebase con tu agente'
+      : 'Audit and structure a codebase with your agent',
 })
 
-useManifestoSchema(page, { faq: false })
+useManifestoSchema(page)
 </script>
 
 <template>

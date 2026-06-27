@@ -36,9 +36,8 @@ defineOgImageComponent('NuxtSeoTakumi', {
 })
 
 // The comparison page is a high-GEO surface; give it the manifesto's structured
-// data (DefinedTerm + TechArticle + Person identity) but NOT the FAQPage: this
-// page's body renders no FAQ, and FAQPage markup must mirror on-page content.
-useManifestoSchema(page, { faq: false })
+// data (DefinedTerm + TechArticle + Person identity).
+useManifestoSchema(page)
 </script>
 
 <template>

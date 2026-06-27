@@ -6,17 +6,17 @@
 @source '../../../content/**/*';
 
 /* ===========================================================================
-   Context Architecture — design system
-   "Ink on paper." Tokens are defined once (brief §4) and everything else
+   Context Architecture: design system
+   "Ink on paper." Tokens are defined once and everything else
    derives from them. Dark mode is an inversion, not a separate theme.
 
    Only tokens and global base styles live here. Everything that can be a
-   Tailwind utility is one — component look comes from utilities (in markup or
+   Tailwind utility is one; component look comes from utilities (in markup or
    in ui.prose / ui.* config), never from hand-written component classes.
    =========================================================================== */
 
 @theme {
-  /* Typography carries the personality (§5). Serif for reading, mono for
+  /* Typography carries the personality. Serif for reading, mono for
      structure. Both families are downloaded & self-hosted by @nuxt/fonts. */
   --font-sans: 'IBM Plex Serif', ui-serif, Georgia, serif;
   --font-serif: 'IBM Plex Serif', ui-serif, Georgia, serif;
@@ -35,17 +35,17 @@
 
 /* --- Tokens: light ("paper") ------------------------------------------- */
 :root {
-  --ca-paper: #f8f8f6; /* off-white, cold — never cream */
+  --ca-paper: #f8f8f6; /* off-white, cold, never cream */
   --ca-ink: #1a1c1e;
   --ca-ink-soft: #4a4f54;
   --ca-rule: #e2e4e3;
-  --ca-accent: #355e52; /* desaturated forest green — links + signature only */
+  --ca-accent: #355e52; /* desaturated forest green, links + signature only */
   --ca-accent-ink: #224138;
 
   --ca-radius: 2px;
   --ca-measure: 70ch; /* reading column width */
   --ca-leading: 1.65; /* reading body */
-  --ca-code-bg: #f1f2f0; /* code blocks & inline code (§2) */
+  --ca-code-bg: #f1f2f0; /* code blocks and inline code */
 
   /* Map Nuxt UI semantic tokens onto ours. */
   --ui-radius: var(--ca-radius);
@@ -71,7 +71,7 @@
   --ui-primary: var(--ca-accent);
 }
 
-/* --- Tokens: dark ("ink") — inversion ---------------------------------- */
+/* --- Tokens: dark ("ink"), inversion ---------------------------------- */
 .dark {
   --ca-paper: #16181a;
   --ca-ink: #eceeed;

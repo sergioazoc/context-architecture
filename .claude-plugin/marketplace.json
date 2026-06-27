@@ -4,14 +4,14 @@
     "name": "Sergio Azócar"
   },
   "metadata": {
-    "description": "The Context Architecture skill: audit and rework an existing codebase so it is legible to people and AI agents.",
+    "description": "The Context Architecture skill: audit and structure a codebase (greenfield or brownfield) so it is legible to people and AI agents.",
     "version": "0.1.0"
   },
   "plugins": [
     {
       "name": "context-architecture",
       "displayName": "Context Architecture",
-      "description": "Audit and rework an existing codebase so it is legible to people and AI agents. Applies the eight principles of Context Architecture: place AGENTS.md at boundaries, codify conventions in lint and types, find context-rot, and back every claim the repo makes about itself with a check that fails when it stops being true. A retrofit procedure for codebases that already exist, not a scaffolder for new ones.",
+      "description": "Audit and structure a codebase so it is legible to people and AI agents. Applies the nine principles of Context Architecture: make structure say what the system does, place AGENTS.md at boundaries, codify conventions in lint and types, find unbound claims, and back every claim the repo makes about itself with a check that fails when it stops being true. Works greenfield (a repo born legible) and brownfield (a repo restructured in steps).",
       "source": "./",
       "version": "0.1.0",
       "author": {
@@ -27,7 +27,6 @@
         "ai-agents",
         "context-engineering",
         "spec-driven-development",
-        "screaming-architecture",
         "code-review",
         "refactor",
         "ai-legible"

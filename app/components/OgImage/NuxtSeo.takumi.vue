@@ -1,5 +1,5 @@
 <script setup>
-// Bespoke OG image in the site's "ink on paper" system (brief §8/§10): paper
+// Bespoke OG image in the site's "ink on paper" system: paper
 // background, mono wordmark, serif title, a single forest accent rule. No
 // gradient, no shadow. Rendered by Takumi (selected via the .takumi.vue suffix).
 defineProps({

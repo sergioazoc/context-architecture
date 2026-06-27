@@ -11,7 +11,7 @@ const isNotFound = computed(() => code.value === 404)
 const title = computed(() => (isNotFound.value ? 'Page not found' : 'Something went wrong'))
 const message = computed(() =>
   isNotFound.value
-    ? 'That page does not exist. Context Architecture is the practice of structuring a codebase so that its intent and behavior are equally legible to people and AI agents.'
+    ? 'That page does not exist. Context Architecture is a software architecture for the age of AI agents: every claim a repository makes about itself is bound to a mechanism that fails when that claim stops being true.'
     : 'An unexpected error occurred while serving this page.',
 )
 

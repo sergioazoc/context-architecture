@@ -2,7 +2,7 @@
 // Self-contained error layout (no SiteHeader/SiteFooter, which depend on
 // i18n-routing): shared by app/error.vue (runtime errors) and app/pages/404.vue
 // (the prerendered, JS-less 404.html that Cloudflare serves). One markup, two
-// entry points — the manifesto's own no-duplication rule.
+// entry points, the manifesto's own no-duplication rule.
 defineProps<{ code: number | string; title: string; message: string }>()
 </script>
 

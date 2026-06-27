@@ -1,4 +1,4 @@
-# AGENTS.md — app/
+# AGENTS.md: app/
 
 The Nuxt application: presentation only. Meaning lives in `content/`; this directory decides how it
 looks and behaves.
@@ -10,7 +10,7 @@ app/
   pages/            # one file per route; queries content, renders it
   components/       # SiteHeader, SiteFooter, DocHero, DocShell, ViewToggle
   components/content/   # MDC components usable from Markdown (Rule, diagrams)
-  composables/      # useSiteMeta, useManifestoSchema
+  composables/      # useSiteMeta, useManifestoSchema, useGlossarySchema
   app.config.ts     # Nuxt UI theme: palette + ui.prose reading typography
   assets/css/main.css   # design tokens + global base only
 ```
@@ -32,7 +32,7 @@ before writing your own.
 - **The signature element is `ViewToggle`.** It is the one bold move. Keep everything around it
   quiet so it stands out. Person view is the default and must work without JavaScript; the toggle is
   progressive enhancement.
-- **Dark mode is an inversion**, not a separate theme — it only re-points the `--ca-*` tokens under
+- **Dark mode is an inversion**, not a separate theme, it only re-points the `--ca-*` tokens under
   `.dark`. Don't add dark-specific component styling.
 - **Accessibility is a floor, not a nice-to-have.** Visible keyboard focus, AA contrast in both
   modes, and `prefers-reduced-motion` are respected globally in `main.css`. Don't regress them.

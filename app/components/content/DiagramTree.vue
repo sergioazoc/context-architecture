@@ -1,7 +1,7 @@
 <script setup lang="ts">
-// Pillar 1 made visual (§8.2): a top level that screams the domain vs. one
-// shaped by the framework. Plain mono trees, not SVG, so they stay legible and
-// invert via the .ca-doc pre tokens. Labels are localized; the trees are code.
+// Principle 01 made visual: a top level that screams the domain vs. one shaped
+// by the framework. Plain mono trees, not SVG, so they stay legible and invert
+// via the .ca-doc pre tokens. Labels are localized; the trees are code.
 const { locale } = useI18n()
 
 const t = computed(() => {

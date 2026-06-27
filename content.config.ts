@@ -1,11 +1,11 @@
 import { defineContentConfig, defineCollection, z } from '@nuxt/content'
 
-// Manifesto content. One markdown file per locale per page — the body is the
-// human view (rendered) and the agent view (raw). Single source of truth (§7).
+// Manifesto content. One markdown file per locale per page. The body is the
+// human view (rendered) and the agent view (raw): a single source of truth.
 const docSchema = z.object({
   title: z.string(),
   description: z.string(),
-  // Canonical, citable definition — rendered in the hero and exposed to SEO.
+  // Canonical, citable definition, rendered in the hero and exposed to SEO.
   definition: z.string().optional(),
   // Dated attribution line (mono), shown under the definition.
   attribution: z.string().optional(),

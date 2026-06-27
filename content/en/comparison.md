@@ -31,7 +31,7 @@ structured in the first place, before any agent reads it.
 
 And there is a causal relationship between the two. A codebase with good Context Architecture takes
 work off every other layer: less to compress at runtime, fewer corrective guardrails in the harness,
-fewer errors to patch across sessions. Structure done well at design time is leverage everywhere
+fewer errors to patch across sessions. Structure done well at design time pays off at every layer
 downstream.
 
 ## An analogy

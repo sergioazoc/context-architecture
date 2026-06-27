@@ -1,7 +1,9 @@
 # context-architecture.dev
 
-The canonical site for **Context Architecture**: the practice of structuring a codebase so that its
-intent and behavior are equally legible to people and AI agents. Introduced by
+The canonical site for **Context Architecture**: a software architecture for the age of AI agents. It
+structures a repository so everything it claims about itself, its structure, its behavior, and who can
+change it, is legible to the agent writing the code and to the people who answer for it, and bound to a
+mechanism that fails when the claim stops being true. Introduced by
 [Sergio Azócar](https://sergioazocar.com) in October 2025.
 
 This repository is its own first case study. If you arrived here from the manifesto to check whether
@@ -21,7 +23,8 @@ typography, structure, and almost nothing else.
 
 ## Apply it
 
-Context Architecture is for codebases that already exist, not a way to start new ones. To apply it:
+Context Architecture applies both to a repository born legible from the first commit and to one that
+already grew without design. To apply it:
 
 - Read the [specification](https://context-architecture.dev) and the
   [step-by-step guide](https://context-architecture.dev/guide).
@@ -48,7 +51,7 @@ skills/             # the distributable skill (context-architecture/SKILL.md)
 server/             # one prerendered route: /skill.md serves the raw skill
 ```
 
-Specs are design-time only (principle 03): written before code, turned into code, tests, and the
+Specs are design-time only (principle 06): written before code, turned into code, tests, and the
 relevant `AGENTS.md`, then removed. The site's own spec was already turned into the files above, so
 there is no `specs/` directory to keep.
 
@@ -61,12 +64,14 @@ pnpm dev          # http://localhost:3000
 
 ## Quality
 
-Conventions are codified, not tribal (principle 05). The CSS conventions are machine-checked by
+Conventions are codified, not tribal (principle 07). The CSS conventions are machine-checked by
 `oxlint` with the `oxlint-tailwindcss` plugin:
 
 ```bash
 pnpm lint         # oxlint + oxlint-tailwindcss
 pnpm typecheck    # vue-tsc
+pnpm test         # vitest: the repo's claims about itself, bound
+pnpm format       # oxfmt
 ```
 
 ## Build & deploy
@@ -84,5 +89,4 @@ pnpm deploy       # generate && wrangler deploy
   see [`LICENSE`](./LICENSE).
 - **Code**: MIT.
 
-The principle set in the manifesto is a working draft of the author's methodology; see the IP note
-in `content/en/index.md`.
+The nine principles in the manifesto are the author's methodology.

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// The layers map (§12.1): three disciplines, three layers. Context
+// The layers map: three disciplines, three layers. Context
 // Architecture is the design-time foundation the others rest on.
 // Hairlines + mono labels + currentColor so it inverts cleanly in dark mode.
 const { locale } = useI18n()

@@ -49,12 +49,6 @@ const TERMS: Record<string, Term[]> = {
         'Spec-driven development is writing intent as a specification before the code exists: the spec defines the what, not the how, with acceptance criteria the implementation is checked against. In Context Architecture the spec is design-time scaffolding, removed once its criteria become tests, its contracts become types, and its conventions become lint.',
     },
     {
-      id: 'screaming-architecture',
-      name: 'Screaming Architecture',
-      description:
-        'Screaming Architecture, named by Robert C. Martin in 2011, is the principle that a software system’s structure should announce what it does, not which framework built it. Context Architecture is its heir, extending the ideal to a reader with no memory: the AI agent.',
-    },
-    {
       id: 'context-rot',
       name: 'Context-rot',
       description:
@@ -90,12 +84,6 @@ const TERMS: Record<string, Term[]> = {
       name: 'Spec-driven development',
       description:
         'Spec-driven development es escribir la intención como una especificación antes de que el código exista: el spec define el qué, no el cómo, con criterios de aceptación contra los que se verifica la implementación. En Context Architecture el spec es andamiaje de tiempo de diseño, eliminado una vez que sus criterios se vuelven tests, sus contratos se vuelven tipos y sus convenciones se vuelven lint.',
-    },
-    {
-      id: 'screaming-architecture',
-      name: 'Screaming Architecture',
-      description:
-        'Screaming Architecture, nombrado por Robert C. Martin en 2011, es el principio de que la estructura de un sistema de software debería anunciar qué hace, no qué framework lo construyó. Context Architecture es su heredera, extendiendo el ideal a un lector sin memoria: el agente de IA.',
     },
     {
       id: 'context-rot',

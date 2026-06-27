@@ -1,6 +1,6 @@
 name: CI & Deploy
 
-# Dogfoods the mechanism (principle 05): conventions are checked in CI, and a
+# Dogfoods the mechanism (principle 07): conventions are checked in CI, and a
 # fresh build stamps runtimeConfig.public.buildDate so dateModified tracks reality.
 #
 # Required repository secrets (Settings → Secrets and variables → Actions):
@@ -42,7 +42,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Conventions are codified, not tribal — the machine checks them.
+      # Conventions are codified, not tribal: the machine checks them.
       - name: Lint (oxlint + oxlint-tailwindcss)
         run: pnpm lint
 
@@ -57,6 +57,13 @@ jobs:
         env:
           NUXT_PUBLIC_GA_ID: ${{ vars.NUXT_PUBLIC_GA_ID }}
 
+      # The repo's own verification surface (principle 09): doc references resolve,
+      # EN/ES parity holds, prose conventions hold, the lint rules are not weakened,
+      # and the prerendered HTML carries the content without JavaScript. Runs after
+      # the build so the no-JS test can read .output/public.
+      - name: Test
+        run: pnpm test
+
       # Deploy only on push to main; PRs run the checks above but never deploy.
       - name: Deploy to Cloudflare
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -65,7 +72,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-      # Tell IndexNow (Bing, Yandex, Naver, Seznam, Yep — and Bing feeds AI search)
+      # Tell IndexNow (Bing, Yandex, Naver, Seznam, Yep, and Bing feeds AI search)
       # that the published URLs changed, so they re-crawl promptly. Google does not
       # participate. The key is the public file public/<key>.txt; the URL list comes
       # from the generated sitemap. Best-effort: a failed ping never fails the deploy.

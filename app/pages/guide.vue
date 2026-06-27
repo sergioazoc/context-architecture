@@ -31,13 +31,13 @@ defineOgImageComponent('NuxtSeoTakumi', {
   title: locale.value === 'es' ? 'Guía de Context Architecture' : 'Context Architecture guide',
   description:
     locale.value === 'es'
-      ? 'Retrofitear un codebase existente, paso a paso'
-      : 'Retrofitting an existing codebase, step by step',
+      ? 'Arrancar un repo legible o reordenar uno que creció, paso a paso'
+      : 'Start a repo legible or rework one that grew, step by step',
 })
 
 // A guide page; reuse the manifesto's structured data (DefinedTerm + TechArticle +
-// Person identity) but not the FAQPage: this page renders no FAQ block.
-useManifestoSchema(page, { faq: false })
+// Person identity).
+useManifestoSchema(page)
 </script>
 
 <template>

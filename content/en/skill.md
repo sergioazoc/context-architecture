@@ -1,28 +1,32 @@
 ---
 title: The Context Architecture skill, run it with your agent
-description: "An agent-agnostic skill that audits an existing codebase against the eight principles of Context Architecture, finds the docs that lie, and hands back a backlog of fixes. One command installs it into Claude Code, Cursor, Codex, Copilot, and more. By Sergio Azócar."
+description: "An agent-agnostic skill that audits a codebase against the nine principles of Context Architecture, finds the claims that are not bound to a mechanism, and hands back a backlog of fixes. One command installs it into Claude Code, Cursor, Codex, Copilot, and more. By Sergio Azócar."
 eyebrow: Skill
-definition: "The Context Architecture skill is an agent-agnostic procedure that reads an existing repository as a cold reader, audits it against the eight principles, finds the documentation that lies, and hands back an ordered backlog of fixes. It needs no server. The install is one file your agent reads."
+definition: "The Context Architecture skill is an agent-agnostic procedure that reads a repository as a cold reader, audits it against the nine principles, finds the claims the repository makes about itself that are not bound to a mechanism, and hands back an ordered backlog of fixes. It needs no server. The install is one file your agent reads."
 ---
 
 The skill is the specification, turned into something your agent runs. One Markdown file. You load it,
 point it at a repo, and it reads the code as a reader with no memory, audits it against the
-[eight principles](/), and tells you where that reader would have to guess. Then it hands back the
-backlog in the order the [guide](/guide) lays out.
+[nine principles](/), and finds the claims the repository makes about itself that are not bound to a
+mechanism that fails when they stop being true. Then it hands back the backlog in the order the
+[guide](/guide) lays out.
 
-No server, no dependency, no special tooling. It is a file your agent reads, which is principle 06
+No server, no dependency, no special tooling. It is a file your agent reads, which is principle 05
 (Capabilities Are Discoverable) applied to the skill itself.
 
 ## What it does
 
-- **Audits** the repo against the eight principles and the five failure modes, and writes a report
-  with a verdict and the evidence behind it, one per principle.
-- **Finds context-rot**: docs that cite deleted files, name renamed modules, or contradict the code.
-- **Proposes a backlog**: PR-sized changes ordered by leverage, each paired with the check (lint,
-  types, test, review) that keeps its claim honest.
+- **Audits** the repo against the nine principles and writes a report with a verdict and the
+  evidence behind it, one per principle: which claims are bound to a mechanism, and which are only
+  prose.
+- **Finds unbound claims**: docs that cite deleted files, name renamed modules, or contradict the
+  code, and conventions that live only in prose with nothing that fails when they break.
+- **Proposes a backlog**: PR-sized changes ordered by payoff, each paired with the mechanism
+  (compiler, linter, automated test, review) that fails when its claim stops being true.
 - **Drafts `AGENTS.md` files** at the boundaries, holding only what you cannot get from the code.
 
-It works on code that already exists and grew messy. It does not scaffold new projects.
+It applies from the first commit, so a repo can be born legible, and to a repo that grew without
+design, restructured in steps. It does the same audit either way.
 
 ## Install it
 
@@ -107,8 +111,8 @@ Grab the raw file and paste it into your tool's instructions, or point the tool 
 curl -fsSL https://context-architecture.dev/skill.md
 ```
 
-It is self-contained. It restates the rule, the eight principles, and the five failure modes, so it
-works with no way back to this site.
+It is self-contained. It restates the rule and the nine principles, so it works with no way back to
+this site.
 
 ## Use it
 
@@ -117,11 +121,12 @@ Load the skill and point your agent at a repo:
 > Apply the Context Architecture skill to this repository.
 
 It writes the audit first, read-only, then the ordered backlog. Work it one change at a time, each
-landing with the check that keeps its claim from rotting. Start where it tells you to: the docs that
-lie, and the `AGENTS.md` files at the top boundaries. That is where you get the most back per edit.
+landing with the mechanism that fails when its claim stops being true. Start where it tells you to:
+the claims that are only prose, and the `AGENTS.md` files at the top boundaries. That is where you get
+the most back per edit.
 
 ## Where to go next
 
-- The [specification](/): the rule, the four pillars, the mechanism, and the eight principles.
+- The [specification](/): the rule, the loop, the kinds of mechanism, and the nine principles.
 - The [guide](/guide): the same work, done by hand, step by step.
 - The [glossary](/glossary): the terms the skill uses, defined.

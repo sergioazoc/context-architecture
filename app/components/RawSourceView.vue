@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Agent view: the raw Markdown source an agent consumes, shared by every
-// document page. Owns its own translation (Context Lives With Code, §02).
+// document page. Owns its own translation (principle 02, Context Lives With Code).
 defineProps<{ source: string }>()
 const { t } = useI18n({ useScope: 'local' })
 </script>
