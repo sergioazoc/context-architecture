@@ -9,6 +9,10 @@ const options = [
   { value: 'human', icon: 'i-lucide-book-open' },
   { value: 'agent', icon: 'i-lucide-terminal' },
 ] as const
+
+function select(value: (typeof options)[number]['value']) {
+  model.value = value
+}
 </script>
 
 <template>
@@ -24,7 +28,7 @@ const options = [
         :variant="model === o.value ? 'solid' : 'outline'"
         :aria-pressed="model === o.value"
         class="font-mono text-xs"
-        @click="model = o.value"
+        @click="select(o.value)"
       />
     </UFieldGroup>
   </div>
