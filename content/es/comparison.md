@@ -11,11 +11,11 @@ pregunta: ¿qué diseña cada uno?
 
 ## Las tres disciplinas
 
-| Disciplina               | Qué diseña                             | Capa                                  | Pregunta que responde                                                     |
-| ------------------------ | -------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------- |
-| Context engineering      | El contenido de la ventana de contexto | Runtime                               | ¿Qué ve el modelo ahora mismo?                                            |
-| Harness engineering      | El entorno de ejecución del agente     | Infraestructura / operación           | ¿Cómo opera el agente de forma segura y se autocorrige?                   |
-| **Context Architecture** | **El codebase mismo**                  | **Arquitectura de software (diseño)** | **¿Cómo estructuro el sistema para que personas y agentes lo entiendan?** |
+| Disciplina               | Qué diseña                             | Capa                                  | Pregunta que responde                                                        |
+| ------------------------ | -------------------------------------- | ------------------------------------- | ---------------------------------------------------------------------------- |
+| Context engineering      | El contenido de la ventana de contexto | Runtime                               | ¿Qué ve el modelo ahora mismo?                                               |
+| Harness engineering      | El entorno de ejecución del agente     | Infraestructura / operación           | ¿Cómo opera el agente de forma segura y se autocorrige?                      |
+| **Context Architecture** | **El codebase mismo**                  | **Arquitectura de software (diseño)** | **¿Cómo se estructura el sistema para que personas y agentes lo entiendan?** |
 
 ::diagram-layers
 ::

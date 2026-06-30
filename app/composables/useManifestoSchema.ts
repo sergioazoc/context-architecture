@@ -2,7 +2,7 @@
  * Page-specific structured data for the manifesto: a JSON-LD graph with
  * DefinedTermSet, DefinedTerm, TechArticle, and the Person who introduced the
  * term. The @nuxtjs/seo module already injects the sitewide WebSite + WebPage +
- * Person identity; here we cross-link its WebPage to the term so the page's
+ * Person identity; this composable cross-links its WebPage to the term so the page's
  * declared subject is the term, not the author.
  */
 
@@ -27,7 +27,7 @@ export function useManifestoSchema(
 
   // Point the canonical WebPage's subject at the term itself, the single strongest
   // GEO signal for a definitional site. Merges by @id into the WebPage that
-  // @nuxtjs/seo already emits, cross-linking it to our DefinedTerm node.
+  // @nuxtjs/seo already emits, cross-linking it to the DefinedTerm node defined here.
   useSchemaOrg([
     defineWebPage({
       about: { '@id': `${base}/#context-architecture` },

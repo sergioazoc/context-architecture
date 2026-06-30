@@ -11,11 +11,11 @@ question: what does each one design?
 
 ## The three disciplines
 
-| Discipline               | What it designs                    | Layer                                   | Question it answers                                                   |
-| ------------------------ | ---------------------------------- | --------------------------------------- | --------------------------------------------------------------------- |
-| Context engineering      | The contents of the context window | Runtime                                 | What does the model see right now?                                    |
-| Harness engineering      | The agent's execution environment  | Infrastructure / operations             | How does the agent operate safely and self-correct?                   |
-| **Context Architecture** | **The codebase itself**            | **Software architecture (design-time)** | **How do I structure the system so people and agents understand it?** |
+| Discipline               | What it designs                    | Layer                                   | Question it answers                                                  |
+| ------------------------ | ---------------------------------- | --------------------------------------- | -------------------------------------------------------------------- |
+| Context engineering      | The contents of the context window | Runtime                                 | What does the model see right now?                                   |
+| Harness engineering      | The agent's execution environment  | Infrastructure / operations             | How does the agent operate safely and self-correct?                  |
+| **Context Architecture** | **The codebase itself**            | **Software architecture (design-time)** | **How is the system structured so people and agents understand it?** |
 
 ::diagram-layers
 ::

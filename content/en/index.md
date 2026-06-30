@@ -3,7 +3,7 @@ title: Context Architecture
 description: "Context Architecture is a software architecture for the age of AI agents: it structures a repository so that everything it claims about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it. A specification by Sergio Azócar."
 eyebrow: A specification
 definition: "Context Architecture is a software architecture for the age of AI agents: it structures a repository so that everything it claims about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when that claim stops being true."
-attribution: I introduced the term Context Architecture in October 2025, while restructuring Skyward's monorepo for people and AI-agent legibility. First published June 2026.
+attribution: Sergio Azócar introduced the term Context Architecture in October 2025, while restructuring Skyward's monorepo for people and AI-agent legibility. First published June 2026.
 ---
 
 ## The rule

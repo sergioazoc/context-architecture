@@ -103,15 +103,15 @@ const publishedLabel = computed(() => {
     "code": "Code",
     "published": "First published",
     "source": "Source",
-    "author": "Written by"
+    "author": "Author"
   },
   "es": {
     "license": "Licencia",
     "manifesto": "Manifiesto",
     "code": "Código",
     "published": "Publicado por primera vez",
-    "source": "Código",
-    "author": "Escrito por"
+    "source": "Fuente",
+    "author": "Autor"
   }
 }
 </i18n>
