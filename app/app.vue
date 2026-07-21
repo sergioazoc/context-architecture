@@ -14,7 +14,7 @@ const current = computed(() =>
 // Built explicitly so they don't depend on module head-integration quirks.
 const alternateLinks = computed(() => {
   const links = i18nLocales.value.map(l => ({
-    rel: 'alternate',
+    rel: 'alternate' as const,
     hreflang: (l.language ?? l.code) as string,
     href: SITE + switchLocalePath(l.code),
   }))
