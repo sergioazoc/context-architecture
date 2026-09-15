@@ -13,6 +13,15 @@ import { CANONICAL_DEFINITION } from '../site-definition'
 
 export { CANONICAL_DEFINITION }
 
+// Sets the repository sense of "Context Architecture" apart from the other public
+// senses of the phrase (a data-platform metadata layer, an agent's runtime context
+// window, information architecture for AI products), so knowledge graphs do not
+// merge them.
+const DISAMBIGUATION: Record<string, string> = {
+  en: 'Not the runtime layout of an agent context window (system prompt, memory, retrieved data), which this specification calls context engineering, nor a data-platform metadata layer, nor information architecture for AI products. Context Architecture designs the repository.',
+  es: 'No es la disposición en runtime de la ventana de contexto de un agente (system prompt, memoria, datos recuperados), que esta especificación llama context engineering, ni una capa de metadatos de una plataforma de datos, ni la arquitectura de información para productos de IA. Context Architecture diseña el repositorio.',
+}
+
 export function useManifestoSchema(
   page: Ref<{ title?: string; description?: string } | null | undefined>,
 ) {
@@ -54,6 +63,9 @@ export function useManifestoSchema(
         '@id': `${base}/#context-architecture`,
         name: 'Context Architecture',
         description: CANONICAL_DEFINITION[lang] ?? CANONICAL_DEFINITION.en,
+        // Distinguishes the term from the other public senses of the phrase, so a
+        // generative engine attributes the repository sense to this entity.
+        disambiguatingDescription: DISAMBIGUATION[lang] ?? DISAMBIGUATION.en,
         inDefinedTermSet: { '@id': `${base}/#termset` },
       },
       {
@@ -67,6 +79,10 @@ export function useManifestoSchema(
         copyrightHolder: { '@id': author },
         copyrightYear: 2026,
         about: { '@id': `${base}/#context-architecture` },
+        // The term was coined (the repo created on GitHub) in October 2025, before
+        // this specification was first published in June 2026. dateCreated carries
+        // the coinage date, the verifiable priority signal.
+        dateCreated: meta.introducedISO,
         datePublished: meta.publishedISO,
         dateModified: meta.modifiedISO,
         license: 'https://creativecommons.org/licenses/by/4.0/',

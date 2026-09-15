@@ -189,7 +189,7 @@ export default defineNuxtConfig({
         title: 'Canonical definition',
         description:
           CANONICAL_DEFINITION.en +
-          ' It is the design-time counterpart to context engineering (runtime) and harness engineering (the agent operating environment). Introduced by Sergio Azócar in October 2025.',
+          ' It is the design-time counterpart to context engineering (runtime) and harness engineering (everything wrapped around one agent). Introduced by Sergio Azócar in October 2025.',
         links: [
           { title: 'The manifesto', href: 'https://context-architecture.dev/' },
           {

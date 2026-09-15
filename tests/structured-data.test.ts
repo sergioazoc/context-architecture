@@ -53,4 +53,13 @@ describe.skipIf(!built)('structured data floor (citability / GEO)', () => {
     expect(en).toContain('"sameAs"')
     expect(en).toContain('sergioazocar.com')
   })
+
+  it('the DefinedTerm disambiguates the term and the TechArticle carries the coinage date', () => {
+    const en = html('index.html')
+    // Sets the repository sense apart from the other public senses of the phrase.
+    expect(en).toContain('disambiguatingDescription')
+    // The coinage date (repo created on GitHub), the verifiable priority signal.
+    expect(en).toContain('"dateCreated"')
+    expect(en).toContain('2025-10-28')
+  })
 })
