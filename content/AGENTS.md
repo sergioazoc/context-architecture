@@ -15,8 +15,12 @@ content/
   es/...              # Spanish mirror, same files, faithful translation
 ```
 
-Paths map by directory: `en/index.md` -> `/en`, `es/comparison.md` -> `/es/comparison`. Pages query
-the collection by the active locale.
+Paths map by directory and locale strategy. English is canonical and served with no prefix, so
+`en/index.md` -> `/` and `en/comparison.md` -> `/comparison`. Spanish is the mirror under `/es`, and
+its pages use the localized slug declared in `i18n.pages` (nuxt.config), so `es/index.md` -> `/es`
+and `es/comparison.md` -> `/es/comparacion`. Pages query the collection by the active locale. The
+route map is derived once in `app/site-routes.ts` and consumed by both the router and the prerender
+list, so it cannot drift from the content tree.
 
 ## Rules
 

@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Version comes from the packageManager field in package.json (pnpm@11).
+      # Version comes from the packageManager field in package.json.
       - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v6

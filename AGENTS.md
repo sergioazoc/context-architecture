@@ -55,6 +55,11 @@ Register reference points: c4model.com, micro-frontends.org.
   into their own tool; see `skills/AGENTS.md`.
 - `server/` has the one prerendered Nitro route that serves the raw skill at `/skill.md`; see
   `server/AGENTS.md`.
+- The site also serves an agent-facing Markdown mirror of every page at `/raw/**.md` (for example
+  `/raw/en.md`, `/raw/es/comparison.md`), emitted by `@nuxt/content`'s llms feature from the same
+  `content/` files, not a hand-kept copy. It is prerendered like every page and served as
+  `text/markdown` via `public/_headers`. It is the raw view an LLM fetches; `tests/prerendered-no-js.test.ts`
+  binds that `/raw/en.md` and `/raw/es.md` carry the rule.
 - `.claude-plugin/marketplace.json` wraps that skill as a Claude Code plugin, so the repo doubles as a
   single-plugin marketplace (`/plugin marketplace add sergioazoc/context-architecture`).
 - `specs/`, design-time only, and absent by design. Per principle 06 a spec is turned into code,
@@ -80,7 +85,12 @@ The repo is its own first case study, so its claims about itself are bound by th
 `tests/` (run in CI after the build). Each test ties a principle or house rule to a mechanism that
 fails when it stops being true:
 
-- `tests/doc-references.test.ts`: every repo file a doc cites still exists (principle 02).
+- `tests/doc-references.test.ts`: every repo path, component, composable, and config-referenced
+  artifact a doc cites still exists; every `AGENTS.md` has a `CLAUDE.md` that bridges to it; every test
+  is documented here and every nested `AGENTS.md` is named in the map above; and `specs/` stays absent
+  (principles 02, 05, 06, 09).
+- `tests/routes.test.ts`: the site's routes are derived once in `app/site-routes.ts` and match the
+  content tree, the prerender list, and the internal links, so none can drift (principle 05).
 - `tests/content-parity.test.ts`: EN and ES stay in parity (same pages, principle markers, MDC
   components, heading counts).
 - `tests/principles.test.ts`: the nine principle names and numbers are canonical and identical across

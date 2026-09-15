@@ -35,5 +35,12 @@ describe.skipIf(!built)('prerendered content reads without JavaScript (principle
       expect(body, `${locale} missing a principle body`).toContain(principle)
       expect(body, `${locale} missing the numbered markers`).toContain('01 ·')
     })
+    // The /raw/**.md mirror (emitted by @nuxt/content's llms feature) is the view an
+    // LLM fetches. It is documented in the root AGENTS.md, so bind that it exists and
+    // carries the rule; if the feature is turned off, this goes red.
+    it(`the ${locale} raw markdown mirror carries the rule`, () => {
+      const raw = readFileSync(join(OUT, `raw/${locale}.md`), 'utf8')
+      expect(raw, `raw/${locale}.md missing the rule`).toContain(rule)
+    })
   }
 })

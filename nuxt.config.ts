@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { i18nPages, prerenderRoutes } from './app/site-routes'
 
 // Stamped once per build (fresh on every CI deploy); feeds dateModified
 // (schema.org + OpenGraph) and the sitemap lastmod.
@@ -135,17 +136,9 @@ export default defineNuxtConfig({
     // prefix; the module prepends it per `strategy`. The content path (the .md file at
     // content/es/comparison.md) stays decoupled from the route slug, so only the URL changes.
     customRoutes: 'config',
-    pages: {
-      comparison: {
-        es: '/comparacion',
-      },
-      guide: {
-        es: '/guia',
-      },
-      glossary: {
-        es: '/glosario',
-      },
-    },
+    // Localized slugs derived once in app/site-routes.ts, shared with the
+    // prerender list so the router and the static output cannot disagree.
+    pages: i18nPages,
     // No global message files: every UI string lives in its component's
     // <i18n> block (principle 02, Context Lives With Code).
     locales: [
@@ -184,7 +177,7 @@ export default defineNuxtConfig({
     title: 'Context Architecture',
     description:
       'Context Architecture is a software architecture for the age of AI agents: it structures a repository so every claim it makes about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when the claim stops being true. A specification by Sergio Azócar, who introduced the term in October 2025.',
-    // Emits /llms_full.txt with the entire manifesto inlined.
+    // Emits /llms-full.txt with the entire manifesto inlined.
     full: {
       title: 'Context Architecture: full specification',
       description:
@@ -197,6 +190,10 @@ export default defineNuxtConfig({
           'Context Architecture is a software architecture for the age of AI agents: it structures a repository so that everything it claims about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when that claim stops being true. It is the design-time counterpart to context engineering (runtime) and harness engineering (the agent operating environment). Introduced by Sergio Azócar in October 2025.',
         links: [
           { title: 'The manifesto', href: 'https://context-architecture.dev/' },
+          {
+            title: 'The manifesto, raw markdown',
+            href: 'https://context-architecture.dev/raw/en.md',
+          },
           {
             title: 'Context Architecture vs. context engineering vs. harness engineering',
             href: 'https://context-architecture.dev/comparison',
@@ -279,22 +276,12 @@ export default defineNuxtConfig({
     prerender: {
       crawlLinks: true,
       // Crawling from the footer nav reaches every page, but list them (both
-      // locales) explicitly so a prerender never silently drops one. `/skill.md`
-      // is the raw skill artifact served by server/routes/skill.md.ts.
-      routes: [
-        '/',
-        '/404',
-        '/skill.md',
-        '/comparison',
-        '/guide',
-        '/glossary',
-        '/skill',
-        '/es',
-        '/es/comparacion',
-        '/es/guia',
-        '/es/glosario',
-        '/es/skill',
-      ],
+      // locales) explicitly so a prerender never silently drops one. The list is
+      // derived in app/site-routes.ts from the content pages and their localized
+      // slugs. `/skill.md` is the raw skill artifact served by
+      // server/routes/skill.md.ts. The `/raw/**.md` agent-facing mirrors are
+      // emitted by @nuxt/content's llms feature and reached by crawlLinks.
+      routes: prerenderRoutes(),
     },
     hooks: {
       // Emit the prerendered /404 page as 404.html (the document Cloudflare's
