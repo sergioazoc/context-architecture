@@ -101,8 +101,17 @@ You are building in the order the principles fall, and each piece ships with its
    commands in predictable, named places and generate the list from those paths, with a test that
    fails if a real capability is missing from it.
 
-7. **Bind the verification surface itself.** The set of tests and rules is a claim too. Protect it so
-   a change cannot weaken or delete a check to get itself through.
+7. **Bind the verification surface itself.** The set of tests and rules is a claim too. From the
+   first commit, declare who owns `tests/`, the lint config, and the CI definition (a `CODEOWNERS`
+   entry and a branch ruleset that requires the checks), add a test that fails if a rule is weakened,
+   and confirm the checks can fail. See [Path B step 8](#step-8-bind-the-verification-surface) for the
+   four mechanisms.
+
+Starting a repo at scale, the same skeleton belongs in the service template new repos are scaffolded
+from: the root `AGENTS.md` map, the doc-reference and verification-surface tests, and the size budget.
+Each new repo is then born bound. In a monorepo the same shape repeats: a root `AGENTS.md` as the map,
+one per package naming its owner, an import-boundary rule between packages, and the budget test over
+each root-to-leaf chain.
 
 Done this way, the five failure modes below never get a chance to accrue. You are not undoing drift,
 you are refusing to start it. When you finish setup, you are already running [the loop](#the-loop-either-way):
@@ -157,17 +166,21 @@ folders (reimplementation waiting to happen), a `README` pointing at a deploy sc
 months ago (false docs), and two date helpers with different signatures (a coin-flip). Three failure
 modes named before you touch a line.
 
-### Step 2: fix context-rot first
+### Step 2: fix context rot first
 
 Start by stopping the docs from lying. A doc that cites a deleted file or contradicts the code is
 worse than no doc at all, because a confident reader does what it says.
 
 Find it by hand or by script: pull every file path, command, symbol, and link out of your `README`,
-your `AGENTS.md` and `CLAUDE.md` files, and your design docs, and check that each one still exists or
-still runs. Fix each lie against what the code actually does today.
+your `AGENTS.md` and `CLAUDE.md` files, the path-scoped rule files some tools keep (`.claude/rules`,
+`.cursor/rules`, `.github/instructions`, `.kiro/steering`), your `SKILL.md` files, and your design
+docs, and check that each one still exists or still runs. Fix each lie against what the code actually
+does today.
 
 Then make the rot impossible to bring back. Add a test that asserts every path the docs cite still
-exists on disk. Now "this doc is accurate" is a claim with a mechanism behind it, instead of a hope.
+exists on disk, or reach for a context-file linter (the class `agents-lint` belongs to) plus a link
+checker, kept in CI as a check that fails. Now "this doc is accurate" is a claim with a mechanism
+behind it, instead of a hope.
 
 **What this looks like.** The `README` documents a `deploy.sh` that was deleted a year ago. You drop
 the dead reference, write down the real command, and add that path-check test. The next time someone
@@ -180,8 +193,17 @@ Context belongs next to the code it describes, at every boundary that owns somet
 ages at the same rate as the code and gets read by the same agent about to edit it. Start at the root
 and the two or three busiest directories. That is where each `AGENTS.md` buys the most legibility.
 
+The root file is a map, not an encyclopedia. Keep it to a few dozen lines and let it list every nested
+`AGENTS.md`, its path and what that boundary owns, because not every agent discovers nested files: some
+read the root only, and Codex reads from the git root down to the current directory. A reader launched
+elsewhere finds the boundary from the map. Size is a claim too: keep the concatenated chain from the
+root to any leaf under 32 KiB (the cap Codex applies), any single file under about 12,000 characters
+(the Windsurf and Antigravity rule limit) and roughly 200 lines (Claude Code guidance). A test that
+sums the chain per leaf and fails past the budget binds it.
+
 Write down only what you cannot get from reading the code: the source of truth, the invariants, the
-tech debt you accepted on purpose, and the reasoning a spec left behind. Keep each one short.
+commands, the boundaries that must not move, the tech debt you accepted on purpose, and the reasoning a
+spec left behind.
 
 ```markdown
 # AGENTS.md (billing)
@@ -191,17 +213,37 @@ Owns invoicing, refunds, and the dunning schedule.
 ## Source of truth
 Prices come from the `pricing-engine` package, never hard-coded here.
 
+## Commands
+Test and lint: `pnpm test billing`, `pnpm lint`. Full list in `package.json` scripts.
+
 ## Invariants
 - A refund never exceeds the captured amount. Enforced by `refunds/guard.test.ts`.
 - All money is integer cents, no floats. Enforced by the `no-float-money` lint rule.
+
+## Boundaries
+- Never edit `migrations/` after a release. Enforced by CODEOWNERS and a PreToolUse deny rule.
+- Ask before touching the `chargeV1` path.
 
 ## Accepted tech debt
 The legacy `chargeV1` path stays until the 2026-Q3 migration. Do not extend it.
 ```
 
-Look at the invariants: each one names the mechanism that enforces it. That is the whole point. An
-invariant with nothing behind it is just a new line that can rot. If the mechanism does not exist yet,
-write it in the same change, or phrase the line as a known gap, not a guarantee.
+Look at the invariants and boundaries: each names the mechanism that enforces it. That is the whole
+point. A line with nothing behind it is just a new claim that can rot. If the mechanism does not exist
+yet, write it in the same change, or phrase the line as a known gap, not a guarantee. The commands are
+the one place to point at the generated list, not to retype it (principle 05). A boundary (never touch,
+ask first) is exactly what the code cannot say on its own, so it belongs here, bound to a deny rule, a
+hook, CODEOWNERS, or a lint rule.
+
+Where a tool keeps rules in a central folder scoped by path (`.claude/rules` with `paths`,
+`.cursor/rules` with `globs`, `.github/instructions` with `applyTo`), that is the same boundary claim
+in a different layout. Point it at the same source, do not duplicate it, and treat the glob as part of
+the claim: the doc-reference test should check each glob matches at least one file.
+
+**What goes in a skill.** The repeatable how, the procedures, checklists, and migrations, goes in a
+`.agents/skills/<name>/SKILL.md` loaded on demand, not in the always-loaded `AGENTS.md`. The `AGENTS.md`
+carries the what that the code cannot say. A skill that cites a path or a script is a claim too, caught
+by the same doc-reference check.
 
 ### Step 4: codify the loudest convention
 
@@ -225,6 +267,17 @@ paths." Today it lives in reviewers' heads, so an agent breaks it on its first c
 
 Once the rule is in the linter, the deep path fails on the spot, with a message that cites the rule,
 not a reviewer who happened to be paying attention that day.
+
+For boundaries between modules the tool class is an import-boundary rule: in JavaScript,
+dependency-cruiser, `@boundaries/eslint-plugin`, Sheriff, Nx enforce-module-boundaries (ESLint or
+Oxlint), or Biome's `noRestrictedImports`; on the JVM, ArchUnit. The rule names the kind of mechanism,
+not the product. The same rule can fire in three places: a hook in the agent's own loop, a pre-commit
+hook, and CI. Wiring it early catches the mistake sooner; the integration gate stays the floor.
+
+On a repo that already grew, a convention is violated in a hundred places at once. Do not wait to fix
+them all before binding it. Record the current violations in a baseline the tool checks against, fail
+on any new one, and shrink the baseline as you fix. The claim is bound from the first day; the debt is
+visible and only goes down.
 
 ### Step 5: name a junk-drawer boundary
 
@@ -292,6 +345,28 @@ src/
 Keep it from sliding back with a lint rule that stops domain code from leaking into a layer folder,
 and keep the target structure in the root `AGENTS.md` so a reader who lands mid-migration knows which
 way is forward.
+
+### Step 8: bind the verification surface
+
+This is the last step and, without a person reviewing, the one that matters most, because the cheapest
+way to make a check go green is to delete it. The rule applies to the checks themselves, so bind them
+with four mechanisms.
+
+1. **A test over the checks.** A test that reads the lint config and the CI workflow and fails if a
+   rule drops below error or a step disappears. This repo's `tests/verification-surface.test.ts` is
+   exactly that.
+2. **A check that can fail.** A surviving mutant is a test that cannot fail, so run a mutation tool on
+   the changed files, or break the invariant on purpose once and confirm red. That binds "the mechanism
+   actually fails."
+3. **Declared ownership.** A `CODEOWNERS` entry over `tests/`, the lint config, and the CI definition,
+   plus a branch ruleset that requires review and the checks to pass. Context Architecture decides
+   what; the infrastructure enforces it.
+4. **An edit-time guard.** A `PreToolUse` hook (or a `permissions.deny` rule) that stops the agent from
+   editing the verification config unless the task asks for it.
+
+A comment nobody must resolve is not one of these; an agent's approval of its own change is not either.
+Kent Beck (2025) named disabling tests as the tell that an agent is cheating; the field now answers it
+with mutation testing, rulesets, and deny hooks (Thoughtworks, 2026).
 
 ## A worked example, end to end
 

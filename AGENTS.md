@@ -91,6 +91,9 @@ fails when it stops being true:
   (principles 02, 05, 06, 09).
 - `tests/routes.test.ts`: the site's routes are derived once in `app/site-routes.ts` and match the
   content tree, the prerender list, and the internal links, so none can drift (principle 05).
+- `tests/agents-md-budget.test.ts`: no single `AGENTS.md` exceeds the 12,000-character rule-file cap and
+  no root-to-leaf chain exceeds the 32 KiB Codex cap, so no reader silently loses a deeper file
+  (principle 02, the size claim the guide names).
 - `tests/content-parity.test.ts`: EN and ES stay in parity (same pages, principle markers, MDC
   components, heading counts).
 - `tests/principles.test.ts`: the nine principle names and numbers are canonical and identical across

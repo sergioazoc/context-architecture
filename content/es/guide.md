@@ -106,7 +106,16 @@ Construyes en el orden en que caen los principios, y cada pieza llega con su mec
    prueba que falla si una capacidad real no aparece en ella.
 
 7. **Ata la propia superficie de verificación.** El conjunto de pruebas y reglas es también una
-   afirmación. Protégelo para que un cambio no pueda debilitar ni borrar un check para colarse.
+   afirmación. Desde el primer commit, declara quién es dueño de `tests/`, la config del linter y la
+   definición de CI (una entrada `CODEOWNERS` y un ruleset de rama que exige los checks), agrega un test
+   que falla si una regla se debilita, y confirma que los checks pueden fallar. Ver los cuatro
+   mecanismos en el Paso 8 del Path B.
+
+Empezando un repo a escala, el mismo esqueleto va en la plantilla de servicio desde la que se generan
+los repos nuevos: el mapa del `AGENTS.md` raíz, los tests de referencias de docs y de superficie de
+verificación, y el presupuesto de tamaño. Cada repo nuevo nace atado. En un monorepo la misma forma se
+repite: un `AGENTS.md` raíz como mapa, uno por paquete que nombra a su dueño, una regla de import
+boundaries entre paquetes, y el test de presupuesto sobre cada cadena de la raíz a la hoja.
 
 Hecho así, los cinco modos de falla de abajo nunca alcanzan a acumularse. No estás deshaciendo la
 deriva, te estás negando a empezarla. Cuando terminas el montaje, ya estás corriendo
@@ -163,18 +172,21 @@ repartida en tres carpetas (una reimplementación esperando para ocurrir), un `R
 script de deploy borrado hace meses (docs falsos) y dos helpers de fecha con firmas distintas (un cara
 o sello). Tres modos de falla nombrados antes de tocar una línea.
 
-### Paso 2: arreglar el context-rot primero
+### Paso 2: arreglar el context rot primero
 
 Parte por hacer que los docs dejen de mentir. Un doc que cita un archivo borrado o contradice el código
 es peor que no tener doc, porque un lector con confianza hace lo que dice.
 
 Encuéntralo a mano o con un script: saca cada ruta de archivo, comando, símbolo y enlace de tu
-`README`, tus archivos `AGENTS.md` y `CLAUDE.md`, y tus documentos de diseño, y verifica que cada uno
-siga existiendo o siga corriendo. Arregla cada mentira contra lo que el código realmente hace hoy.
+`README`, tus archivos `AGENTS.md` y `CLAUDE.md`, los archivos de reglas por ruta que algunas
+herramientas guardan (`.claude/rules`, `.cursor/rules`, `.github/instructions`, `.kiro/steering`), tus
+archivos `SKILL.md`, y tus documentos de diseño, y verifica que cada uno siga existiendo o siga
+corriendo. Arregla cada mentira contra lo que el código realmente hace hoy.
 
 Después haz que el rot sea imposible de traer de vuelta. Agrega un test que afirme que cada ruta que
-los docs citan sigue existiendo en disco. Ahora "este doc es preciso" es una afirmación con un mecanismo
-detrás, en vez de un deseo.
+los docs citan sigue existiendo en disco, o usa un linter de archivos de contexto (la clase a la que
+pertenece `agents-lint`) más un link checker, en CI como un check que falla. Ahora "este doc es preciso"
+es una afirmación con un mecanismo detrás, en vez de un deseo.
 
 **Cómo se ve esto.** El `README` documenta un `deploy.sh` que se borró hace un año. Sacas la referencia
 muerta, escribes el comando real y agregas ese test de rutas. La próxima vez que alguien mueva un
@@ -187,8 +199,18 @@ El contexto va junto al código que describe, en cada frontera que es dueña de 
 envejece al mismo ritmo que el código y lo lee el mismo agente que está por editarlo. Empieza por la
 raíz y los dos o tres directorios de más tráfico. Ahí cada `AGENTS.md` compra la mayor legibilidad.
 
-Escribe solo lo que no puedes sacar leyendo el código: la fuente de verdad, los invariantes, la deuda
-técnica que aceptaste a propósito, y el razonamiento que un spec dejó atrás. Mantén cada uno corto.
+El archivo raíz es un mapa, no una enciclopedia. Déjalo en unas pocas decenas de líneas y que liste
+cada `AGENTS.md` anidado, su ruta y de qué es dueña esa frontera, porque no todo agente descubre los
+archivos anidados: algunos leen solo la raíz, y Codex lee de la raíz de git hacia el directorio actual.
+Un lector lanzado en otro lugar encuentra la frontera desde el mapa. El tamaño también es una
+afirmación: mantén la cadena concatenada de la raíz a cualquier hoja bajo 32 KiB (el tope que aplica
+Codex), cada archivo bajo unos 12,000 caracteres (el límite de reglas de Windsurf y Antigravity) y
+alrededor de 200 líneas (la guía de Claude Code). Un test que suma la cadena por hoja y falla al pasar
+el presupuesto lo ata.
+
+Escribe solo lo que no puedes sacar leyendo el código: la fuente de verdad, los invariantes, los
+comandos, las fronteras que no se deben mover, la deuda técnica que aceptaste a propósito, y el
+razonamiento que un spec dejó atrás.
 
 ```markdown
 # AGENTS.md (billing)
@@ -198,17 +220,38 @@ Dueño de la facturación, los reembolsos y el calendario de cobranza.
 ## Fuente de verdad
 Los precios vienen del paquete `pricing-engine`, nunca hardcodeados acá.
 
+## Comandos
+Test y lint: `pnpm test billing`, `pnpm lint`. Lista completa en los scripts de `package.json`.
+
 ## Invariantes
 - Un reembolso nunca excede el monto capturado. Lo hace cumplir `refunds/guard.test.ts`.
 - Todo el dinero es enteros en centavos, sin floats. Lo hace cumplir la regla lint `no-float-money`.
+
+## Fronteras
+- Nunca editar `migrations/` después de un release. Lo hacen cumplir CODEOWNERS y una deny rule PreToolUse.
+- Preguntar antes de tocar la ruta `chargeV1`.
 
 ## Deuda técnica aceptada
 La ruta legacy `chargeV1` se queda hasta la migración 2026-Q3. No la extiendas.
 ```
 
-Mira los invariantes: cada uno nombra el mecanismo que lo hace cumplir. Ese es todo el punto. Un
-invariante sin nada detrás es solo una línea nueva que se puede pudrir. Si el mecanismo todavía no
-existe, escríbelo en el mismo cambio, o redacta la línea como un hueco conocido, no como una garantía.
+Mira los invariantes y las fronteras: cada uno nombra el mecanismo que lo hace cumplir. Ese es todo el
+punto. Una línea sin nada detrás es solo una afirmación nueva que se puede pudrir. Si el mecanismo
+todavía no existe, escríbelo en el mismo cambio, o redacta la línea como un hueco conocido, no como una
+garantía. Los comandos son el único lugar para apuntar a la lista generada, no para retipearla
+(principio 05). Una frontera (nunca tocar, preguntar primero) es justo lo que el código no puede decir
+por sí mismo, así que va acá, atada a una deny rule, un hook, CODEOWNERS o una regla de lint.
+
+Donde una herramienta guarda las reglas en una carpeta central acotada por ruta (`.claude/rules` con
+`paths`, `.cursor/rules` con `globs`, `.github/instructions` con `applyTo`), esa es la misma afirmación
+de frontera en otra disposición. Apúntala a la misma fuente, no la dupliques, y trata el glob como parte
+de la afirmación: el test de referencias de docs debería comprobar que cada glob casa con al menos un
+archivo.
+
+**Qué va en un skill.** El cómo repetible, los procedimientos, checklists y migraciones, va en un
+`.agents/skills/<name>/SKILL.md` cargado bajo demanda, no en el `AGENTS.md` siempre cargado. El
+`AGENTS.md` lleva el qué que el código no puede decir. Un skill que cita una ruta o un script también es
+una afirmación, atrapada por la misma prueba de referencias de docs.
 
 ### Paso 4: codificar la convención más repetida
 
@@ -233,6 +276,18 @@ profundas". Hoy vive en la cabeza de quienes revisan, así que un agente lo romp
 
 Una vez que la regla está en el linter, la ruta profunda falla al toque, con un mensaje que cita la
 regla, no a quien revisó y justo estaba prestando atención ese día.
+
+Para las fronteras entre módulos la clase de herramienta es una regla de import boundaries: en
+JavaScript, dependency-cruiser, `@boundaries/eslint-plugin`, Sheriff, Nx enforce-module-boundaries
+(ESLint u Oxlint), o el `noRestrictedImports` de Biome; en la JVM, ArchUnit. La regla nombra el tipo de
+mecanismo, no el producto. La misma regla puede disparar en tres lugares: un hook en el propio bucle del
+agente, un hook de pre-commit y CI. Cablearla antes atrapa el error más temprano; el gate de integración
+sigue siendo el piso.
+
+En un repo que ya creció, una convención se viola en cien lugares a la vez. No esperes a arreglarlos
+todos antes de atarla. Registra las violaciones actuales en un baseline contra el que la herramienta
+chequea, falla ante cualquiera nueva, y encoge el baseline a medida que arreglas. La afirmación queda
+atada desde el primer día; la deuda es visible y solo baja.
 
 ### Paso 5: nombrar una frontera de cajón de sastre
 
@@ -302,6 +357,28 @@ src/
 Evita que se devuelva con una regla de lint que impide que el código de dominio se filtre a una carpeta
 de capa, y mantén la estructura objetivo en el `AGENTS.md` raíz para que un lector que cae a mitad de la
 migración sepa hacia dónde es adelante.
+
+### Paso 8: atar la superficie de verificación
+
+Este es el último paso y, sin una persona revisando, el que más importa, porque la forma más barata de
+poner un check en verde es borrarlo. La regla aplica a los propios checks, así que átalos con cuatro
+mecanismos.
+
+1. **Un test sobre los checks.** Un test que lee la config del linter y el workflow de CI y falla si
+   una regla baja de error o un paso desaparece. El `tests/verification-surface.test.ts` de este repo es
+   justo eso.
+2. **Un check que pueda fallar.** Un mutante que sobrevive es una prueba que no puede fallar, así que
+   corre una herramienta de mutation testing sobre los archivos cambiados, o rompe el invariante a
+   propósito una vez y confirma el rojo. Eso ata "el mecanismo falla de verdad".
+3. **Propiedad declarada.** Una entrada `CODEOWNERS` sobre `tests/`, la config del linter y la
+   definición de CI, más un ruleset de rama que exige revisión y que los checks pasen. Context
+   Architecture decide qué; la infraestructura lo aplica.
+4. **Una guarda en tiempo de edición.** Un hook `PreToolUse` (o una regla `permissions.deny`) que
+   impide al agente editar la config de verificación salvo que la tarea lo pida.
+
+Un comentario que nadie tiene que resolver no es ninguno de estos; la aprobación de un agente sobre su
+propio cambio, tampoco. Kent Beck (2025) nombró desactivar tests como la señal de que un agente hace
+trampa; el campo ahora la responde con mutation testing, rulesets y deny hooks (Thoughtworks, 2026).
 
 ## Un ejemplo completo, de principio a fin
 
