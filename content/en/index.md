@@ -20,7 +20,7 @@ The rule is evaluated against any repository, claim by claim. Take each thing th
 
 A claim is anything the repository holds about itself, not just the shape of its folders. "Prices are computed in this module and nowhere else" is a claim. "This operation responds within a certain time" is a claim. "This data format does not break for the people already using it" is a claim. They are all the same kind of thing: something the repository promises, and that at some point can stop being true.
 
-The mechanism has to actually fail, not just exist. A performance test that never exercises the slow path does not satisfy the rule, it violates it. Either the claim is bound to something that goes red when it breaks, or it is not.
+The mechanism has to actually fail, not just exist. A performance test that never exercises the slow path does not satisfy the rule, it violates it. Either the claim is bound to something that goes red when it breaks, or it is not. That a test can fail is itself a claim, with its own mechanism class: change the code the test guards and expect red. Mutation testing does this automatically; a surviving mutant is a test that cannot fail.
 
 The rule applies to itself. The set of tests and rules that verify the repository is, in turn, a set of claims about the repository, so it too is bound to a mechanism that fails if it is weakened.
 
@@ -36,20 +36,24 @@ A small error rate, multiplied by that volume and that speed, with no mechanism 
 
 The job of the architecture is not to make the agent wrong less often. The model handles that, and better every day. The job is to make every violated claim fail at once, in the place where it broke, instead of integrating without anything noticing. That is why the problem grows with better models instead of going away: the faster and more autonomous the agent, the more the repository has to verify itself.
 
+The evidence points the same way. Repository overview files do not generally raise an agent's task success, and add over 20% to inference cost (Gloaguen et al., 2026); most context files say nothing about security or performance (Chatlatanagulchai et al., 2026); and instruction adherence decays within a session as more code is generated (McMillan, 2026). The reading is not to write more context, it is to bind it: what the code cannot hold, tied to a mechanism, instead of another paragraph the agent stops following.
+
 > Design for a reader who remembers nothing between sessions and only knows what the repository says out loud. An agent meets that exactly. A new person approximates it.
+
+Agents now keep notes between sessions, but that does not change the reader to design for. The notes live outside the repository, nothing fails when they go stale, and the next session on another machine, another account, or a cloud environment starts without them. Memory is more prose, one step further from the code, and the tools themselves call a note context, not enforcement.
 
 ## The autonomy spectrum
 
-Context Architecture works with or without a person in the loop. Today the norm is someone orchestrating the agent; more of the work is moving to agents running on their own. The architecture has to serve the whole range.
+Context Architecture works with or without a person in the loop. As of 2026 all four levels exist as products: an interactive session where a person, or a classifier standing in for one, approves each action; a pull request reviewed by a person or by another agent; a cloud session or scheduled routine that a person configures and does not watch; and an event-triggered routine or a team of agents with nobody in the middle. The architecture has to serve the whole range.
 
 | Level | Who reviews | What breaks without repository discipline |
 | --- | --- | --- |
-| Inline | a person approves each edit | the agent reimplements things that already exist and the person burns time fixing what the tools could have caught |
+| Inline | a person, or a classifier acting for one, approves each edit | the agent reimplements things that already exist and the person burns time fixing what the tools could have caught |
 | Async | a person reviews the change before integrating it | review does not scale; the integration gate exists but enforces nothing, one click lets a change through |
-| Autonomous | a person sets the rules, does not look at each change | if the mechanisms are missing, the definition of "done" is empty: the agent calls a change finished when it passes but is wrong |
+| Autonomous | a person sets the rules, does not look at each change | if the mechanisms are missing, the definition of "done" is empty: the agent keeps pushing until the checks are green, so weakening a check is the shortest path to done |
 | Orchestrated | nobody in the middle | the error multiplies at machine speed; the only arbiters are the repository's mechanisms |
 
-What changes across the spectrum is who consumes the verification, not the verification. The same `AGENTS.md` and the same mechanisms work in an interactive session, in a change reviewed separately, and in an agent running on its own. When there is a person, the mechanisms absorb the routine checks, so the person spends attention on what needs judgment, not on re-checking a convention. When there is no person, the mechanisms are the reviewer.
+What changes across the spectrum is who consumes the verification, not the verification. The same `AGENTS.md` and the same mechanisms work in an interactive session, in a change reviewed separately, and in an agent running on its own. With several agents in parallel, the merge queue is where the mechanisms arbitrate: each change arrives alone and integrates only if everything bound stays green. When there is a person, the mechanisms absorb the routine checks, so the person spends attention on what needs judgment, not on re-checking a convention. When there is no person, the mechanisms are the reviewer.
 
 ## How it applies
 
@@ -62,7 +66,9 @@ Binding a claim is connecting it to something that fails when it stops being tru
 - **The compiler** catches what can be expressed in types: reintroducing a forbidden import breaks the build.
 - **The linter** catches problems of structure and convention: a file in the wrong folder fails the lint and cites the rule it breaks.
 - **Automated tests** catch documentation that lies and behavior that strays from what is expected: an `AGENTS.md` that mentions a deleted file turns the tests red.
-- **Review**, by a person or an agent, catches what the others do not see, the meaning: on each change it asks whether any document now says something false, and requires the fix in the same change.
+- **Review**, by a person or an agent, catches what the others do not see, the meaning: on each change it asks whether any document now says something false, and requires the fix in the same change. Review by an agent counts as a mechanism only when its verdict can stop the change, a required check that fails or a review that requests changes; a comment nobody has to resolve is prose. The agent reviewer runs in a fresh context, separate from the one that wrote the change, and sees the diff and the criteria, not the reasoning.
+
+Where a mechanism fires is the infrastructure's choice. The same lint rule can run in the agent's own loop through a hook the repository commits, before the file is even saved, at push through the repository's rules, or in CI. Firing early saves a round trip; it does not replace the gate. A hook or a permission rule the agent's tool reads can be switched off by a local setting, so the binding principle 09 requires has to hold where the change is integrated.
 
 The split with the infrastructure the agent runs on is clear: Context Architecture decides what gets verified and guarantees the mechanism exists and fails. The infrastructure runs it. Binding the claim belongs to the architecture; running that mechanism on each change belongs to the environment.
 
@@ -78,7 +84,7 @@ _Mechanism: a linter rule that errors when a file lands in a folder that does no
 ::diagram-tree
 ::
 
-**02 · Context Lives With Code.** Context lives next to the code it describes, at every important boundary, not in a separate wiki that goes stale. It holds only what the code cannot say on its own: where the source of truth is, what invariants must be respected, what technical debt was accepted on purpose, and what behavioral limits apply to that part. Because it sits next to the code, it ages at the same pace and is found by the same agent that will edit it.
+**02 · Context Lives With Code.** Context lives next to the code it describes, at every important boundary, not in a separate wiki that goes stale. It holds only what the code cannot say on its own: where the source of truth is, what invariants must be respected, what technical debt was accepted on purpose, and what behavioral limits apply to that part. Because it sits next to the code, it ages at the same pace and is found by the same agent that will edit it. Where a tool keeps rules in a central folder, a rule scoped to the boundary by path (`paths`, `globs`, `applyTo`) is the same claim in a different layout; the glob is part of the claim.
 _Mechanism: a test that fails if an `AGENTS.md` mentions a file that no longer exists._
 
 **03 · Boundaries Are Explicit and Named.** Each module and package is named for the responsibility it owns. Folders like `utils/`, `common/`, or `helpers/` collect anything, because the name rules nothing out.
@@ -99,13 +105,13 @@ _Mechanism: the list generated from the conventional paths, and a test that fail
 **06 · Intent Becomes Mechanism.** Intent is written as a spec before the code, then turned into the code and into the tests and rules that enforce it, and the spec is removed once its content already lives there. What stays is the intent and its verification, not the code that satisfies it: as long as the tests pin down the behavior, that code can be regenerated. A spec is kept only if it still generates something (code, configuration); if not, it is removed, so no second description is left to go stale.
 _Mechanism: the tests, the types, and the rules the spec was turned into._
 
-**07 · Conventions Are Codified, Not Implicit.** A convention that lives only in people's heads is invisible to an agent, and the agent will break it. Take it out of the culture and put it in the tools that review the code: linter rules, type constraints, automated validations in CI that state the rule and enforce it in the same place.
+**07 · Conventions Are Codified, Not Implicit.** A convention that lives only in people's heads is invisible to an agent, and the agent will break it. Take it out of the culture and put it in the tools that review the code: linter rules, type constraints, automated validations in CI that state the rule and enforce it in the same place. The convention can be about code or about configuration: a rule that parses the CI definition, the lint configuration, or the agent's settings file and fails is the same kind of mechanism as a lint rule on source.
 _Mechanism: the linter rules and the type constraints._
 
 **08 · Behavior Is Verifiable, Not Asserted.** Every claim about how the system behaves (how long an operation may take, what data must not cross a certain boundary, what format must not break for the people already using it) is bound to an automated test that lives in the repository and goes red when the behavior strays from what was promised. A time limit written in a document goes stale; the same limit bound to a test that fails when it is exceeded is architecture. The test lives in the repository and runs before the change is integrated. If the system in production also fires an alert when something degrades, that is already the job of the environment it runs in, not of the architecture.
 _Mechanism: an automated behavior test (performance, data contract, security) that lives in the repository and fails when the behavior deviates._
 
-**09 · The Verification Surface Is Itself Bound.** The set of tests and rules that verify the repository is, in turn, a set of claims about the repository, so it too is bound. An agent can rewrite the code freely, but it cannot weaken or delete a test, a rule, or a validation to get a change through. Without a person reviewing, this is the principle that matters most: the cheapest way to make a validation pass is to remove it.
+**09 · The Verification Surface Is Itself Bound.** The set of tests and rules that verify the repository is, in turn, a set of claims about the repository, so it too is bound. An agent can rewrite the code freely, but it cannot weaken or delete a test, a rule, or a validation to get a change through. Without a person reviewing, this is the principle that matters most: the cheapest way to make a validation pass is to remove it. In practice the authorization is the repository's own integration rules: which paths need whose approval (the tests, the lint configuration, the CI definition, the hooks), which checks must pass before merging, and who can bypass them. A test that fails when a rule is weakened catches the drift; the integration rule is what stops the same change from deleting the test. An agent's approval does not authorize a change to the verification surface: that approval comes from a person or from a reviewer the repository names, never from the author of the change.
 _Mechanism: a validation that goes red if the set of tests and rules changes without the authorization the repository defined._
 
 ## What Context Architecture does not do

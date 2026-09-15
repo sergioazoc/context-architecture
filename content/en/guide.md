@@ -48,8 +48,9 @@ review, by a person or an agent, catches it and requires it bound before the cha
 
 ::callout{color="neutral"}
 Assume a reader who keeps nothing between sessions and knows only what the repo states out loud. An
-AI agent is exactly that reader. A new teammate is close. The question underneath all of it is one:
-how long until that reader makes a correct change.
+AI agent is exactly that reader. A new teammate is close. Agents keep memory now, but it lives outside
+the repo, unverified and unshared, so design as if it were absent. The question underneath all of it
+is one: how long until that reader makes a correct change.
 ::
 
 ## Before you start: is it worth it?

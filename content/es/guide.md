@@ -50,8 +50,9 @@ cambio.
 
 ::callout{color="neutral"}
 Asume un lector que no guarda nada entre sesiones y solo sabe lo que el repo dice en voz alta. Un
-agente de IA es exactamente ese lector. Alguien recién llegado se le acerca. La pregunta debajo de
-todo es una sola: cuánto demora ese lector en hacer un cambio correcto.
+agente de IA es exactamente ese lector. Alguien recién llegado se le acerca. Los agentes ahora guardan
+memoria, pero vive fuera del repo, sin verificar y sin compartir, así que diseña como si no existiera.
+La pregunta debajo de todo es una sola: cuánto demora ese lector en hacer un cambio correcto.
 ::
 
 ## Antes de empezar: ¿vale la pena?

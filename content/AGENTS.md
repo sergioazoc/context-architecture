@@ -46,6 +46,8 @@ list, so it cannot drift from the content tree.
   reword the rule, or alter the methodology.
 - **Stay qualitative.** No performance figures attributed to Context Architecture; any speed gain
   belongs to the specific tooling, not to the discipline. Confirm any figure with the author.
+  Third-party findings may be cited with their source and date (for example the AGENTS.md studies in
+  "The problem"), never as a result of Context Architecture itself.
 - **Voice and wording.** Follow the repository voice rules in the root `AGENTS.md`: plain,
   unambiguous wording (never "discharge"/"descargar" for removing a spec; say it is removed), no em
   dashes, no filler, tech terms in English. Public pages read in the author's voice within the
