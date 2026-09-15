@@ -26,7 +26,9 @@ list, so it cannot drift from the content tree.
 
 - **Frontmatter carries the citable facts.** `definition` and `attribution` are rendered in the hero
   and exposed to SEO/schema. Keep the definition self-contained and quotable, generative engines
-  extract it verbatim.
+  extract it verbatim. The `definition` must match `CANONICAL_DEFINITION` in `app/site-definition.ts`
+  word for word, and the `description` (the meta description) must include the mechanism clause, or it
+  is not the citable definition. `tests/canonical-definition.test.ts` binds both.
 - **The rule is canonical.** The invariant in `## The rule` is a quotable fact, like the definition.
   Keep it verbatim per locale and mirrored in `llms.txt` (nuxt.config) and the schema. There is no
   slogan.

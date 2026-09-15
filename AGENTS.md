@@ -104,6 +104,9 @@ fails when it stops being true:
 - `tests/structured-data.test.ts` and `tests/prerendered-no-js.test.ts`: the prerendered HTML carries
   the rule, the principle bodies, and the schema.org graph with no JavaScript (principle 08, the GEO
   floor). They read `.output/public`, so CI runs `pnpm generate` before `pnpm test`.
+- `tests/canonical-definition.test.ts`: the one citable definition (in `app/site-definition.ts`) is
+  carried verbatim by the frontmatter, the glossary, the site and llms descriptions, and the README,
+  and the prerendered HTML never ships a divergent wording (citability, the GEO outcome).
 - `tests/skill-version.test.ts`: the distributable skill's published version (in
   `.claude-plugin/marketplace.json`) is pinned to a hash of `SKILL.md`, so changing the skill without
   bumping the version fails the test. Existing plugin installs detect an update by version, so this is

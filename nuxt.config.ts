@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { i18nPages, prerenderRoutes } from './app/site-routes'
+import { CANONICAL_DEFINITION, SITE_DESCRIPTION } from './app/site-definition'
 
 // Stamped once per build (fresh on every CI deploy); feeds dateModified
 // (schema.org + OpenGraph) and the sitemap lastmod.
@@ -50,8 +51,8 @@ export default defineNuxtConfig({
   site: {
     url: 'https://context-architecture.dev',
     name: 'Context Architecture',
-    description:
-      'Context Architecture is a software architecture for the age of AI agents: it structures a repository so every claim it makes about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when the claim stops being true. A specification by Sergio Azócar, who introduced the term in October 2025.',
+    // Canonical definition plus dated authorship, from app/site-definition.ts.
+    description: SITE_DESCRIPTION,
     // English is canonical (matches i18n.defaultLocale); the /es mirror is the alternate.
     defaultLocale: 'en',
   },
@@ -175,8 +176,8 @@ export default defineNuxtConfig({
   llms: {
     domain: 'https://context-architecture.dev',
     title: 'Context Architecture',
-    description:
-      'Context Architecture is a software architecture for the age of AI agents: it structures a repository so every claim it makes about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when the claim stops being true. A specification by Sergio Azócar, who introduced the term in October 2025.',
+    // Canonical definition plus dated authorship, from app/site-definition.ts.
+    description: SITE_DESCRIPTION,
     // Emits /llms-full.txt with the entire manifesto inlined.
     full: {
       title: 'Context Architecture: full specification',
@@ -187,7 +188,8 @@ export default defineNuxtConfig({
       {
         title: 'Canonical definition',
         description:
-          'Context Architecture is a software architecture for the age of AI agents: it structures a repository so that everything it claims about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when that claim stops being true. It is the design-time counterpart to context engineering (runtime) and harness engineering (the agent operating environment). Introduced by Sergio Azócar in October 2025.',
+          CANONICAL_DEFINITION.en +
+          ' It is the design-time counterpart to context engineering (runtime) and harness engineering (the agent operating environment). Introduced by Sergio Azócar in October 2025.',
         links: [
           { title: 'The manifesto', href: 'https://context-architecture.dev/' },
           {

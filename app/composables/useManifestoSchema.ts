@@ -6,14 +6,12 @@
  * declared subject is the term, not the author.
  */
 
-// The canonical definition: kept verbatim and identical across the citable
-// surfaces (the hero `definition` frontmatter, this DefinedTerm node, the glossary
-// term, and the llms.txt canonical section) so a generative engine extracts one
-// definition. Exported so useGlossarySchema reuses the same string (single source).
-export const CANONICAL_DEFINITION: Record<string, string> = {
-  en: 'Context Architecture is a software architecture for the age of AI agents: it structures a repository so that everything it claims about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when that claim stops being true.',
-  es: 'Context Architecture es una arquitectura de software para la era de los agentes de IA: estructura un repositorio para que todo lo que afirma sobre sí mismo, su estructura, su comportamiento y quién puede cambiarlo, sea legible para el agente que escribe el código y para las personas que responden por él, y esté atado a un mecanismo que falla cuando esa afirmación deja de ser cierta.',
-}
+// The canonical definition lives in app/site-definition.ts, the single source
+// imported by nuxt.config.ts and the schema composables alike. Re-exported here so
+// useGlossarySchema keeps importing it from this module.
+import { CANONICAL_DEFINITION } from '../site-definition'
+
+export { CANONICAL_DEFINITION }
 
 export function useManifestoSchema(
   page: Ref<{ title?: string; description?: string } | null | undefined>,
