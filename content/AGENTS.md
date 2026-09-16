@@ -41,7 +41,10 @@ list, so it cannot drift from the content tree.
   and a TOC entry, so heading text must stand alone.
 - **Parity.** Any change to an English file must be mirrored in its Spanish counterpart, keeping the
   specification register (neutral Spanish, technical terms left in English where idiomatic: context
-  engineering, harness engineering).
+  engineering, harness engineering). `tests/content-parity.test.ts` binds the dimensions: same pages,
+  MDC components, heading count, mechanism markers, table rows, fenced blocks, internal links, code
+  spans, and frontmatter keys per page. A paragraph or a mechanism line dropped in translation fails
+  the suite.
 - **The nine principles are the author's IP.** Build them as written; do not invent new principles,
   reword the rule, or alter the methodology.
 - **Stay qualitative.** No performance figures attributed to Context Architecture; any speed gain
