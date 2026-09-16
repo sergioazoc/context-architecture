@@ -12,6 +12,7 @@ import { read } from './repo'
 // that fails when it stops being true.
 const RELEASED: Record<string, string> = {
   '0.2.0': '403ddf0aea322dbe9095050af8d69c1612d44fd5b7c37815e6a6a4bcbe58b4ad',
+  '0.3.0': '9fb7ead8856e6d1f7bd950ef6295d0cb4bb35a7ff934673070a050b21f1031f1',
 }
 
 const sha256 = (s: string): string => createHash('sha256').update(s).digest('hex')
@@ -23,6 +24,15 @@ describe('skill version is bound to skill content', () => {
 
   it('declares one version (metadata and the plugin entry agree)', () => {
     expect(pluginVersion, 'plugin entry version must equal metadata version').toBe(metaVersion)
+  })
+
+  it('the SKILL.md frontmatter declares the same version', () => {
+    // A curl or CLI install reads the version from the skill itself, so it must
+    // match the marketplace version the plugin install sees.
+    const skill = read('skills/context-architecture/SKILL.md')
+    expect(skill, `SKILL.md metadata.version must be "${pluginVersion}"`).toContain(
+      `version: "${pluginVersion}"`,
+    )
   })
 
   it('registers a hash for the current version', () => {

@@ -31,17 +31,37 @@ diseño, reestructurado en pasos. Hace la misma auditoría en ambos casos.
 
 ## Instalarlo
 
-Un comando cubre la mayoría de las herramientas. El [CLI `skills`](https://skills.sh) lee el skill
-desde el repo y lo deja en el agente que tengas:
+Un comando cubre la mayoría de las herramientas, y un archivo cubre el resto. El skill está en el
+formato estándar Agent Skills, así que casi cualquier agente lo lee una vez que está en la carpeta
+correcta.
+
+### Un comando
+
+El [CLI `skills`](https://skills.sh) lee el skill desde el repo y lo instala en el agente que tengas:
 
 ```bash
 npx skills add sergioazoc/context-architecture
 ```
 
 Te pregunta en qué herramienta instalarlo. Pasa `-a <herramienta>` para elegir una (por ejemplo
-`-a claude-code`), `-g` para instalarlo en todos tus proyectos, y `-y` para saltarte las preguntas. Las
-secciones por herramienta de abajo cubren el camino manual, por si prefieres dejar el archivo tú mismo
-o tu herramienta no está en su lista.
+`-a claude-code`), `-g` para instalarlo en todos tus proyectos, y `-y` para saltarte las preguntas.
+Instala una copia canónica y enlaza cada agente a ella; pasa `--copy` si prefieres copias
+independientes.
+
+### La ruta portable
+
+La mayoría de los agentes leen un skill desde `.agents/skills/<name>/SKILL.md`. Deja el archivo ahí a
+mano y funciona en varias herramientas:
+
+```bash
+mkdir -p .agents/skills/context-architecture
+curl -fsSL https://context-architecture.dev/skill.md -o .agents/skills/context-architecture/SKILL.md
+```
+
+Usa `~/.agents/skills/` para una instalación personal en todos tus proyectos. A septiembre de 2026 esa
+ruta la leen Codex, Cursor, GitHub Copilot, Gemini CLI, Antigravity, Amp, OpenCode, Zed, Roo Code,
+Kilo, Junie, Windsurf, goose, Warp y Factory. La carpeta debe llamarse como el skill
+(`context-architecture`); la spec de Agent Skills exige que el nombre sea igual a la carpeta.
 
 ### Claude Code
 
@@ -49,72 +69,53 @@ o tu herramienta no está en su lista.
 npx skills add sergioazoc/context-architecture -a claude-code -g
 ```
 
-A mano, sin Node: guarda el archivo en una carpeta con el nombre del skill, luego reinicia Claude Code.
-El nombre de la carpeta es lo que escribes como el comando `/context-architecture`, así que déjalo
-exactamente así.
+A mano, guarda el archivo en una carpeta con el nombre del skill bajo `.claude/skills/`:
 
 ```bash
 mkdir -p ~/.claude/skills/context-architecture
 curl -fsSL https://context-architecture.dev/skill.md -o ~/.claude/skills/context-architecture/SKILL.md
 ```
 
-Quita el `~/.claude` para una instalación personal; usa `.claude/skills/context-architecture/SKILL.md`
-para acotarlo a un solo proyecto.
+`~/.claude/skills/` es la instalación personal (todos los proyectos de esta máquina); usa
+`.claude/skills/context-architecture/SKILL.md` dentro de un repo para acotarlo a un proyecto. Claude
+Code toma el archivo en la sesión en curso; reinicia solo si la carpeta `.claude/skills/` no existía
+cuando arrancó la sesión.
 
-### Cursor
+### GitHub Copilot
 
-Guárdalo como una regla de proyecto. La extensión `.mdc` importa, un `.md` plano en esa carpeta se
-ignora:
-
-```bash
-mkdir -p .cursor/rules
-curl -fsSL https://context-architecture.dev/skill.md -o .cursor/rules/context-architecture.mdc
-```
-
-El `description` del frontmatter le dice a Cursor que traiga la regla cuando es relevante.
-
-### GitHub Copilot (VS Code)
-
-VS Code lee Agent Skills de forma nativa, el mismo formato `SKILL.md`. La carpeta debe llamarse como el
-skill, o Copilot no lo carga:
+Copilot lee skills en el modo agente de VS Code y JetBrains, la CLI, el coding agent y la revisión de
+código, desde `.github/skills/`, `.claude/skills/` o `.agents/skills/`. El nombre de la carpeta debe
+ser igual al del skill, o Copilot no lo carga:
 
 ```bash
 mkdir -p .github/skills/context-architecture
 curl -fsSL https://context-architecture.dev/skill.md -o .github/skills/context-architecture/SKILL.md
 ```
 
-En JetBrains, o en un Copilot viejo sin skills, pega el archivo en `.github/copilot-instructions.md`.
+### Herramientas con su propia carpeta de skills
 
-### OpenAI Codex
-
-```bash
-mkdir -p ~/.agents/skills/context-architecture
-curl -fsSL https://context-architecture.dev/skill.md -o ~/.agents/skills/context-architecture/SKILL.md
-```
-
-Usa un `.agents/skills/context-architecture/SKILL.md` local para acotarlo a un repo. Reinicia Codex si
-no toma el skill.
-
-### Otras herramientas
-
-La misma idea: el archivo va donde la herramienta lee sus reglas.
-
-- **Windsurf**: `.windsurf/rules/context-architecture.md`. Si Windsurf se queja por el tamaño, apúntalo
-  al archivo en vez de pegar todo.
-- **Cline**: `.clinerules/context-architecture.md`.
-- **Zed**: agrégalo a tu `AGENTS.md`, que Zed lee. Un archivo `.rules` suelto puede tapar uno existente,
-  así que agregarlo al `AGENTS.md` es más seguro.
-- **Aider**: guárdalo como `CONVENTIONS.md`, luego corre `aider --read CONVENTIONS.md`.
-
-### Cualquier otro agente
-
-Toma el archivo en crudo y pégalo en las instrucciones de tu herramienta, o apúntala a él:
+Algunos agentes leen una ruta específica en vez de `.agents/skills/`: Cline (`.cline/skills/`), Kiro
+(`.kiro/skills/`) y Qwen Code (`.qwen/skills/`). El layout es el mismo, una carpeta
+`context-architecture/SKILL.md` bajo esa ruta. En una herramienta sin soporte de skills, apúntala al
+archivo en crudo: Aider lo lee como `CONVENTIONS.md` con `aider --read CONVENTIONS.md`, y cualquier
+herramienta puede tomar el archivo autocontenido pegado en sus instrucciones. El archivo en crudo
+siempre está en:
 
 ```bash
 curl -fsSL https://context-architecture.dev/skill.md
 ```
 
-Es autocontenido. Reenuncia la regla y los nueve principios, así que funciona sin vuelta a este sitio.
+### Como plugin de Claude Code
+
+El repo también es un marketplace de un solo plugin, así que Claude Code puede instalarlo y
+actualizarlo como plugin:
+
+```bash
+/plugin marketplace add sergioazoc/context-architecture
+/plugin install context-architecture@context-architecture
+```
+
+El skill queda como `/context-architecture:context-architecture`.
 
 ## Usarlo
 
@@ -132,15 +133,16 @@ donde más recuperas por edición.
 Las actualizaciones viajan por la rama por defecto: un cambio le llega a alguien solo cuando se
 mergea a `main` y se vuelve a deployar el sitio. Después, cómo lo bajas depende de cómo lo instalaste.
 
-- **Plugin de Claude Code** (`/plugin marketplace add`): corre
-  `/plugin marketplace update context-architecture`. Cada release sube la versión del plugin, así
-  Claude Code ve una versión nueva y la baja. Una versión sin cambios la trata como cacheada y la
-  salta, por eso cada cambio en el skill viaja con un bump de versión.
-- **CLI `skills`**: vuelve a correr `npx skills add sergioazoc/context-architecture`. Sobreescribe la
-  copia instalada desde el repo.
+- **CLI `skills`**: corre `npx skills update context-architecture` (o `npx skills update` para todos;
+  agrega `-g` para la instalación global). Refresca la copia canónica a la que cada agente enlaza.
+- **Plugin de Claude Code**: corre `/plugin marketplace update context-architecture` para refrescar el
+  catálogo, luego `claude plugin update context-architecture@context-architecture` para instalar la
+  versión nueva, o habilita el auto-update del marketplace en `/plugin` (apagado por defecto en
+  marketplaces de terceros). Cada release sube la versión, así que una versión sin cambios queda
+  cacheada.
 - **Instalación manual (`curl`)**: vuelve a correr el mismo `curl ... -o <ruta>` con el que
-  instalaste; sobreescribe el archivo. Claude Code toma un archivo `~/.claude/skills/...` editado
-  dentro de la sesión, sin reiniciar.
+  instalaste; sobreescribe el archivo. Claude Code toma un archivo `.claude/skills/...` editado dentro
+  de la sesión.
 
 ## Hacia dónde seguir
 

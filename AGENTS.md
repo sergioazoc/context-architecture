@@ -111,9 +111,13 @@ fails when it stops being true:
   carried verbatim by the frontmatter, the glossary, the site and llms descriptions, and the README,
   and the prerendered HTML never ships a divergent wording (citability, the GEO outcome).
 - `tests/skill-version.test.ts`: the distributable skill's published version (in
-  `.claude-plugin/marketplace.json`) is pinned to a hash of `SKILL.md`, so changing the skill without
-  bumping the version fails the test. Existing plugin installs detect an update by version, so this is
-  the rule applied to the skill's own release.
+  `.claude-plugin/marketplace.json` and the `SKILL.md` frontmatter) is pinned to a hash of `SKILL.md`,
+  so changing the skill without bumping the version fails the test. Existing plugin installs detect an
+  update by version, so this is the rule applied to the skill's own release.
+- `tests/skill-spec.test.ts`: the `SKILL.md` frontmatter conforms to the Agent Skills spec (name
+  matches the folder and the pattern, description within 1024 characters, metadata values are strings,
+  only standard keys) and the body stays within the progressive-disclosure budget, so the skill loads
+  in every tool (principle 08 applied to the deliverable).
 
 Principles 01, 03, and 04 (domain-first structure, named boundaries, fractal legibility) hold here by
 discipline plus the parity and doc tests, not by a dedicated structure/import/naming lint rule: a
