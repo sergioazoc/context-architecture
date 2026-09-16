@@ -27,8 +27,10 @@ Register reference points: c4model.com, micro-frontends.org.
 - **The principle set is the author's IP** (nine principles). Build them as written; do not invent
   new principles or alter the methodology.
 - **Prerendered and verifiable.** Fully SSG; the content reads with no JavaScript. The schema.org
-  graph (`DefinedTerm`, `Person` with `sameAs`, `TechArticle`) and Lighthouse 100 across
-  the board are the floor.
+  graph (`DefinedTerm`, `Person` with `sameAs`, `TechArticle`) is the floor, bound in
+  `tests/structured-data.test.ts`. Lighthouse 100 across the board and accessibility are quality
+  targets checked by hand with tooling (Lighthouse, axe) before a visual change, not rules bound in
+  CI. Stating that here, rather than calling an unbound check a rule, is the honest reading of the rule.
 
 ## Voice and wording
 
@@ -150,6 +152,12 @@ pnpm typecheck    # vue-tsc
 pnpm test         # vitest: the repo's claims about itself, bound
 pnpm format       # oxfmt (formats code; Markdown is excluded, it reflows MDC blocks)
 pnpm format:check # oxfmt --check: the CI gate that fails on unformatted code
+pnpm build        # nuxt build (server build; the deploy path uses generate)
 pnpm generate     # prerender (SSG) to .output/public
+pnpm preview      # serve the last build locally
+pnpm cf:preview   # generate && wrangler dev: preview the static site on Workers
 pnpm deploy       # generate && deploy to Cloudflare Workers
 ```
+
+Every `package.json` script except lifecycle hooks (`postinstall`) is listed here or in the README;
+`tests/capabilities.test.ts` fails if one is not (principle 05).

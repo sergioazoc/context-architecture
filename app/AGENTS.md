@@ -37,7 +37,8 @@ before writing your own.
   progressive enhancement.
 - **Dark mode is an inversion**, not a separate theme, it only re-points the `--ca-*` tokens under
   `.dark`. Don't add dark-specific component styling.
-- **Accessibility is a floor, not a nice-to-have.** Visible keyboard focus, AA contrast in both
-  modes, and `prefers-reduced-motion` are respected globally in `main.css`. Don't regress them.
+- **Accessibility is a quality target.** Visible keyboard focus, AA contrast in both modes, and
+  `prefers-reduced-motion` are respected globally in `main.css`. These are verified by review and by
+  hand with tooling (axe, Lighthouse), not bound to a CI check; don't regress them.
 - **MDC components** (used inside Markdown) live in `components/content/` and must invert cleanly
   via `currentColor` / CSS variables.
