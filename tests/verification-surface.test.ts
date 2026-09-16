@@ -6,20 +6,30 @@ import { read } from './repo'
 // that run the checks are removed, which is the cheapest way to make a red check
 // go green.
 describe('the verification surface is itself bound (principle 09)', () => {
-  it('the oxlint CSS rules stay at "error", not weakened to warn/off', () => {
+  it('the oxlint rules stay at "error", not weakened to warn/off', () => {
     const cfg = JSON.parse(read('.oxlintrc.json')) as {
       jsPlugins?: string[]
-      rules?: Record<string, string>
+      rules?: Record<string, unknown>
     }
+    // A rule is "at error" whether it is the string "error" or ["error", options].
+    const atError = (v: unknown): boolean => v === 'error' || (Array.isArray(v) && v[0] === 'error')
     const mustError = [
+      // CSS conventions (principle 07).
       'tailwindcss/no-unknown-classes',
       'tailwindcss/no-duplicate-classes',
       'tailwindcss/no-conflicting-classes',
       'tailwindcss/no-deprecated-classes',
       'tailwindcss/no-unnecessary-whitespace',
+      // One accent color, no hard-coded colors outside the tokens (principle 07).
+      'tailwindcss/no-hardcoded-colors',
+      // Complexity and size limits on functions (principle 04).
+      'max-depth',
+      'max-params',
+      'complexity',
+      'max-lines-per-function',
     ]
     for (const rule of mustError) {
-      expect(cfg.rules?.[rule], `${rule} must stay "error"`).toBe('error')
+      expect(atError(cfg.rules?.[rule]), `${rule} must stay at "error"`).toBe(true)
     }
     expect(cfg.jsPlugins ?? []).toContain('oxlint-tailwindcss')
   })

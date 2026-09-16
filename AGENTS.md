@@ -78,6 +78,8 @@ Register reference points: c4model.com, micro-frontends.org.
 - CSS is checked by `oxlint` + `oxlint-tailwindcss` against `app/assets/css/main.css`.
 - Prefer Nuxt UI components and semantic utilities (`text-muted`, `border-default`, `text-primary`)
   over hard-coded colors or bespoke markup, since they already map to the design tokens.
+- Code comments are written in English, so one convention holds across the tree. Public copy and its
+  Spanish mirror live in `content/`, not in comments.
 
 ## How this repo binds its own claims
 
@@ -130,11 +132,14 @@ the `ci` check, and Code Owner review, and blocks force pushes and deletions. Cr
 `gh api repos/sergioazoc/context-architecture/rulesets`; it is the one part of this that lives in the
 GitHub settings, not the tree.
 
-Principles 01, 03, and 04 (domain-first structure, named boundaries, fractal legibility) hold here by
-discipline plus the parity and doc tests, not by a dedicated structure/import/naming lint rule: a
-content site has no domain import graph to police, so the manifesto's lint-rule mechanism for those
-does not apply on this repo. Lighthouse 100 and accessibility are quality targets verified with
-tooling, not yet bound to a CI check.
+Principle 04 (legibility at every zoom level) is bound by the `complexity`, `max-depth`, `max-params`,
+and `max-lines-per-function` rules in `.oxlintrc.json`, kept at `error` and pinned by
+`tests/verification-surface.test.ts`; they are set as a ratchet at the current levels, so a change
+cannot make a function less legible than the code already is. Principles 01 and 03 (domain-first
+structure, named boundaries) hold here by discipline plus the parity and doc tests: a content site has
+no domain import graph to police, so the manifesto's import-rule mechanism for 03 does not apply.
+Lighthouse 100 and accessibility are quality targets verified with tooling, not yet bound to a CI
+check.
 
 ## Commands
 

@@ -10,9 +10,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
 
-  // Nota: @nuxt/icon, @nuxt/fonts y @nuxtjs/color-mode los registra
-  // automáticamente @nuxt/ui, por eso no se listan aquí (se configuran
-  // más abajo con sus respectivas claves `icon`, `fonts`, `colorMode`).
+  // @nuxt/icon, @nuxt/fonts and @nuxtjs/color-mode are registered automatically
+  // by @nuxt/ui, so they are not listed here (they are configured below under
+  // their `icon`, `fonts`, and `colorMode` keys).
   modules: [
     '@nuxt/ui',
     '@nuxt/content',
@@ -26,8 +26,8 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
-  // Favicon en la identidad del sitio (SVG escalable + .ico legacy + apple-touch).
-  // SVG primero para que los navegadores modernos lo prefieran.
+  // Favicon in the site identity (scalable SVG + legacy .ico + apple-touch).
+  // SVG first so modern browsers prefer it.
   app: {
     head: {
       // Default lang/dir for the SPA-fallback document (404.html); real prerendered
@@ -46,8 +46,8 @@ export default defineNuxtConfig({
     },
   },
 
-  // Configuración global del sitio. Alimenta a @nuxtjs/seo (sitemap, robots,
-  // og-image, schema-org), nuxt-llms, etc.
+  // Global site config. Feeds @nuxtjs/seo (sitemap, robots, og-image,
+  // schema-org), nuxt-llms, etc.
   site: {
     url: 'https://context-architecture.dev',
     name: 'Context Architecture',
@@ -55,6 +55,14 @@ export default defineNuxtConfig({
     description: SITE_DESCRIPTION,
     // English is canonical (matches i18n.defaultLocale); the /es mirror is the alternate.
     defaultLocale: 'en',
+  },
+
+  // The htmlAttrs.lang='en' above is the deliberate fallback for the SPA-fallback
+  // 404.html; the prerendered /es pages still emit lang="es" (bound in
+  // tests/prerendered-no-js.test.ts). Turn off the app-head validator so that
+  // correct setup does not print a warning on every typecheck.
+  seo: {
+    validateAppHead: false,
   },
 
   // Build-time values exposed to the app. `buildDate` is stamped on every build
@@ -78,14 +86,14 @@ export default defineNuxtConfig({
 
   // --- @nuxt/icon ---------------------------------------------------------
   icon: {
-    // Sirve los iconos como bundle local (mejor para SSG, sin llamadas a la
-    // API de Iconify en runtime). Usa los sets instalados como devDeps.
+    // Serve icons as a local bundle (better for SSG, no Iconify API calls at
+    // runtime). Uses the sets installed as devDeps.
     serverBundle: 'local',
   },
 
   // --- @nuxt/fonts --------------------------------------------------------
-  // Self-hosted en build, font-display: swap por defecto. Subsets latin +
-  // latin-ext para el español. IBM Plex Serif (lectura) + Mono (estructura).
+  // Self-hosted at build, font-display: swap by default. latin + latin-ext
+  // subsets for Spanish. IBM Plex Serif (reading) + Mono (structure).
   fonts: {
     provider: 'google',
     families: [
@@ -94,7 +102,7 @@ export default defineNuxtConfig({
     ],
   },
 
-  // --- @nuxtjs/color-mode (vía Nuxt UI) -----------------------------------
+  // --- @nuxtjs/color-mode (via Nuxt UI) -----------------------------------
   colorMode: {
     preference: 'system',
     fallback: 'light',
@@ -104,7 +112,7 @@ export default defineNuxtConfig({
   content: {
     build: {
       markdown: {
-        // Resalta el código con Shiki en ambos modos de color.
+        // Highlight code with Shiki in both color modes.
         highlight: {
           theme: {
             default: 'github-light',
@@ -117,20 +125,20 @@ export default defineNuxtConfig({
 
   // --- @nuxt/image --------------------------------------------------------
   image: {
-    // En un sitio 100% estático no hay servidor IPX en runtime; las imágenes
-    // del directorio public se sirven tal cual. Cambia el provider si usas
-    // un CDN de imágenes (p.ej. Cloudflare Images).
+    // On a fully static site there is no IPX server at runtime; images in the
+    // public directory are served as-is. Change the provider if you use an
+    // image CDN (for example Cloudflare Images).
     provider: 'none',
   },
 
   // --- @nuxtjs/i18n v10 ---------------------------------------------------
-  // Inglés canónico sin prefijo; español espejo bajo /es/.
+  // English canonical with no prefix; Spanish mirror under /es/.
   i18n: {
     defaultLocale: 'en',
     // Required for @nuxtjs/i18n to emit absolute hreflang alternate links.
     baseUrl: 'https://context-architecture.dev',
     strategy: 'prefix_except_default',
-    // En SSG la redirección automática por idioma no es fiable, se desactiva.
+    // In SSG, automatic language redirection is unreliable, so it is disabled.
     detectBrowserLanguage: false,
     // Localized route slugs: the Spanish mirror reads in Spanish (e.g. /es/comparacion),
     // not the English slug under a /es prefix. Paths are declared here without the locale
@@ -148,24 +156,24 @@ export default defineNuxtConfig({
     ],
   },
 
-  // --- nuxt-og-image (vía @nuxtjs/seo) ------------------------------------
+  // --- nuxt-og-image (via @nuxtjs/seo) ------------------------------------
   ogImage: {
-    // Las familias de @nuxt/fonts (IBM Plex Serif + Mono) se incluyen solas en
-    // el renderer de OG, así que la imagen las usa directo sin config extra.
-    // El renderer NO se configura aquí: nuxt-og-image v6 lo deriva del sufijo
-    // del archivo del componente. `app/components/OgImage/NuxtSeo.takumi.vue`
-    // selecciona Takumi (Rust → PNG directo, sin paso por SVG; @takumi-rs/core
-    // en build/prerender, @takumi-rs/wasm en edge). `renderer` está excluido de
-    // `defaults` en los tipos del módulo, por eso aquí solo van las dimensiones.
+    // The @nuxt/fonts families (IBM Plex Serif + Mono) are included in the OG
+    // renderer on their own, so the image uses them with no extra config.
+    // The renderer is NOT configured here: nuxt-og-image v6 derives it from the
+    // component file suffix. `app/components/OgImage/NuxtSeo.takumi.vue` selects
+    // Takumi (Rust to PNG directly, no SVG step; @takumi-rs/core at
+    // build/prerender, @takumi-rs/wasm on edge). `renderer` is excluded from
+    // `defaults` in the module types, so only the dimensions go here.
     defaults: {
-      // Dimensión recomendada para OG/Twitter (1.91:1).
+      // Recommended dimension for OG/Twitter (1.91:1).
       width: 1200,
       height: 630,
     },
   },
 
-  // --- @nuxtjs/sitemap (vía @nuxtjs/seo) ----------------------------------
-  // lastmod por defecto = fecha de build (se regenera en cada deploy).
+  // --- @nuxtjs/sitemap (via @nuxtjs/seo) ----------------------------------
+  // lastmod defaults to the build date (regenerated on each deploy).
   sitemap: {
     defaults: {
       lastmod: BUILD_DATE,
@@ -252,8 +260,8 @@ export default defineNuxtConfig({
     ],
   },
 
-  // --- nuxt-schema-org (vía @nuxtjs/seo) ----------------------------------
-  // Identidad del autor para atribución verificable.
+  // --- nuxt-schema-org (via @nuxtjs/seo) ----------------------------------
+  // Author identity for verifiable attribution.
   schemaOrg: {
     identity: {
       type: 'Person',
@@ -272,8 +280,8 @@ export default defineNuxtConfig({
   },
 
   // --- Nitro / prerender (SSG) --------------------------------------------
-  // `nuxt generate` prerenderiza todo a `.output/public`, que luego sirve
-  // Cloudflare Workers como static assets (ver wrangler.jsonc).
+  // `nuxt generate` prerenders everything to `.output/public`, which
+  // Cloudflare Workers then serves as static assets (see wrangler.jsonc).
   nitro: {
     prerender: {
       crawlLinks: true,

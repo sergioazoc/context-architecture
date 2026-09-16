@@ -2,22 +2,22 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "context-architecture",
   "compatibility_date": "2025-06-12",
-  // Dominio oficial. Requiere que context-architecture.dev esté añadido como
-  // zona en tu cuenta de Cloudflare. Quita este bloque para usar solo el
-  // subdominio *.workers.dev.
+  // Official domain. Requires context-architecture.dev to be added as a zone in
+  // your Cloudflare account. Remove this block to use only the *.workers.dev
+  // subdomain.
   "routes": [{ "pattern": "context-architecture.dev", "custom_domain": true }],
-  // Sitio 100% estático (SSG): no hay Worker script (`main`), Cloudflare
-  // sirve directamente los archivos prerenderizados por `nuxt generate`.
+  // Fully static site (SSG): no Worker script (`main`), Cloudflare serves the
+  // files prerendered by `nuxt generate` directly.
   "assets": {
     "directory": "./.output/public",
-    // Sin barra final, para alinear con las URLs canónicas: el canonical y el
-    // sitemap de @nuxtjs/seo declaran las rutas sin trailing slash (p.ej.
-    // /comparison), así que Cloudflare debe servir esa misma forma con 200 (y
-    // redirigir /comparison/ → /comparison con 307). Con el default
-    // `auto-trailing-slash` ocurría lo contrario y el sitemap/canonical
-    // apuntaban a URLs que redirigían.
+    // No trailing slash, to match the canonical URLs: @nuxtjs/seo declares the
+    // canonical and the sitemap routes without a trailing slash (for example
+    // /comparison), so Cloudflare must serve that same form with 200 (and
+    // redirect /comparison/ to /comparison with 307). With the default
+    // `auto-trailing-slash` the opposite happened and the sitemap/canonical
+    // pointed at URLs that redirected.
     "html_handling": "drop-trailing-slash",
-    // Sirve el 404.html que genera Nuxt para rutas no encontradas.
+    // Serve the 404.html Nuxt generates for not-found routes.
     "not_found_handling": "404-page",
   },
 }

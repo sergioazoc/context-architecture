@@ -43,4 +43,13 @@ describe.skipIf(!built)('prerendered content reads without JavaScript (principle
       expect(raw, `raw/${locale}.md missing the rule`).toContain(rule)
     })
   }
+
+  // The htmlAttrs.lang fallback is 'en' for the SPA-fallback 404.html, but each
+  // prerendered locale must still emit its own lang, or the per-locale claim is
+  // false. This binds that (the reason seo.validateAppHead is turned off).
+  it('each prerendered page emits the right html lang', () => {
+    expect(html('index.html'), 'English home must be lang="en"').toContain('lang="en"')
+    expect(html('es/index.html'), 'Spanish home must be lang="es"').toContain('lang="es"')
+    expect(html('404.html'), '404 fallback must be lang="en"').toContain('lang="en"')
+  })
 })

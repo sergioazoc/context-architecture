@@ -74,3 +74,24 @@ describe('house wording conventions', () => {
     expect(offenders, 'lines with a dangling § pointer').toEqual([])
   })
 })
+
+// House rule (root AGENTS.md): one accent color, mapped through --ca-accent, used
+// sparingly. This binds it: app source carries no hard-coded hex or rgb() colors
+// outside the design tokens in main.css and the OgImage renderer (Takumi renders
+// outside the CSS cascade, so it cannot read the tokens and needs literal hex),
+// and main.css defines the accent exactly once per color scheme.
+describe('one accent color, no stray hard-coded colors (principle 07)', () => {
+  const files = walk('app', (p) => /\.(vue|ts)$/.test(p)).filter(
+    (p) => !p.startsWith('app/components/OgImage'),
+  )
+
+  it('app source uses no hard-coded hex or rgb() colors outside the tokens and OgImage', () => {
+    const offenders = files.filter((f) => /#[0-9a-fA-F]{3,8}\b|rgb\(/.test(read(f)))
+    expect(offenders, 'files with hard-coded colors').toEqual([])
+  })
+
+  it('main.css defines --ca-accent once for light and once for dark', () => {
+    const defs = [...read('app/assets/css/main.css').matchAll(/--ca-accent:\s/g)]
+    expect(defs.length, 'expected two --ca-accent definitions (:root and .dark)').toBe(2)
+  })
+})
