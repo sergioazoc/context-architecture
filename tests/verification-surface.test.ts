@@ -36,4 +36,27 @@ describe('the verification surface is itself bound (principle 09)', () => {
       expect(ci, `CI must run ${cmd}`).toContain(cmd)
     }
   })
+
+  it('CI runs the checks on pull requests, not only on push', () => {
+    // The checks are only an integration gate if they run before merge.
+    const ci = read('.github/workflows/deploy.yml')
+    expect(ci, 'CI must trigger on pull_request').toMatch(/pull_request:/)
+  })
+})
+
+// The authorization principle 09 names is declared in the repo: CODEOWNERS marks
+// the verification surface, and the vitest config keeps collecting every test so a
+// deleted test file is not silently uncovered. A branch ruleset that requires Code
+// Owner review and the CI check is the external half (see the root AGENTS.md).
+describe('the authorization is declared (principle 09)', () => {
+  it('CODEOWNERS covers the verification surface', () => {
+    const owners = read('.github/CODEOWNERS')
+    for (const path of ['/tests/', '/.oxlintrc.json', '/.github/', '/vitest.config.ts']) {
+      expect(owners, `CODEOWNERS must cover ${path}`).toContain(path)
+    }
+  })
+
+  it('the test runner still collects every test file', () => {
+    expect(read('vitest.config.ts')).toContain("include: ['tests/**/*.test.ts']")
+  })
 })

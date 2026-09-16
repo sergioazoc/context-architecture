@@ -102,8 +102,10 @@ fails when it stops being true:
   in the shipped Markdown or the code comments (principle 07).
 - `tests/capabilities.test.ts`: the core commands exist and are documented, and no doc cites an
   undefined script (principle 05). The command list is hand-kept; the test enforces its consistency.
-- `tests/verification-surface.test.ts`: the lint rules stay at `error` and CI keeps running
-  lint/format:check/typecheck/test/build, so the surface cannot be quietly weakened (principle 09).
+- `tests/verification-surface.test.ts`: the lint rules stay at `error`, CI keeps running
+  lint/format:check/typecheck/test/build and runs on pull requests, `CODEOWNERS` covers the
+  verification surface, the test runner still collects every test, and the committed agent deny-rule
+  settings keep the agent from editing that surface, so it cannot be quietly weakened (principle 09).
 - `tests/structured-data.test.ts` and `tests/prerendered-no-js.test.ts`: the prerendered HTML carries
   the rule, the principle bodies, and the schema.org graph with no JavaScript (principle 08, the GEO
   floor). They read `.output/public`, so CI runs `pnpm generate` before `pnpm test`.
@@ -118,6 +120,15 @@ fails when it stops being true:
   matches the folder and the pattern, description within 1024 characters, metadata values are strings,
   only standard keys) and the body stays within the progressive-disclosure budget, so the skill loads
   in every tool (principle 08 applied to the deliverable).
+
+**The authorization principle 09 names** is declared here in three layers. `.github/CODEOWNERS` marks
+the verification surface (`tests/`, the lint and format config, `vitest.config.ts`, `.github/`,
+`.claude/`, `.claude-plugin/`) as owned; `REVIEW.md` states the review rules an agent or a person
+applies on every change; and a committed Claude Code settings file denies the agent editing that
+surface, so a person edits it by hand. The external half is a branch ruleset on `main` that requires a pull request,
+the `ci` check, and Code Owner review, and blocks force pushes and deletions. Create or verify it with
+`gh api repos/sergioazoc/context-architecture/rulesets`; it is the one part of this that lives in the
+GitHub settings, not the tree.
 
 Principles 01, 03, and 04 (domain-first structure, named boundaries, fractal legibility) hold here by
 discipline plus the parity and doc tests, not by a dedicated structure/import/naming lint rule: a
