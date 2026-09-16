@@ -18,3 +18,9 @@ server/
   run at the edge. Reads from disk (e.g. `skills/context-architecture/SKILL.md`) therefore happen at build time only.
 - **No second source of truth.** `skill.md.ts` reads `skills/context-architecture/SKILL.md` at build instead of holding a
   copy. If you add a route that serves repo content, read it; do not duplicate it.
+
+## Not a server route
+
+The agent-facing Markdown mirror at `/raw/**.md` (for example `/raw/en.md`) is not defined here. It is
+emitted by `@nuxt/content`'s llms feature from the `content/` files and prerendered as a static asset.
+This directory owns only `skill.md.ts`; `/raw/**` is documented in the root `AGENTS.md`.

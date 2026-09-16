@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { i18nPages, prerenderRoutes } from './app/site-routes'
+import { CANONICAL_DEFINITION, SITE_DESCRIPTION } from './app/site-definition'
 
 // Stamped once per build (fresh on every CI deploy); feeds dateModified
 // (schema.org + OpenGraph) and the sitemap lastmod.
@@ -8,9 +10,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
 
-  // Nota: @nuxt/icon, @nuxt/fonts y @nuxtjs/color-mode los registra
-  // automáticamente @nuxt/ui, por eso no se listan aquí (se configuran
-  // más abajo con sus respectivas claves `icon`, `fonts`, `colorMode`).
+  // @nuxt/icon, @nuxt/fonts and @nuxtjs/color-mode are registered automatically
+  // by @nuxt/ui, so they are not listed here (they are configured below under
+  // their `icon`, `fonts`, and `colorMode` keys).
   modules: [
     '@nuxt/ui',
     '@nuxt/content',
@@ -24,8 +26,8 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
-  // Favicon en la identidad del sitio (SVG escalable + .ico legacy + apple-touch).
-  // SVG primero para que los navegadores modernos lo prefieran.
+  // Favicon in the site identity (scalable SVG + legacy .ico + apple-touch).
+  // SVG first so modern browsers prefer it.
   app: {
     head: {
       // Default lang/dir for the SPA-fallback document (404.html); real prerendered
@@ -44,15 +46,39 @@ export default defineNuxtConfig({
     },
   },
 
-  // Configuración global del sitio. Alimenta a @nuxtjs/seo (sitemap, robots,
-  // og-image, schema-org), nuxt-llms, etc.
+  // Global site config. Feeds @nuxtjs/seo (sitemap, robots, og-image,
+  // schema-org), nuxt-llms, etc.
   site: {
     url: 'https://context-architecture.dev',
     name: 'Context Architecture',
-    description:
-      'Context Architecture is a software architecture for the age of AI agents: it structures a repository so every claim it makes about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when the claim stops being true. A specification by Sergio Azócar, who introduced the term in October 2025.',
+    // Canonical definition plus dated authorship, from app/site-definition.ts.
+    description: SITE_DESCRIPTION,
     // English is canonical (matches i18n.defaultLocale); the /es mirror is the alternate.
     defaultLocale: 'en',
+  },
+
+  // The htmlAttrs.lang='en' above is the deliberate fallback for the SPA-fallback
+  // 404.html; the prerendered /es pages still emit lang="es" (bound in
+  // tests/prerendered-no-js.test.ts). Turn off the app-head validator so that
+  // correct setup does not print a warning on every typecheck.
+  seo: {
+    validateAppHead: false,
+  },
+
+  // robots.txt declares intent legibly, machine-readable. The site wants to be
+  // both indexed and cited, and to enter the training corpora that fix the term,
+  // so all three content signals are yes and no AI bot is blocked. Cloudflare's
+  // AI Crawl Control and Bot Preference Sync must be left in Allow to match this
+  // (see the root AGENTS.md); a dashboard default that flips ai-train would
+  // contradict it. tests/geo-surface.test.ts binds the emitted directive.
+  robots: {
+    groups: [
+      {
+        userAgent: ['*'],
+        disallow: [''],
+        contentSignal: { search: 'yes', 'ai-input': 'yes', 'ai-train': 'yes' },
+      },
+    ],
   },
 
   // Build-time values exposed to the app. `buildDate` is stamped on every build
@@ -76,14 +102,14 @@ export default defineNuxtConfig({
 
   // --- @nuxt/icon ---------------------------------------------------------
   icon: {
-    // Sirve los iconos como bundle local (mejor para SSG, sin llamadas a la
-    // API de Iconify en runtime). Usa los sets instalados como devDeps.
+    // Serve icons as a local bundle (better for SSG, no Iconify API calls at
+    // runtime). Uses the sets installed as devDeps.
     serverBundle: 'local',
   },
 
   // --- @nuxt/fonts --------------------------------------------------------
-  // Self-hosted en build, font-display: swap por defecto. Subsets latin +
-  // latin-ext para el español. IBM Plex Serif (lectura) + Mono (estructura).
+  // Self-hosted at build, font-display: swap by default. latin + latin-ext
+  // subsets for Spanish. IBM Plex Serif (reading) + Mono (structure).
   fonts: {
     provider: 'google',
     families: [
@@ -92,7 +118,7 @@ export default defineNuxtConfig({
     ],
   },
 
-  // --- @nuxtjs/color-mode (vía Nuxt UI) -----------------------------------
+  // --- @nuxtjs/color-mode (via Nuxt UI) -----------------------------------
   colorMode: {
     preference: 'system',
     fallback: 'light',
@@ -102,7 +128,7 @@ export default defineNuxtConfig({
   content: {
     build: {
       markdown: {
-        // Resalta el código con Shiki en ambos modos de color.
+        // Highlight code with Shiki in both color modes.
         highlight: {
           theme: {
             default: 'github-light',
@@ -115,37 +141,29 @@ export default defineNuxtConfig({
 
   // --- @nuxt/image --------------------------------------------------------
   image: {
-    // En un sitio 100% estático no hay servidor IPX en runtime; las imágenes
-    // del directorio public se sirven tal cual. Cambia el provider si usas
-    // un CDN de imágenes (p.ej. Cloudflare Images).
+    // On a fully static site there is no IPX server at runtime; images in the
+    // public directory are served as-is. Change the provider if you use an
+    // image CDN (for example Cloudflare Images).
     provider: 'none',
   },
 
   // --- @nuxtjs/i18n v10 ---------------------------------------------------
-  // Inglés canónico sin prefijo; español espejo bajo /es/.
+  // English canonical with no prefix; Spanish mirror under /es/.
   i18n: {
     defaultLocale: 'en',
     // Required for @nuxtjs/i18n to emit absolute hreflang alternate links.
     baseUrl: 'https://context-architecture.dev',
     strategy: 'prefix_except_default',
-    // En SSG la redirección automática por idioma no es fiable, se desactiva.
+    // In SSG, automatic language redirection is unreliable, so it is disabled.
     detectBrowserLanguage: false,
     // Localized route slugs: the Spanish mirror reads in Spanish (e.g. /es/comparacion),
     // not the English slug under a /es prefix. Paths are declared here without the locale
     // prefix; the module prepends it per `strategy`. The content path (the .md file at
     // content/es/comparison.md) stays decoupled from the route slug, so only the URL changes.
     customRoutes: 'config',
-    pages: {
-      comparison: {
-        es: '/comparacion',
-      },
-      guide: {
-        es: '/guia',
-      },
-      glossary: {
-        es: '/glosario',
-      },
-    },
+    // Localized slugs derived once in app/site-routes.ts, shared with the
+    // prerender list so the router and the static output cannot disagree.
+    pages: i18nPages,
     // No global message files: every UI string lives in its component's
     // <i18n> block (principle 02, Context Lives With Code).
     locales: [
@@ -154,24 +172,24 @@ export default defineNuxtConfig({
     ],
   },
 
-  // --- nuxt-og-image (vía @nuxtjs/seo) ------------------------------------
+  // --- nuxt-og-image (via @nuxtjs/seo) ------------------------------------
   ogImage: {
-    // Las familias de @nuxt/fonts (IBM Plex Serif + Mono) se incluyen solas en
-    // el renderer de OG, así que la imagen las usa directo sin config extra.
-    // El renderer NO se configura aquí: nuxt-og-image v6 lo deriva del sufijo
-    // del archivo del componente. `app/components/OgImage/NuxtSeo.takumi.vue`
-    // selecciona Takumi (Rust → PNG directo, sin paso por SVG; @takumi-rs/core
-    // en build/prerender, @takumi-rs/wasm en edge). `renderer` está excluido de
-    // `defaults` en los tipos del módulo, por eso aquí solo van las dimensiones.
+    // The @nuxt/fonts families (IBM Plex Serif + Mono) are included in the OG
+    // renderer on their own, so the image uses them with no extra config.
+    // The renderer is NOT configured here: nuxt-og-image v6 derives it from the
+    // component file suffix. `app/components/OgImage/NuxtSeo.takumi.vue` selects
+    // Takumi (Rust to PNG directly, no SVG step; @takumi-rs/core at
+    // build/prerender, @takumi-rs/wasm on edge). `renderer` is excluded from
+    // `defaults` in the module types, so only the dimensions go here.
     defaults: {
-      // Dimensión recomendada para OG/Twitter (1.91:1).
+      // Recommended dimension for OG/Twitter (1.91:1).
       width: 1200,
       height: 630,
     },
   },
 
-  // --- @nuxtjs/sitemap (vía @nuxtjs/seo) ----------------------------------
-  // lastmod por defecto = fecha de build (se regenera en cada deploy).
+  // --- @nuxtjs/sitemap (via @nuxtjs/seo) ----------------------------------
+  // lastmod defaults to the build date (regenerated on each deploy).
   sitemap: {
     defaults: {
       lastmod: BUILD_DATE,
@@ -182,9 +200,9 @@ export default defineNuxtConfig({
   llms: {
     domain: 'https://context-architecture.dev',
     title: 'Context Architecture',
-    description:
-      'Context Architecture is a software architecture for the age of AI agents: it structures a repository so every claim it makes about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when the claim stops being true. A specification by Sergio Azócar, who introduced the term in October 2025.',
-    // Emits /llms_full.txt with the entire manifesto inlined.
+    // Canonical definition plus dated authorship, from app/site-definition.ts.
+    description: SITE_DESCRIPTION,
+    // Emits /llms-full.txt with the entire manifesto inlined.
     full: {
       title: 'Context Architecture: full specification',
       description:
@@ -194,9 +212,14 @@ export default defineNuxtConfig({
       {
         title: 'Canonical definition',
         description:
-          'Context Architecture is a software architecture for the age of AI agents: it structures a repository so that everything it claims about itself, its structure, its behavior, and who can change it, is legible to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails when that claim stops being true. It is the design-time counterpart to context engineering (runtime) and harness engineering (the agent operating environment). Introduced by Sergio Azócar in October 2025.',
+          CANONICAL_DEFINITION.en +
+          ' It is the design-time counterpart to context engineering (runtime) and harness engineering (everything wrapped around one agent). Introduced by Sergio Azócar in October 2025.',
         links: [
           { title: 'The manifesto', href: 'https://context-architecture.dev/' },
+          {
+            title: 'The manifesto, raw markdown',
+            href: 'https://context-architecture.dev/raw/en.md',
+          },
           {
             title: 'Context Architecture vs. context engineering vs. harness engineering',
             href: 'https://context-architecture.dev/comparison',
@@ -206,7 +229,7 @@ export default defineNuxtConfig({
       {
         title: 'The rule',
         description:
-          'The whole architecture reduces to one rule: every claim a repository makes about itself must be bound to a mechanism that fails when that claim stops being true. A claim is anything the repository holds about itself, not just the shape of its folders: where the source of truth lives, what pattern is correct, how long an operation may take, what data must not cross a boundary. The mechanism must actually fail, not just exist; a check that cannot fail violates the rule. The rule applies to itself: the set of tests and rules that verify the repository is also bound, so it cannot be weakened to get a change through. Design for a reader who retains nothing between sessions and knows only what the repository says out loud (an agent meets this exactly). When no person reviews the code, the mechanisms are the reviewer.',
+          'The whole architecture reduces to one rule: every claim a repository makes about itself must be bound to a mechanism that fails when that claim stops being true. A claim is anything the repository holds about itself, not just the shape of its folders: where the source of truth lives, what pattern is correct, how long an operation may take, what data must not cross a boundary. The mechanism must actually fail, not just exist; a check that cannot fail violates the rule. The rule applies to itself: the set of tests and rules that verify the repository is also bound, so it cannot be weakened to get a change through. Design for a reader who retains nothing between sessions and knows only what the repository says out loud (an agent meets this exactly; agent memory lives outside the repository, unverified and unshared, so design as if it were absent). When no person reviews the code, the mechanisms are the reviewer.',
       },
       {
         title: 'The problem',
@@ -216,12 +239,12 @@ export default defineNuxtConfig({
       {
         title: 'The autonomy spectrum',
         description:
-          'Context Architecture works with or without a person in the loop, across the whole range: inline (a person approves each edit), async (a person reviews the change before integrating), autonomous (a person sets the rules and does not look at each change), and orchestrated (nobody in the middle). What changes across the spectrum is who consumes the verification, not the verification: the same AGENTS.md and the same mechanisms serve all of them. With a person, the mechanisms absorb the routine review; without a person, they are the reviewer.',
+          'Context Architecture works with or without a person in the loop, across the whole range: inline (a person approves each edit), async (a person reviews the change before integrating), autonomous (a person sets the rules and does not look at each change), and orchestrated (nobody in the middle). As of 2026 all four exist as products (a classifier standing in for the inline approver, cloud sessions and scheduled routines, event-triggered routines, teams of agents). What changes across the spectrum is who consumes the verification, not the verification: the same AGENTS.md and the same mechanisms serve all of them. With several agents in parallel the merge queue is where the mechanisms arbitrate. With a person, the mechanisms absorb the routine review; without a person, they are the reviewer.',
       },
       {
         title: 'How it applies',
         description:
-          'Working with an agent is a continuous flow of code changes, and the rule lives inside that flow. When a change introduces a claim (a source of truth, an invariant, a convention), it is bound to a mechanism in the same change; when a change touches existing code, it meets the mechanisms already there. Binding means connecting a claim to something that fails when it stops being true. Context Architecture names the kinds of mechanism, not the tool: the compiler (a forbidden import breaks the build), the linter (a misplaced file fails the lint), automated tests (an AGENTS.md citing a deleted file turns the tests red), and review by a person or an agent (catches the meaning). Context Architecture decides what gets verified and guarantees the mechanism exists and fails; the infrastructure runs it.',
+          'Working with an agent is a continuous flow of code changes, and the rule lives inside that flow. When a change introduces a claim (a source of truth, an invariant, a convention), it is bound to a mechanism in the same change; when a change touches existing code, it meets the mechanisms already there. Binding means connecting a claim to something that fails when it stops being true. Context Architecture names the kinds of mechanism, not the tool: the compiler (a forbidden import breaks the build), the linter (a misplaced file fails the lint), automated tests (an AGENTS.md citing a deleted file turns the tests red), and review by a person or an agent (catches the meaning, and counts as a mechanism only when its verdict can stop the change, not a comment nobody must resolve). Where a mechanism fires is up to the infrastructure: a hook the repository commits runs it inside the agent loop, or the repository rules run it at push, or CI runs it, but the integration gate stays the floor because a hook can be switched off locally. Context Architecture decides what gets verified and guarantees the mechanism exists and fails; the infrastructure runs it.',
       },
       {
         title: 'The principles',
@@ -253,8 +276,8 @@ export default defineNuxtConfig({
     ],
   },
 
-  // --- nuxt-schema-org (vía @nuxtjs/seo) ----------------------------------
-  // Identidad del autor para atribución verificable.
+  // --- nuxt-schema-org (via @nuxtjs/seo) ----------------------------------
+  // Author identity for verifiable attribution.
   schemaOrg: {
     identity: {
       type: 'Person',
@@ -269,32 +292,27 @@ export default defineNuxtConfig({
         'https://www.linkedin.com/in/sergio-azocar',
         'https://dev.to/sergioazoc',
       ],
+      // Fill out the author entity so a knowledge graph can resolve it, and
+      // anchor what he is known for to the term this site owns.
+      jobTitle: 'Software Engineer',
+      worksFor: { type: 'Organization', name: 'Skyward' },
+      knowsAbout: ['Context Architecture', 'software architecture', 'AI agents'],
     },
   },
 
   // --- Nitro / prerender (SSG) --------------------------------------------
-  // `nuxt generate` prerenderiza todo a `.output/public`, que luego sirve
-  // Cloudflare Workers como static assets (ver wrangler.jsonc).
+  // `nuxt generate` prerenders everything to `.output/public`, which
+  // Cloudflare Workers then serves as static assets (see wrangler.jsonc).
   nitro: {
     prerender: {
       crawlLinks: true,
       // Crawling from the footer nav reaches every page, but list them (both
-      // locales) explicitly so a prerender never silently drops one. `/skill.md`
-      // is the raw skill artifact served by server/routes/skill.md.ts.
-      routes: [
-        '/',
-        '/404',
-        '/skill.md',
-        '/comparison',
-        '/guide',
-        '/glossary',
-        '/skill',
-        '/es',
-        '/es/comparacion',
-        '/es/guia',
-        '/es/glosario',
-        '/es/skill',
-      ],
+      // locales) explicitly so a prerender never silently drops one. The list is
+      // derived in app/site-routes.ts from the content pages and their localized
+      // slugs. `/skill.md` is the raw skill artifact served by
+      // server/routes/skill.md.ts. The `/raw/**.md` agent-facing mirrors are
+      // emitted by @nuxt/content's llms feature and reached by crawlLinks.
+      routes: prerenderRoutes(),
     },
     hooks: {
       // Emit the prerendered /404 page as 404.html (the document Cloudflare's

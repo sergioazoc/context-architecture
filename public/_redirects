@@ -1,0 +1,6 @@
+# Cloudflare redirects for the static deploy, copied into .output/public by
+# `nuxt generate`.
+
+# The sitemap index is the real entrypoint; /sitemap.xml is only a meta-refresh
+# shell, so send a submitter straight to the index.
+/sitemap.xml  /sitemap_index.xml  301

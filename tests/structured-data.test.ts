@@ -34,6 +34,9 @@ function jsonLdTypes(file: string): string[] {
   return found
 }
 
+const jsonLdBlockCount = (file: string): number =>
+  [...html(file).matchAll(/<script type="application\/ld\+json"[^>]*>/g)].length
+
 describe.skipIf(!built)('structured data floor (citability / GEO)', () => {
   for (const [page, file] of [
     ['English', 'index.html'],
@@ -52,5 +55,31 @@ describe.skipIf(!built)('structured data floor (citability / GEO)', () => {
     expect(en).toContain('bound to a mechanism that fails when that claim stops being true')
     expect(en).toContain('"sameAs"')
     expect(en).toContain('sergioazocar.com')
+  })
+
+  it('the DefinedTerm disambiguates the term and the TechArticle carries the coinage date', () => {
+    const en = html('index.html')
+    // Sets the repository sense apart from the other public senses of the phrase.
+    expect(en).toContain('disambiguatingDescription')
+    // The coinage date (repo created on GitHub), the verifiable priority signal.
+    expect(en).toContain('"dateCreated"')
+    expect(en).toContain('2025-10-28')
+  })
+
+  it('the graph anchors the entity: Wikidata mentions and a filled-out author', () => {
+    const en = html('index.html')
+    // Anchor to existing knowledge-graph entities so an engine can resolve the term.
+    expect(en).toContain('wikidata.org/entity/Q137916163') // context engineering
+    // The author entity carries what he is known for and where he works.
+    expect(en).toContain('knowsAbout')
+    expect(en).toContain('worksFor')
+  })
+
+  it('each page emits a single JSON-LD graph, not cross-referencing blocks', () => {
+    // The term nodes and @nuxtjs/seo's WebSite/WebPage/Person share one @graph, so
+    // every cross-@id reference resolves inside one block.
+    for (const file of ['index.html', 'es/index.html', 'glossary/index.html']) {
+      expect(jsonLdBlockCount(file), `${file} should have one ld+json block`).toBe(1)
+    }
   })
 })

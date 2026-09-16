@@ -1,13 +1,18 @@
 # Cloudflare headers for the static deploy. Copied verbatim into .output/public
 # by `nuxt generate`; honored by Workers static assets.
 
-# Hashed build assets are immutable — cache them hard.
+# Hashed build assets are immutable, so cache them hard.
 /_nuxt/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Agent-facing artifacts: serve as text so they render in the browser / are
-# consumed correctly when fetched directly, rather than downloaded.
+# Agent-facing artifacts: serve as text with a charset so they render in the
+# browser and are consumed correctly when fetched directly, rather than
+# downloaded. Workers Assets infers the type from the extension and drops the
+# handler's header, so /skill.md needs its charset declared here too (RFC 7763
+# makes charset required for text/markdown, and the skill contains non-ASCII).
 /raw/*
+  Content-Type: text/markdown; charset=utf-8
+/skill.md
   Content-Type: text/markdown; charset=utf-8
 /llms.txt
   Content-Type: text/plain; charset=utf-8

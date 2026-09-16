@@ -24,7 +24,10 @@ before writing your own.
 
 - **Tokens first.** All color, type scale, radius, and spacing come from the `--ca-*` tokens in
   `main.css`, mapped onto Nuxt UI's `--ui-*` variables. Don't hard-code colors in components; use
-  `text-primary`, `text-muted`, `border-default`, etc.
+  `text-primary`, `text-muted`, `border-default`, etc. `tests/prose-conventions.test.ts` binds this: no
+  hard-coded hex or `rgb()` in `app/**/*.{vue,ts}`. The one exemption is `components/OgImage/` (Takumi
+  renders the OG image outside the CSS cascade, so it cannot read the tokens and uses literal hex); it
+  is excluded there and in `.oxlintrc.json` `ignorePatterns`.
 - **Style with utilities, not CSS.** Component look is Tailwind utilities (in markup) and Nuxt UI
   `ui.*` overrides. The rendered Markdown is themed in `app.config.ts` under `ui.prose`. `main.css`
   is tokens + global base only; never add component classes there. Unavoidable custom CSS goes in
@@ -34,7 +37,8 @@ before writing your own.
   progressive enhancement.
 - **Dark mode is an inversion**, not a separate theme, it only re-points the `--ca-*` tokens under
   `.dark`. Don't add dark-specific component styling.
-- **Accessibility is a floor, not a nice-to-have.** Visible keyboard focus, AA contrast in both
-  modes, and `prefers-reduced-motion` are respected globally in `main.css`. Don't regress them.
+- **Accessibility is a quality target.** Visible keyboard focus, AA contrast in both modes, and
+  `prefers-reduced-motion` are respected globally in `main.css`. These are verified by review and by
+  hand with tooling (axe, Lighthouse), not bound to a CI check; don't regress them.
 - **MDC components** (used inside Markdown) live in `components/content/` and must invert cleanly
   via `currentColor` / CSS variables.

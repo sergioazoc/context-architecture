@@ -35,5 +35,21 @@ describe.skipIf(!built)('prerendered content reads without JavaScript (principle
       expect(body, `${locale} missing a principle body`).toContain(principle)
       expect(body, `${locale} missing the numbered markers`).toContain('01 ·')
     })
+    // The /raw/**.md mirror (emitted by @nuxt/content's llms feature) is the view an
+    // LLM fetches. It is documented in the root AGENTS.md, so bind that it exists and
+    // carries the rule; if the feature is turned off, this goes red.
+    it(`the ${locale} raw markdown mirror carries the rule`, () => {
+      const raw = readFileSync(join(OUT, `raw/${locale}.md`), 'utf8')
+      expect(raw, `raw/${locale}.md missing the rule`).toContain(rule)
+    })
   }
+
+  // The htmlAttrs.lang fallback is 'en' for the SPA-fallback 404.html, but each
+  // prerendered locale must still emit its own lang, or the per-locale claim is
+  // false. This binds that (the reason seo.validateAppHead is turned off).
+  it('each prerendered page emits the right html lang', () => {
+    expect(html('index.html'), 'English home must be lang="en"').toContain('lang="en"')
+    expect(html('es/index.html'), 'Spanish home must be lang="es"').toContain('lang="es"')
+    expect(html('404.html'), '404 fallback must be lang="en"').toContain('lang="en"')
+  })
 })

@@ -1,0 +1,12 @@
+# Ownership of the verification surface (principle 09). These paths decide what
+# the repository checks and how, so changing one is authorizing a change to the
+# rules themselves. Pairing this with a branch ruleset that requires Code Owner
+# review makes the authorization real: an agent can rewrite the code freely, but
+# not weaken or delete a check to get a change through.
+/tests/            @sergioazoc
+/.oxlintrc.json    @sergioazoc
+/.oxfmtrc.json     @sergioazoc
+/vitest.config.ts  @sergioazoc
+/.github/          @sergioazoc
+/.claude/          @sergioazoc
+/.claude-plugin/   @sergioazoc

@@ -24,4 +24,15 @@ describe('capabilities are discoverable (principle 05)', () => {
     )
     expect(unknown, 'docs cite undefined pnpm scripts').toEqual([])
   })
+
+  // The other direction (principle 05): every real capability is discoverable, so
+  // a script that exists must be documented. Lifecycle hooks run automatically and
+  // are not user-facing commands, so they are exempt.
+  it('every package.json script is documented, except lifecycle hooks', () => {
+    const lifecycle = new Set(['preinstall', 'install', 'postinstall', 'prepare', 'prepublishonly'])
+    const undocumented = scripts.filter(
+      (s) => !lifecycle.has(s.toLowerCase()) && !docs.includes(`pnpm ${s}`),
+    )
+    expect(undocumented, 'scripts not documented in README or AGENTS.md').toEqual([])
+  })
 })

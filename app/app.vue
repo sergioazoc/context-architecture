@@ -1,8 +1,17 @@
 <script setup lang="ts">
 import * as locales from '@nuxt/ui/locale'
+import { SITE_DESCRIPTION, SITE_DESCRIPTION_ES } from '~/site-definition'
 
 const { locale, locales: i18nLocales } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
+
+// Localize the sitewide WebSite description so the /es schema is not in English.
+// site.description (nuxt.config) is English; this overrides the same @id per locale.
+useSchemaOrg([
+  defineWebSite({
+    description: locale.value === 'es' ? SITE_DESCRIPTION_ES : SITE_DESCRIPTION,
+  }),
+])
 
 const SITE = 'https://context-architecture.dev'
 
@@ -37,9 +46,14 @@ useHead({
   },
 })
 
-// og:locale, kept generic (en / es) to match the locale codes.
+// og:locale, kept generic (en / es) to match the locale codes. og:image:alt gives
+// the generated OG image a text alternative, localized per mirror.
 useSeoMeta({
   ogLocale: () => current.value?.language ?? 'en',
+  ogImageAlt: () =>
+    locale.value === 'es'
+      ? 'Context Architecture, una especificación de Sergio Azócar'
+      : 'Context Architecture, a specification by Sergio Azócar',
 })
 </script>
 

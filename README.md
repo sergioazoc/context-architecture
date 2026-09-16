@@ -1,9 +1,9 @@
 # context-architecture.dev
 
-The canonical site for **Context Architecture**: a software architecture for the age of AI agents. It
-structures a repository so everything it claims about itself, its structure, its behavior, and who can
-change it, is legible to the agent writing the code and to the people who answer for it, and bound to a
-mechanism that fails when the claim stops being true. Introduced by
+Context Architecture is a software architecture for the age of AI agents: it structures a repository so
+that everything it claims about itself, its structure, its behavior, and who can change it, is legible
+to the agent writing the code and to the people who answer for it, and bound to a mechanism that fails
+when that claim stops being true. This is its canonical specification site. Introduced by
 [Sergio Azócar](https://sergioazocar.com) in October 2025.
 
 This repository is its own first case study. If you arrived here from the manifesto to check whether

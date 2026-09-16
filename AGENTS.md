@@ -27,8 +27,10 @@ Register reference points: c4model.com, micro-frontends.org.
 - **The principle set is the author's IP** (nine principles). Build them as written; do not invent
   new principles or alter the methodology.
 - **Prerendered and verifiable.** Fully SSG; the content reads with no JavaScript. The schema.org
-  graph (`DefinedTerm`, `Person` with `sameAs`, `TechArticle`) and Lighthouse 100 across
-  the board are the floor.
+  graph (`DefinedTerm`, `Person` with `sameAs`, `TechArticle`) is the floor, bound in
+  `tests/structured-data.test.ts`. Lighthouse 100 across the board and accessibility are quality
+  targets checked by hand with tooling (Lighthouse, axe) before a visual change, not rules bound in
+  CI. Stating that here, rather than calling an unbound check a rule, is the honest reading of the rule.
 
 ## Voice and wording
 
@@ -55,6 +57,11 @@ Register reference points: c4model.com, micro-frontends.org.
   into their own tool; see `skills/AGENTS.md`.
 - `server/` has the one prerendered Nitro route that serves the raw skill at `/skill.md`; see
   `server/AGENTS.md`.
+- The site also serves an agent-facing Markdown mirror of every page at `/raw/**.md` (for example
+  `/raw/en.md`, `/raw/es/comparison.md`), emitted by `@nuxt/content`'s llms feature from the same
+  `content/` files, not a hand-kept copy. It is prerendered like every page and served as
+  `text/markdown` via `public/_headers`. It is the raw view an LLM fetches; `tests/prerendered-no-js.test.ts`
+  binds that `/raw/en.md` and `/raw/es.md` carry the rule.
 - `.claude-plugin/marketplace.json` wraps that skill as a Claude Code plugin, so the repo doubles as a
   single-plugin marketplace (`/plugin marketplace add sergioazoc/context-architecture`).
 - `specs/`, design-time only, and absent by design. Per principle 06 a spec is turned into code,
@@ -73,6 +80,8 @@ Register reference points: c4model.com, micro-frontends.org.
 - CSS is checked by `oxlint` + `oxlint-tailwindcss` against `app/assets/css/main.css`.
 - Prefer Nuxt UI components and semantic utilities (`text-muted`, `border-default`, `text-primary`)
   over hard-coded colors or bespoke markup, since they already map to the design tokens.
+- Code comments are written in English, so one convention holds across the tree. Public copy and its
+  Spanish mirror live in `content/`, not in comments.
 
 ## How this repo binds its own claims
 
@@ -80,7 +89,15 @@ The repo is its own first case study, so its claims about itself are bound by th
 `tests/` (run in CI after the build). Each test ties a principle or house rule to a mechanism that
 fails when it stops being true:
 
-- `tests/doc-references.test.ts`: every repo file a doc cites still exists (principle 02).
+- `tests/doc-references.test.ts`: every repo path, component, composable, and config-referenced
+  artifact a doc cites still exists; every `AGENTS.md` has a `CLAUDE.md` that bridges to it; every test
+  is documented here and every nested `AGENTS.md` is named in the map above; and `specs/` stays absent
+  (principles 02, 05, 06, 09).
+- `tests/routes.test.ts`: the site's routes are derived once in `app/site-routes.ts` and match the
+  content tree, the prerender list, and the internal links, so none can drift (principle 05).
+- `tests/agents-md-budget.test.ts`: no single `AGENTS.md` exceeds the 12,000-character rule-file cap and
+  no root-to-leaf chain exceeds the 32 KiB Codex cap, so no reader silently loses a deeper file
+  (principle 02, the size claim the guide names).
 - `tests/content-parity.test.ts`: EN and ES stay in parity (same pages, principle markers, MDC
   components, heading counts).
 - `tests/principles.test.ts`: the nine principle names and numbers are canonical and identical across
@@ -89,21 +106,46 @@ fails when it stops being true:
   in the shipped Markdown or the code comments (principle 07).
 - `tests/capabilities.test.ts`: the core commands exist and are documented, and no doc cites an
   undefined script (principle 05). The command list is hand-kept; the test enforces its consistency.
-- `tests/verification-surface.test.ts`: the lint rules stay at `error` and CI keeps running
-  lint/format:check/typecheck/test/build, so the surface cannot be quietly weakened (principle 09).
+- `tests/verification-surface.test.ts`: the lint rules stay at `error`, CI keeps running
+  lint/format:check/typecheck/test/build and runs on pull requests, `CODEOWNERS` covers the
+  verification surface, the test runner still collects every test, and `.claude/settings.json` denies
+  the agent editing that surface, so it cannot be quietly weakened (principle 09).
 - `tests/structured-data.test.ts` and `tests/prerendered-no-js.test.ts`: the prerendered HTML carries
   the rule, the principle bodies, and the schema.org graph with no JavaScript (principle 08, the GEO
   floor). They read `.output/public`, so CI runs `pnpm generate` before `pnpm test`.
+- `tests/canonical-definition.test.ts`: the one citable definition (in `app/site-definition.ts`) is
+  carried verbatim by the frontmatter, the glossary, the site and llms descriptions, and the README,
+  and the prerendered HTML never ships a divergent wording (citability, the GEO outcome).
+- `tests/geo-surface.test.ts`: the agent-facing artifacts declare a charset in `public/_headers`, the
+  `public/_redirects` sitemap redirect points at the index, and the built `robots.txt` states the
+  content signals (search, ai-input, ai-train) and blocks nothing (citability / crawlability).
 - `tests/skill-version.test.ts`: the distributable skill's published version (in
-  `.claude-plugin/marketplace.json`) is pinned to a hash of `SKILL.md`, so changing the skill without
-  bumping the version fails the test. Existing plugin installs detect an update by version, so this is
-  the rule applied to the skill's own release.
+  `.claude-plugin/marketplace.json` and the `SKILL.md` frontmatter) is pinned to a hash of `SKILL.md`,
+  so changing the skill without bumping the version fails the test. Existing plugin installs detect an
+  update by version, so this is the rule applied to the skill's own release.
+- `tests/skill-spec.test.ts`: the `SKILL.md` frontmatter conforms to the Agent Skills spec (name
+  matches the folder and the pattern, description within 1024 characters, metadata values are strings,
+  only standard keys) and the body stays within the progressive-disclosure budget, so the skill loads
+  in every tool (principle 08 applied to the deliverable).
 
-Principles 01, 03, and 04 (domain-first structure, named boundaries, fractal legibility) hold here by
-discipline plus the parity and doc tests, not by a dedicated structure/import/naming lint rule: a
-content site has no domain import graph to police, so the manifesto's lint-rule mechanism for those
-does not apply on this repo. Lighthouse 100 and accessibility are quality targets verified with
-tooling, not yet bound to a CI check.
+**The authorization principle 09 names** is declared here in three layers. `.github/CODEOWNERS` marks
+the verification surface (`tests/`, the lint and format config, `vitest.config.ts`, `.github/`,
+`.claude/`, `.claude-plugin/`) as owned; `REVIEW.md` states the review rules an agent or a person
+applies on every change; and `.claude/settings.json` denies the agent editing that surface (leaving
+`tests/` writable so tests can be added, with deletion caught by the test above), so a person edits
+the rest by hand. The external half is a branch ruleset on `main` that requires a pull request,
+the `ci` check, and Code Owner review, and blocks force pushes and deletions. Create or verify it with
+`gh api repos/sergioazoc/context-architecture/rulesets`; it is the one part of this that lives in the
+GitHub settings, not the tree.
+
+Principle 04 (legibility at every zoom level) is bound by the `complexity`, `max-depth`, `max-params`,
+and `max-lines-per-function` rules in `.oxlintrc.json`, kept at `error` and pinned by
+`tests/verification-surface.test.ts`; they are set as a ratchet at the current levels, so a change
+cannot make a function less legible than the code already is. Principles 01 and 03 (domain-first
+structure, named boundaries) hold here by discipline plus the parity and doc tests: a content site has
+no domain import graph to police, so the manifesto's import-rule mechanism for 03 does not apply.
+Lighthouse 100 and accessibility are quality targets verified with tooling, not yet bound to a CI
+check.
 
 ## Commands
 
@@ -114,6 +156,12 @@ pnpm typecheck    # vue-tsc
 pnpm test         # vitest: the repo's claims about itself, bound
 pnpm format       # oxfmt (formats code; Markdown is excluded, it reflows MDC blocks)
 pnpm format:check # oxfmt --check: the CI gate that fails on unformatted code
+pnpm build        # nuxt build (server build; the deploy path uses generate)
 pnpm generate     # prerender (SSG) to .output/public
+pnpm preview      # serve the last build locally
+pnpm cf:preview   # generate && wrangler dev: preview the static site on Workers
 pnpm deploy       # generate && deploy to Cloudflare Workers
 ```
+
+Every `package.json` script except lifecycle hooks (`postinstall`) is listed here or in the README;
+`tests/capabilities.test.ts` fails if one is not (principle 05).

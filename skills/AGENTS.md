@@ -31,19 +31,22 @@ and the served `/skill.md` route all depend on this exact path.
 - **Same house rules as the rest of the repo.** No marketing copy, no emojis, specification register,
   the wording rules in the root `AGENTS.md` (plain language, no em dashes in copy).
 - **The `description` frontmatter is the discovery surface.** It is what an agent and the installers
-  match on, so keep it trigger-rich (the failure-mode signals, "agent-ready", "AI-legible", "AGENTS.md")
-  and accurate. The frontmatter `name` must stay `context-architecture` (lowercase, hyphens): Copilot
-  and others require the folder name to equal it.
+  match on, so keep it trigger-rich (the failure-mode signals, "agent-ready", "AI-legible", "AGENTS.md",
+  "harness engineering", "context files") and accurate, within the 1024-character cap the Agent Skills
+  spec sets. The frontmatter `name` must stay `context-architecture` (lowercase, hyphens): the Agent
+  Skills spec requires the name to equal the folder, and a non-standard key or an over-long description
+  makes the skill silently fail to load. `tests/skill-spec.test.ts` binds all of this.
 - **Served, documented, and packaged.** Three other places point at this exact path: `server/routes/skill.md.ts`
   reads it and serves it raw at `/skill.md`; the `/skill` page documents per-tool install; and
   `.claude-plugin/marketplace.json` at the repo root references `./skills/context-architecture` to
   publish it as a Claude Code plugin. Keep all four in sync, and do not rename the folder.
-- **Bump the version on every change.** A change to `SKILL.md` ships with a version bump in
-  `.claude-plugin/marketplace.json` (both `metadata.version` and the plugin entry, kept equal).
+- **Bump the version on every change.** A change to `SKILL.md` ships with a version bump in three
+  places, kept equal: `metadata.version` and the plugin entry in `.claude-plugin/marketplace.json`, and
+  `metadata.version` in the `SKILL.md` frontmatter (so a `curl` or CLI install knows its version).
   Claude Code dedupes a plugin by version: an unchanged version is served from cache, so existing
-  installs never see the new content. `tests/skill-version.test.ts` binds this, the published
-  version is pinned to a hash of `SKILL.md`, so changing the skill without bumping the version fails
-  the test. This is the rule applied to the skill itself.
+  installs never see the new content. `tests/skill-version.test.ts` binds this, the published version
+  is pinned to a hash of `SKILL.md`, so changing the skill without bumping the version fails the test.
+  This is the rule applied to the skill itself.
 - **Re-sync the external mirror on a version bump.** The skill is also vendored as a copy in the
   `davila7/claude-code-templates` aggregator, at
   `cli-tool/components/skills/development/context-architecture/SKILL.md`. That copy names this site as
@@ -51,4 +54,4 @@ and the served `/skill.md` route all depend on this exact path.
   one does not control. Treat it as a manual sync. On a meaningful version bump, open a PR there with
   the current `SKILL.md` (a faithful copy, attribution and the CC BY 4.0 license intact). If the
   aggregator's copy is older than `marketplace.json`'s version, a re-sync is pending. Last synced:
-  v0.2.0.
+  v0.2.0; a re-sync to v0.3.0 is pending (open the PR after this version ships).
