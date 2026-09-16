@@ -193,59 +193,48 @@ export function useGlossarySchema(
 
   const base = (site.url || 'https://context-architecture.dev').replace(/\/$/, '')
 
+  const lang = locale.value
+  const pageUrl = `${base}${route.path}`
+  const author = `${base}/#identity`
+  const terms = TERMS[lang] ?? TERMS.en ?? []
+
+  // Emit the glossary term nodes through useSchemaOrg (not a separate useHead
+  // script), so they join @nuxtjs/seo's WebSite/WebPage/Person in one @graph and
+  // every cross-@id reference resolves in a single block.
   useSchemaOrg([
     defineWebPage({
       about: { '@id': `${base}/#context-architecture` },
       mainEntity: { '@id': `${base}/#glossary` },
     }),
+    {
+      '@type': 'DefinedTermSet',
+      '@id': `${base}/#glossary`,
+      name: lang === 'es' ? 'Glosario de Context Architecture' : 'Context Architecture glossary',
+      url: pageUrl,
+      hasDefinedTerm: terms.map((t) => ({ '@id': `${base}/#${t.id}` })),
+    },
+    ...terms.map((t) => ({
+      '@type': 'DefinedTerm',
+      '@id': `${base}/#${t.id}`,
+      name: t.name,
+      description: t.description,
+      ...(t.sameAs ? { sameAs: t.sameAs } : {}),
+      inDefinedTermSet: { '@id': `${base}/#glossary` },
+    })),
+    {
+      '@type': 'TechArticle',
+      '@id': `${pageUrl}#article`,
+      headline: page.value?.title ?? 'Glossary',
+      description: page.value?.description ?? '',
+      inLanguage: lang,
+      author: { '@id': author },
+      creator: { '@id': author },
+      copyrightHolder: { '@id': author },
+      copyrightYear: 2026,
+      about: { '@id': `${base}/#context-architecture` },
+      datePublished: meta.publishedISO,
+      dateModified: meta.modifiedISO,
+      license: 'https://creativecommons.org/licenses/by/4.0/',
+    },
   ])
-
-  useHead(() => {
-    const lang = locale.value
-    const pageUrl = `${base}${route.path}`
-    const author = `${base}/#identity`
-    const terms = TERMS[lang] ?? TERMS.en ?? []
-
-    const graph: Record<string, unknown>[] = [
-      {
-        '@type': 'DefinedTermSet',
-        '@id': `${base}/#glossary`,
-        name: lang === 'es' ? 'Glosario de Context Architecture' : 'Context Architecture glossary',
-        url: pageUrl,
-        hasDefinedTerm: terms.map((t) => ({ '@id': `${base}/#${t.id}` })),
-      },
-      ...terms.map((t) => ({
-        '@type': 'DefinedTerm',
-        '@id': `${base}/#${t.id}`,
-        name: t.name,
-        description: t.description,
-        ...(t.sameAs ? { sameAs: t.sameAs } : {}),
-        inDefinedTermSet: { '@id': `${base}/#glossary` },
-      })),
-      {
-        '@type': 'TechArticle',
-        '@id': `${pageUrl}#article`,
-        headline: page.value?.title ?? 'Glossary',
-        description: page.value?.description ?? '',
-        inLanguage: lang,
-        author: { '@id': author },
-        creator: { '@id': author },
-        copyrightHolder: { '@id': author },
-        copyrightYear: 2026,
-        about: { '@id': `${base}/#context-architecture` },
-        datePublished: meta.publishedISO,
-        dateModified: meta.modifiedISO,
-        license: 'https://creativecommons.org/licenses/by/4.0/',
-      },
-    ]
-
-    return {
-      script: [
-        {
-          type: 'application/ld+json',
-          innerHTML: JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }),
-        },
-      ],
-    }
-  })
 }

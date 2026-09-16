@@ -34,6 +34,9 @@ function jsonLdTypes(file: string): string[] {
   return found
 }
 
+const jsonLdBlockCount = (file: string): number =>
+  [...html(file).matchAll(/<script type="application\/ld\+json"[^>]*>/g)].length
+
 describe.skipIf(!built)('structured data floor (citability / GEO)', () => {
   for (const [page, file] of [
     ['English', 'index.html'],
@@ -70,5 +73,13 @@ describe.skipIf(!built)('structured data floor (citability / GEO)', () => {
     // The author entity carries what he is known for and where he works.
     expect(en).toContain('knowsAbout')
     expect(en).toContain('worksFor')
+  })
+
+  it('each page emits a single JSON-LD graph, not cross-referencing blocks', () => {
+    // The term nodes and @nuxtjs/seo's WebSite/WebPage/Person share one @graph, so
+    // every cross-@id reference resolves inside one block.
+    for (const file of ['index.html', 'es/index.html', 'glossary/index.html']) {
+      expect(jsonLdBlockCount(file), `${file} should have one ld+json block`).toBe(1)
+    }
   })
 })
