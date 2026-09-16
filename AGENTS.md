@@ -108,8 +108,8 @@ fails when it stops being true:
   undefined script (principle 05). The command list is hand-kept; the test enforces its consistency.
 - `tests/verification-surface.test.ts`: the lint rules stay at `error`, CI keeps running
   lint/format:check/typecheck/test/build and runs on pull requests, `CODEOWNERS` covers the
-  verification surface, the test runner still collects every test, and the committed agent deny-rule
-  settings keep the agent from editing that surface, so it cannot be quietly weakened (principle 09).
+  verification surface, the test runner still collects every test, and `.claude/settings.json` denies
+  the agent editing that surface, so it cannot be quietly weakened (principle 09).
 - `tests/structured-data.test.ts` and `tests/prerendered-no-js.test.ts`: the prerendered HTML carries
   the rule, the principle bodies, and the schema.org graph with no JavaScript (principle 08, the GEO
   floor). They read `.output/public`, so CI runs `pnpm generate` before `pnpm test`.
@@ -131,8 +131,9 @@ fails when it stops being true:
 **The authorization principle 09 names** is declared here in three layers. `.github/CODEOWNERS` marks
 the verification surface (`tests/`, the lint and format config, `vitest.config.ts`, `.github/`,
 `.claude/`, `.claude-plugin/`) as owned; `REVIEW.md` states the review rules an agent or a person
-applies on every change; and a committed Claude Code settings file denies the agent editing that
-surface, so a person edits it by hand. The external half is a branch ruleset on `main` that requires a pull request,
+applies on every change; and `.claude/settings.json` denies the agent editing that surface (leaving
+`tests/` writable so tests can be added, with deletion caught by the test above), so a person edits
+the rest by hand. The external half is a branch ruleset on `main` that requires a pull request,
 the `ci` check, and Code Owner review, and blocks force pushes and deletions. Create or verify it with
 `gh api repos/sergioazoc/context-architecture/rulesets`; it is the one part of this that lives in the
 GitHub settings, not the tree.

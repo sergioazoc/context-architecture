@@ -69,4 +69,19 @@ describe('the authorization is declared (principle 09)', () => {
   it('the test runner still collects every test file', () => {
     expect(read('vitest.config.ts')).toContain("include: ['tests/**/*.test.ts']")
   })
+
+  it('the committed Claude Code settings deny the agent editing the verification surface', () => {
+    const settings = JSON.parse(read('.claude/settings.json')) as {
+      permissions?: { deny?: string[] }
+    }
+    const deny = settings.permissions?.deny ?? []
+    for (const rule of [
+      'Edit(.oxlintrc.json)',
+      'Edit(vitest.config.ts)',
+      'Edit(.github/**)',
+      'Edit(.claude/settings.json)',
+    ]) {
+      expect(deny, `settings must deny ${rule}`).toContain(rule)
+    }
+  })
 })
