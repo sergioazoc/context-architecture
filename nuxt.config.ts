@@ -65,6 +65,22 @@ export default defineNuxtConfig({
     validateAppHead: false,
   },
 
+  // robots.txt declares intent legibly, machine-readable. The site wants to be
+  // both indexed and cited, and to enter the training corpora that fix the term,
+  // so all three content signals are yes and no AI bot is blocked. Cloudflare's
+  // AI Crawl Control and Bot Preference Sync must be left in Allow to match this
+  // (see the root AGENTS.md); a dashboard default that flips ai-train would
+  // contradict it. tests/geo-surface.test.ts binds the emitted directive.
+  robots: {
+    groups: [
+      {
+        userAgent: ['*'],
+        disallow: [''],
+        contentSignal: { search: 'yes', 'ai-input': 'yes', 'ai-train': 'yes' },
+      },
+    ],
+  },
+
   // Build-time values exposed to the app. `buildDate` is stamped on every build
   // (including GitHub CI deploys) and feeds dateModified in schema.org + OG.
   runtimeConfig: {
@@ -276,6 +292,11 @@ export default defineNuxtConfig({
         'https://www.linkedin.com/in/sergio-azocar',
         'https://dev.to/sergioazoc',
       ],
+      // Fill out the author entity so a knowledge graph can resolve it, and
+      // anchor what he is known for to the term this site owns.
+      jobTitle: 'Software Engineer',
+      worksFor: { type: 'Organization', name: 'Skyward' },
+      knowsAbout: ['Context Architecture', 'software architecture', 'AI agents'],
     },
   },
 

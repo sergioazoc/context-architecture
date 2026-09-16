@@ -116,6 +116,9 @@ fails when it stops being true:
 - `tests/canonical-definition.test.ts`: the one citable definition (in `app/site-definition.ts`) is
   carried verbatim by the frontmatter, the glossary, the site and llms descriptions, and the README,
   and the prerendered HTML never ships a divergent wording (citability, the GEO outcome).
+- `tests/geo-surface.test.ts`: the agent-facing artifacts declare a charset in `public/_headers`, the
+  `public/_redirects` sitemap redirect points at the index, and the built `robots.txt` states the
+  content signals (search, ai-input, ai-train) and blocks nothing (citability / crawlability).
 - `tests/skill-version.test.ts`: the distributable skill's published version (in
   `.claude-plugin/marketplace.json` and the `SKILL.md` frontmatter) is pinned to a hash of `SKILL.md`,
   so changing the skill without bumping the version fails the test. Existing plugin installs detect an

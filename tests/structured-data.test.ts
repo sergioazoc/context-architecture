@@ -62,4 +62,13 @@ describe.skipIf(!built)('structured data floor (citability / GEO)', () => {
     expect(en).toContain('"dateCreated"')
     expect(en).toContain('2025-10-28')
   })
+
+  it('the graph anchors the entity: Wikidata mentions and a filled-out author', () => {
+    const en = html('index.html')
+    // Anchor to existing knowledge-graph entities so an engine can resolve the term.
+    expect(en).toContain('wikidata.org/entity/Q137916163') // context engineering
+    // The author entity carries what he is known for and where he works.
+    expect(en).toContain('knowsAbout')
+    expect(en).toContain('worksFor')
+  })
 })

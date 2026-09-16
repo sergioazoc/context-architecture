@@ -96,3 +96,21 @@ jobs:
           curl -sS -X POST 'https://api.indexnow.org/indexnow' \
             -H 'Content-Type: application/json; charset=utf-8' \
             --data "$body" -w '\nIndexNow HTTP %{http_code}\n'
+
+      # Ask the Wayback Machine to snapshot the published URLs, so the definition
+      # and its dates have a neutral third-party timestamp (attribution, the site's
+      # first outcome). Best-effort: a failed save never fails the deploy.
+      - name: Archive on the Wayback Machine
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        run: |
+          urls="$(grep -ohE '<loc>[^<]+</loc>' .output/public/__sitemap__/*.xml | sed -E 's:</?loc>::g' | sort -u)"
+          extra="https://context-architecture.dev/skill.md
+          https://context-architecture.dev/llms.txt
+          https://context-architecture.dev/llms-full.txt"
+          printf '%s\n%s\n' "$urls" "$extra" | while read -r u; do
+            [ -z "$u" ] && continue
+            echo "Archiving $u"
+            curl -sS -m 30 -o /dev/null -w '%{http_code}\n' "https://web.archive.org/save/$u" || true
+            sleep 5
+          done

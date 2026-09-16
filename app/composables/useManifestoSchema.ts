@@ -79,6 +79,17 @@ export function useManifestoSchema(
         copyrightHolder: { '@id': author },
         copyrightYear: 2026,
         about: { '@id': `${base}/#context-architecture` },
+        // Anchor the article to existing knowledge-graph entities, so an engine can
+        // place the term next to the concepts it extends (Wikidata: software
+        // architecture, AI agent, context engineering).
+        mentions: [
+          { '@id': 'https://www.wikidata.org/entity/Q846636' },
+          { '@id': 'https://www.wikidata.org/entity/Q132451509' },
+          { '@id': 'https://www.wikidata.org/entity/Q137916163' },
+        ],
+        image: `${base}/icon.png`,
+        mainEntityOfPage: { '@id': `${pageUrl}#webpage` },
+        isPartOf: { '@id': `${base}/#website` },
         // The term was coined (the repo created on GitHub) in October 2025, before
         // this specification was first published in June 2026. dateCreated carries
         // the coinage date, the verifiable priority signal.

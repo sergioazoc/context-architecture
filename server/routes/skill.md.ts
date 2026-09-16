@@ -12,6 +12,9 @@ export default defineEventHandler(async (event) => {
     resolve(process.cwd(), 'skills/context-architecture/SKILL.md'),
     'utf8',
   )
+  // This header is set for completeness, but the prerendered asset is served by
+  // Workers Assets, which infers the type from the extension and drops it. The
+  // effective `text/markdown; charset=utf-8` comes from public/_headers.
   setHeader(event, 'content-type', 'text/markdown; charset=utf-8')
   return body
 })
