@@ -15,6 +15,9 @@ interface Term {
   id: string
   name: string
   description: string
+  // Optional link to the same concept in an external knowledge graph (Wikidata),
+  // so an engine can resolve the adjacent term to a known entity.
+  sameAs?: string
 }
 
 const TERMS: Record<string, Term[]> = {
@@ -29,6 +32,7 @@ const TERMS: Record<string, Term[]> = {
       name: 'Context engineering',
       description:
         "Context engineering is the runtime discipline of deciding what information enters the model's context window at each moment: which files, instructions, and tool results are loaded for a given step. It designs the contents of the window; Context Architecture designs the codebase the window looks at.",
+      sameAs: 'https://www.wikidata.org/wiki/Q137916163',
     },
     {
       id: 'harness-engineering',
@@ -108,6 +112,7 @@ const TERMS: Record<string, Term[]> = {
       name: 'Context engineering',
       description:
         'Context engineering es la disciplina de runtime que decide qué información entra a la ventana de contexto del modelo en cada momento: qué archivos, instrucciones y resultados de herramientas se cargan para un paso dado. Diseña los contenidos de la ventana; Context Architecture diseña el codebase que la ventana mira.',
+      sameAs: 'https://www.wikidata.org/wiki/Q137916163',
     },
     {
       id: 'harness-engineering',
@@ -214,6 +219,7 @@ export function useGlossarySchema(
         '@id': `${base}/#${t.id}`,
         name: t.name,
         description: t.description,
+        ...(t.sameAs ? { sameAs: t.sameAs } : {}),
         inDefinedTermSet: { '@id': `${base}/#glossary` },
       })),
       {

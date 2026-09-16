@@ -23,3 +23,8 @@ export const ATTRIBUTION_SUFFIX: Record<string, string> = {
 export const SITE_DESCRIPTION =
   CANONICAL_DEFINITION.en +
   ' A specification by Sergio Azócar, who introduced the term in October 2025.'
+
+// The Spanish mirror's WebSite description, so the /es schema is not in English.
+export const SITE_DESCRIPTION_ES =
+  CANONICAL_DEFINITION.es +
+  ' Una especificación de Sergio Azócar, quien introdujo el término en octubre de 2025.'
