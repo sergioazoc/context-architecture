@@ -8,6 +8,7 @@ important any of the following, and require the fix in the same change.
 - A new claim left loose: a source of truth, an invariant, a convention, or a boundary added without
   the mechanism that fails when it stops being true.
 - The verification surface weakened: a lint rule dropped below `error`, a CI step removed, a test
-  deleted, or a deny rule loosened, without the Code Owner's approval (principle 09).
+  deleted, or a deny rule loosened, unless the pull request states it is intended (principle 09).
+  The maintainer's merge is the only authorization, so the intent must be on the record.
 - EN and ES out of parity, or an em dash, an emoji, or marketing copy, against the house rules in the
   root `AGENTS.md`.
