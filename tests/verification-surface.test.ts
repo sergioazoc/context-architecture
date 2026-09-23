@@ -56,8 +56,8 @@ describe('the verification surface is itself bound (principle 09)', () => {
 
 // The authorization principle 09 names is declared in the repo: CODEOWNERS marks
 // the verification surface, and the vitest config keeps collecting every test so a
-// deleted test file is not silently uncovered. A branch ruleset that requires Code
-// Owner review and the CI check is the external half (see the root AGENTS.md).
+// deleted test file is not silently uncovered. A branch ruleset that requires a
+// pull request and the CI check is the external half (see the root AGENTS.md).
 describe('the authorization is declared (principle 09)', () => {
   it('CODEOWNERS covers the verification surface', () => {
     const owners = read('.github/CODEOWNERS')

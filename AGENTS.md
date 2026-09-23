@@ -133,10 +133,12 @@ the verification surface (`tests/`, the lint and format config, `vitest.config.t
 `.claude/`, `.claude-plugin/`) as owned; `REVIEW.md` states the review rules an agent or a person
 applies on every change; and `.claude/settings.json` denies the agent editing that surface (leaving
 `tests/` writable so tests can be added, with deletion caught by the test above), so a person edits
-the rest by hand. The external half is a branch ruleset on `main` that requires a pull request,
-the `ci` check, and Code Owner review, and blocks force pushes and deletions. Create or verify it with
-`gh api repos/sergioazoc/context-architecture/rulesets`; it is the one part of this that lives in the
-GitHub settings, not the tree.
+the rest by hand. The external half is a branch ruleset on `main` that requires a pull request and
+the `ci` check, and blocks force pushes and deletions. It requires no approval: the agent opens pull
+requests with the one maintainer's account, and GitHub never counts an author's own approval. The
+maintainer's merge is the authorization; against the agent, the edit-time deny rules are what act.
+Create or verify it with `gh api repos/sergioazoc/context-architecture/rulesets`; it is the one part
+that lives in GitHub settings, not the tree.
 
 Principle 04 (legibility at every zoom level) is bound by the `complexity`, `max-depth`, `max-params`,
 and `max-lines-per-function` rules in `.oxlintrc.json`, kept at `error` and pinned by
