@@ -1,8 +1,9 @@
 # Ownership of the verification surface (principle 09). These paths decide what
 # the repository checks and how, so changing one is authorizing a change to the
-# rules themselves. Pairing this with a branch ruleset that requires Code Owner
-# review makes the authorization real: an agent can rewrite the code freely, but
-# not weaken or delete a check to get a change through.
+# rules themselves. With one maintainer, no review is required (GitHub does not
+# count an author's own approval): this file declares the surface, the branch
+# ruleset requires a pull request and the CI check, and the maintainer's merge is
+# the authorization.
 /tests/            @sergioazoc
 /.oxlintrc.json    @sergioazoc
 /.oxfmtrc.json     @sergioazoc
