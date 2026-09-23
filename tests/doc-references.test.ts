@@ -7,7 +7,8 @@ import { read, exists, walk, ROOT } from './repo'
 // command that no longer exists. We scan the repo's self-describing docs (the
 // AGENTS.md set and the README) and assert every citation resolves: full paths
 // (first segment is a real top-level entry), bare source filenames (resolved by
-// basename), directories, and the components and composables app/AGENTS.md names.
+// basename), directories, and the components and composables app/AGENTS.md names
+// (which must be all of them).
 // The distributable SKILL.md is standalone and full of illustrative paths
 // (billing/, refunds/guard.test.ts), so it is scanned only by the conservative
 // first-segment rule, under which those examples never match.
@@ -74,7 +75,11 @@ describe('doc references resolve (principle 02)', () => {
   })
 })
 
-describe('app/AGENTS.md names real components and composables (principle 02)', () => {
+// The names from `names` that do not appear as a whole word in `md`.
+const unnamedIn = (md: string, names: string[]): string[] =>
+  names.filter((n) => !new RegExp(`\\b${n}\\b`).test(md))
+
+describe('app/AGENTS.md names real components and composables, and all of them (principle 02)', () => {
   const components = new Set(
     walk('app/components', (p) => p.endsWith('.vue')).map((p) =>
       (p.split('/').pop() as string).replace(/\.vue$/, ''),
@@ -97,6 +102,27 @@ describe('app/AGENTS.md names real components and composables (principle 02)', (
     const cited = [...new Set([...doc.matchAll(/\buse[A-Z][A-Za-z0-9]+/g)].map((m) => m[0]))]
     const missing = cited.filter((c) => !composables.has(c))
     expect(missing, 'cited composables with no .ts file').toEqual([])
+  })
+
+  // The boundary map lists the components and composables, so it must list all of
+  // them: one left out is a map that lies by omission while the checks above stay
+  // green. Top-level components only; components/content/ (MDC) and
+  // components/OgImage/ are named by their folder.
+  const topLevelComponents = walk('app/components', (p) => p.endsWith('.vue'))
+    .filter((p) => p.split('/').length === 3)
+    .map((p) => (p.split('/').pop() as string).replace(/\.vue$/, ''))
+
+  it('names every top-level component', () => {
+    expect(unnamedIn(doc, topLevelComponents), 'components missing from app/AGENTS.md').toEqual([])
+  })
+
+  it('names every composable', () => {
+    expect(unnamedIn(doc, [...composables]), 'composables missing from app/AGENTS.md').toEqual([])
+  })
+
+  // The check must be able to fail (the rule applies to the mechanism itself).
+  it('flags a component the map leaves out', () => {
+    expect(unnamedIn('only SiteHeader here', ['SiteHeader', 'ErrorView'])).toEqual(['ErrorView'])
   })
 })
 

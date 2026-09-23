@@ -30,7 +30,7 @@ Register reference points: c4model.com, micro-frontends.org.
   graph (`DefinedTerm`, `Person` with `sameAs`, `TechArticle`) is the floor, bound in
   `tests/structured-data.test.ts`. Lighthouse 100 across the board and accessibility are quality
   targets checked by hand with tooling (Lighthouse, axe) before a visual change, not rules bound in
-  CI. Stating that here, rather than calling an unbound check a rule, is the honest reading of the rule.
+  CI.
 
 ## Voice and wording
 
@@ -90,9 +90,9 @@ The repo is its own first case study, so its claims about itself are bound by th
 fails when it stops being true:
 
 - `tests/doc-references.test.ts`: every repo path, component, composable, and config-referenced
-  artifact a doc cites still exists; every `AGENTS.md` has a `CLAUDE.md` that bridges to it; every test
-  is documented here and every nested `AGENTS.md` is named in the map above; and `specs/` stays absent
-  (principles 02, 05, 06, 09).
+  artifact a doc cites still exists; `app/AGENTS.md` names every top-level component and composable;
+  every `AGENTS.md` has a `CLAUDE.md` that bridges to it; every test is documented here and every
+  nested `AGENTS.md` is named in the map above; and `specs/` stays absent (principles 02, 05, 06, 09).
 - `tests/routes.test.ts`: the site's routes are derived once in `app/site-routes.ts` and match the
   content tree, the prerender list, and the internal links, so none can drift (principle 05).
 - `tests/agents-md-budget.test.ts`: no single `AGENTS.md` exceeds the 12,000-character rule-file cap and

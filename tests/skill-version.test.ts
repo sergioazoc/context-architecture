@@ -13,6 +13,7 @@ import { read } from './repo'
 const RELEASED: Record<string, string> = {
   '0.2.0': '403ddf0aea322dbe9095050af8d69c1612d44fd5b7c37815e6a6a4bcbe58b4ad',
   '0.3.0': '9fb7ead8856e6d1f7bd950ef6295d0cb4bb35a7ff934673070a050b21f1031f1',
+  '0.3.1': '09c1d8be0fa0b520b121a35e6f2d3a0e46b9e3a310f9775fa8c3a68b9f2dc62e',
 }
 
 const sha256 = (s: string): string => createHash('sha256').update(s).digest('hex')
