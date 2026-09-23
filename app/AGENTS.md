@@ -8,9 +8,11 @@ looks and behaves.
 ```text
 app/
   pages/            # one file per route; queries content, renders it
-  components/       # SiteHeader, SiteFooter, DocHero, DocShell, ViewToggle
+  components/       # SiteHeader, SiteFooter, DocHero, DocShell, ViewToggle, RawSourceView, ErrorView
   components/content/   # MDC components usable from Markdown (Rule, diagrams)
   composables/      # useSiteMeta, useManifestoSchema, useGlossarySchema
+  site-routes.ts    # the route map, derived once for the router and the prerender list
+  site-definition.ts    # CANONICAL_DEFINITION, the one citable definition
   app.config.ts     # Nuxt UI theme: palette + ui.prose reading typography
   assets/css/main.css   # design tokens + global base only
 ```

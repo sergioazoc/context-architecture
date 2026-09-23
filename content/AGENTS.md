@@ -30,8 +30,8 @@ list, so it cannot drift from the content tree.
   word for word, and the `description` (the meta description) must include the mechanism clause, or it
   is not the citable definition. `tests/canonical-definition.test.ts` binds both.
 - **The rule is canonical.** The invariant in `## The rule` is a quotable fact, like the definition.
-  Keep it verbatim per locale and mirrored in `llms.txt` (nuxt.config) and the schema. There is no
-  slogan.
+  Keep it verbatim per locale and mirrored in `llms.txt` (nuxt.config) and the schema. Do not add a
+  slogan or tagline beside it.
 - **The manifesto uses MDC components.** `::rule`, `::diagram-tree`, and `::diagram-layers` (used by
   `comparison.md`) live in `app/components/content/`; `::callout` is Nuxt UI's prose callout (use
   `color="neutral"`), themed in `app/app.config.ts`. The person view renders them; the agent view

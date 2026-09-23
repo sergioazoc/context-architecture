@@ -53,5 +53,4 @@ and the served `/skill.md` route all depend on this exact path.
   its source but is not bound to it: nothing here fails when it drifts, because it lives in a repo this
   one does not control. Treat it as a manual sync. On a meaningful version bump, open a PR there with
   the current `SKILL.md` (a faithful copy, attribution and the CC BY 4.0 license intact). If the
-  aggregator's copy is older than `marketplace.json`'s version, a re-sync is pending. Last synced:
-  v0.2.0; a re-sync to v0.3.0 is pending (open the PR after this version ships).
+  aggregator's copy is older than `marketplace.json`'s version, a re-sync is pending.

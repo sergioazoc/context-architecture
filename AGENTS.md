@@ -30,7 +30,7 @@ Register reference points: c4model.com, micro-frontends.org.
   graph (`DefinedTerm`, `Person` with `sameAs`, `TechArticle`) is the floor, bound in
   `tests/structured-data.test.ts`. Lighthouse 100 across the board and accessibility are quality
   targets checked by hand with tooling (Lighthouse, axe) before a visual change, not rules bound in
-  CI. Stating that here, rather than calling an unbound check a rule, is the honest reading of the rule.
+  CI.
 
 ## Voice and wording
 
