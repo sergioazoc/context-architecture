@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import * as locales from '@nuxt/ui/locale'
 import { SITE_DESCRIPTION, SITE_DESCRIPTION_ES } from '~/site-definition'
 
 const { locale, locales: i18nLocales } = useI18n()
@@ -34,7 +33,7 @@ const alternateLinks = computed(() => {
 useHead({
   htmlAttrs: {
     lang: computed(() => current.value?.language ?? 'en'),
-    dir: computed(() => locales[locale.value]?.dir ?? 'ltr'),
+    dir: computed(() => current.value?.dir ?? 'ltr'),
   },
   link: alternateLinks,
   // Avoid the "Context Architecture | Context Architecture" duplication: only
@@ -58,7 +57,8 @@ useSeoMeta({
 </script>
 
 <template>
-  <UApp :locale="locales[locale]">
+  <!-- UApp follows the @nuxtjs/i18n locale on its own (Nuxt UI 4.12+). -->
+  <UApp>
     <NuxtRouteAnnouncer />
     <NuxtLayout>
       <NuxtPage />

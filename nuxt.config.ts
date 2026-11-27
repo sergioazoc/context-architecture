@@ -61,6 +61,12 @@ export default defineNuxtConfig({
   // 404.html; the prerendered /es pages still emit lang="es" (bound in
   // tests/prerendered-no-js.test.ts). Turn off the app-head validator so that
   // correct setup does not print a warning on every typecheck.
+  // @nuxtjs/seo v6 bundles two modules this site does not use. nuxt-ai-ready
+  // emits a Markdown copy of every page at /<page>.md, which overwrites the raw
+  // skill at /skill.md and duplicates the /raw/**.md mirror and nuxt-llms.
+  // nuxt-skew-protection adds a service worker a static site does not need.
+  aiReady: false,
+  skewProtection: false,
   seo: {
     validateAppHead: false,
   },
