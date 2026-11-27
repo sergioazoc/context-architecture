@@ -1,5 +1,5 @@
 overrides:
-  vite: 8.1.3
+  vite: 8.4.0
 
 allowBuilds:
   '@parcel/watcher': true
@@ -14,4 +14,7 @@ allowBuilds:
 # stop doing anything once that version is installed and a day old. Pruned to
 # empty on 2026-09-15 after the dependency bump; add a version here only while it
 # is freshly published and needed before the delay elapses, then let it lapse.
-minimumReleaseAgeExclude: []
+minimumReleaseAgeExclude:
+  # 5.5.2 throws `__VUE_OPTIONS_API__ is not defined` during SSR prerender
+  # (vuejs/router#2964); 5.5.3 sets the global in its Node entry.
+  - vue-router@5.5.3
